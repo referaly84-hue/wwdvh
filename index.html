@@ -2640,10 +2640,61 @@ function getClientFixtureTourKey(f) {
   return `${s}:${f.comp}:${f.round || 1}`;
 }
 
+function clientFixtureSupportsVar(f) {
+  if (!f) return false;
+  if (typeof f.supportsVar === 'boolean') return f.supportsVar;
+  const c = String(f.comp || '');
+  if (c === 'rpl' || c === 'supercup' || c === 'playoff' || c === 'playoff_rpl_fnl') return true;
+  if (c === 'cup') {
+    const cp = f.cupPath || (Number(f.round) <= 6 ? 'rpl_group' : 'regions_qual');
+    if (cp === 'regions_qual' || (!f.cupPath && !f.cupStage && f.qualRound)) return false;
+    return true;
+  }
+  return false;
+}
+
+function clientFixtureRefereeScope(f) {
+  if (!f) return 'any';
+  if (f.refereeScope) return f.refereeScope;
+  const c = String(f.comp || '');
+  if (c === 'rpl' || c === 'supercup' || c === 'playoff' || c === 'playoff_rpl_fnl') return 'rpl';
+  if (c === 'fnl') return 'fnl';
+  if (c === 'cup') {
+    const cp = f.cupPath || (Number(f.round) <= 6 ? 'rpl_group' : 'regions_qual');
+    const stg = String(f.cupStage || '').toLowerCase();
+    if (cp === 'regions_qual' || cp === 'regions_playoff' || stg.startsWith('regions_')) return 'rpl_and_fnl';
+    return 'rpl';
+  }
+  return 'any';
+}
+
+function clientRefereeEligibleForFixture(r, f) {
+  if (!r || !f) return false;
+  const scope = clientFixtureRefereeScope(f);
+  const ls = Array.isArray(r.leagues) ? r.leagues.map(x => String(x || '').toLowerCase()) : [];
+  if (scope === 'rpl') return ls.includes('rpl');
+  if (scope === 'fnl') return ls.includes('fnl');
+  if (scope === 'rpl_and_fnl') return ls.includes('rpl') || ls.includes('fnl') || ls.includes('cup');
+  return true;
+}
+
+function clientRefLeaguesLabel(r) {
+  const ls = Array.isArray(r?.leagues) ? r.leagues.map(x => String(x || '').toLowerCase()) : [];
+  const tags = [];
+  if (ls.includes('rpl')) tags.push('РПЛ');
+  if (ls.includes('fnl')) tags.push('ФНЛ');
+  return tags.join('/');
+}
+
 function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = null) {
+  const supportsVar = clientFixtureSupportsVar(f);
+  const scope = clientFixtureRefereeScope(f);
   const sortedRefs = [...(refs || [])].sort((a, b) => (b.rating || 0) - (a.rating || 0) || String(a.name).localeCompare(String(b.name), 'ru'));
+  const eligibleRefs = sortedRefs.filter(r => clientRefereeEligibleForFixture(r, f));
+  const otherRefs = sortedRefs.filter(r => !clientRefereeEligibleForFixture(r, f));
   const sortedAssts = [...(assts || [])].sort((a, b) => String(a.name).localeCompare(String(b.name), 'ru'));
-  const varRefs = [...sortedRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
+  const varEligibleRefs = [...eligibleRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
+  const varOtherRefs = [...otherRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
   const tourKey = getClientFixtureTourKey(f);
   const fxPool = Array.isArray(allFx) ? allFx : (window.__adminRefPool?.data?.fixtures || S.st?.fixtures || []);
   const sameTourFx = fxPool.filter(x => x.id !== f.id && getClientFixtureTourKey(x) === tourKey && (f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'cup'));
@@ -2653,18 +2704,26 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
   const curA1 = (Array.isArray(f.assistants) && f.assistants[0]) || '';
   const curA2 = (Array.isArray(f.assistants) && f.assistants[1]) || '';
   const curRes = f.reserveReferee || '';
-  const curVar = f.varReferee || '';
-  const curAvar = f.avarReferee || '';
+  const curVar = supportsVar ? (f.varReferee || '') : '';
+  const curAvar = supportsVar ? (f.avarReferee || '') : '';
+
+  const renderHeadOpt = (r) => {
+    const busy = sameTourFx.find(x => x.refereeId === r.id || x.refereeName === r.name);
+    const sel = (curHeadId && r.id === curHeadId) || (!curHeadId && curHeadName && r.name === curHeadName) ? 'selected' : '';
+    const lgLbl = clientRefLeaguesLabel(r);
+    const meta = [lgLbl || null, r.city, r.rating ? `★${Number(r.rating).toFixed(2)}` : null, (supportsVar && r.varRole) ? r.varRole : null].filter(Boolean).join(' · ');
+    const busyTxt = busy ? ` [занят: ${teamName(busy.home)} — ${teamName(busy.away)}]` : '';
+    return `<option value="${e(r.id)}" data-name="${e(r.name)}" data-city="${e(r.city || '')}" ${busy ? `data-busy="${e(teamName(busy.home) + ' — ' + teamName(busy.away))}"` : ''} ${sel}>${e(r.name)}${meta ? ` (${e(meta)})` : ''}${e(busyTxt)}</option>`;
+  };
 
   const headOptions = [
     `<option value="">— Не назначен —</option>`,
-    ...sortedRefs.map(r => {
-      const busy = sameTourFx.find(x => x.refereeId === r.id || x.refereeName === r.name);
-      const sel = (curHeadId && r.id === curHeadId) || (!curHeadId && curHeadName && r.name === curHeadName) ? 'selected' : '';
-      const meta = [r.city, r.rating ? `★${Number(r.rating).toFixed(2)}` : null, r.varRole || null].filter(Boolean).join(' · ');
-      const busyTxt = busy ? ` [занят: ${teamName(busy.home)} — ${teamName(busy.away)}]` : '';
-      return `<option value="${e(r.id)}" data-name="${e(r.name)}" data-city="${e(r.city || '')}" ${busy ? `data-busy="${e(teamName(busy.home) + ' — ' + teamName(busy.away))}"` : ''} ${sel}>${e(r.name)}${meta ? ` (${e(meta)})` : ''}${e(busyTxt)}</option>`;
-    }),
+    ...(eligibleRefs.length && otherRefs.length
+      ? [`<optgroup label="Подходят для турнира (${eligibleRefs.length})">${eligibleRefs.map(renderHeadOpt).join('')}</optgroup>`]
+      : eligibleRefs.map(renderHeadOpt)),
+    ...(otherRefs.length
+      ? [`<optgroup label="Судьи других лиг (только при совмещении)">${otherRefs.map(renderHeadOpt).join('')}</optgroup>`]
+      : []),
     ...(curHeadName && !sortedRefs.some(r => r.id === curHeadId || r.name === curHeadName)
       ? [`<option value="__custom__:${e(curHeadName)}" data-name="${e(curHeadName)}" selected>${e(curHeadName)} (текущий)</option>`]
       : [])
@@ -2680,23 +2739,49 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
     ].join('');
   };
 
-  const buildRefNameOptions = (pool, selectedName, emptyLabel) => {
-    const names = pool.map(r => r.name);
-    const hasCustom = selectedName && !names.includes(selectedName);
+  const renderRefNameOpt = (r, selectedName) => {
+    const lgLbl = clientRefLeaguesLabel(r);
+    const roleTag = (supportsVar && r.varRole) ? r.varRole : (r.role === 'Резервный судья' ? 'Резерв' : '');
+    const meta = [lgLbl, r.city, roleTag].filter(Boolean).join(' · ');
+    return `<option value="${e(r.name)}" ${r.name === selectedName ? 'selected' : ''}>${e(r.name)}${meta ? ` (${e(meta)})` : ''}</option>`;
+  };
+
+  const buildRefNameOptions = (eligPool, othPool, selectedName, emptyLabel) => {
+    const allNames = [...eligPool, ...othPool].map(r => r.name);
+    const hasCustom = selectedName && !allNames.includes(selectedName);
     return [
       `<option value="">${e(emptyLabel)}</option>`,
       ...(hasCustom ? [`<option value="${e(selectedName)}" selected>${e(selectedName)} (текущий)</option>`] : []),
-      ...pool.map(r => {
-        const roleTag = r.varRole ? ` · ${r.varRole}` : (r.role === 'Резервный судья' ? ' · Резерв' : '');
-        return `<option value="${e(r.name)}" ${r.name === selectedName ? 'selected' : ''}>${e(r.name)}${r.city ? ` (${e(r.city)}${e(roleTag)})` : (roleTag ? ` (${e(roleTag.replace(/^ · /, ''))})` : '')}</option>`;
-      })
+      ...(eligPool.length && othPool.length
+        ? [`<optgroup label="Подходят для турнира (${eligPool.length})">${eligPool.map(r => renderRefNameOpt(r, selectedName)).join('')}</optgroup>`]
+        : eligPool.map(r => renderRefNameOpt(r, selectedName))),
+      ...(othPool.length
+        ? [`<optgroup label="Судьи других лиг (при совмещении)">${othPool.map(r => renderRefNameOpt(r, selectedName)).join('')}</optgroup>`]
+        : [])
     ].join('');
   };
 
+  const scopeBadge = scope === 'fnl'
+    ? 'ФНЛ: только арбитры ФНЛ'
+    : scope === 'rpl'
+      ? (f.comp === 'cup' ? 'Путь РПЛ / Суперфинал: только арбитры РПЛ' : 'Только арбитры РПЛ')
+      : scope === 'rpl_and_fnl'
+        ? 'Путь регионов: арбитры РПЛ и ФНЛ'
+        : 'Все доступные арбитры';
+
   return `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-      <div class="small muted">Назначьте всех 6 арбитров бригады или подберите свободную бригаду автоматически.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <div class="small muted">
+        ${supportsVar
+          ? 'Назначьте всех 6 арбитров бригады или подберите свободную бригаду автоматически.'
+          : 'Назначьте 4 арбитров бригады (главный, 2 помощника, резервный) — система VAR в этом турнире не используется.'}
+      </div>
       <button type="button" class="btn alt sm" id="${prefix}_auto">🎲 Подобрать свободную бригаду</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+      <span class="tag" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-weight:700">⚖️ ${e(scopeBadge)}</span>
+      <span class="tag" style="background:${supportsVar ? '#ecfdf5' : '#f1f5f9'};color:${supportsVar ? '#166534' : '#475569'};border-color:${supportsVar ? '#86efac' : '#cbd5e1'};font-weight:700">${supportsVar ? '📺 VAR работает' : '🚫 Без VAR'}</span>
+      ${!eligibleRefs.length ? `<span class="tag" style="background:#fef2f2;color:#b91c1c;border-color:#fecaca;font-weight:700">Нет арбитров с допуском в эту лигу</span>` : ''}
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px">
       <div>
@@ -2713,26 +2798,36 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
       </div>
       <div>
         <label class="small" style="display:block;margin-bottom:4px;font-weight:700">🔁 Резервный судья</label>
-        <select id="${prefix}_res" style="width:100%">${buildRefNameOptions(sortedRefs, curRes, '— Не назначен —')}</select>
+        <select id="${prefix}_res" style="width:100%">${buildRefNameOptions(eligibleRefs, otherRefs, curRes, '— Не назначен —')}</select>
       </div>
+      ${supportsVar ? `
       <div>
         <label class="small" style="display:block;margin-bottom:4px;font-weight:700">📺 Арбитр ВАР (VAR)</label>
-        <select id="${prefix}_var" style="width:100%">${buildRefNameOptions(varRefs, curVar, '— Без ВАР / Не назначен —')}</select>
+        <select id="${prefix}_var" style="width:100%">${buildRefNameOptions(varEligibleRefs, varOtherRefs, curVar, '— Без ВАР / Не назначен —')}</select>
       </div>
       <div>
         <label class="small" style="display:block;margin-bottom:4px;font-weight:700">🖥️ Ассистент ВАР (AVAR)</label>
-        <select id="${prefix}_avar" style="width:100%">${buildRefNameOptions(varRefs, curAvar, '— Без АВАР / Не назначен —')}</select>
+        <select id="${prefix}_avar" style="width:100%">${buildRefNameOptions(varEligibleRefs, varOtherRefs, curAvar, '— Без АВАР / Не назначен —')}</select>
       </div>
+      ` : `
+      <div style="grid-column:1 / -1;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:8px 12px;font-size:12px;color:#475569">
+        🚫 В этом турнире система VAR не используется — арбитры ВАР и АВАР не назначаются.
+        <input type="hidden" id="${prefix}_var" value="">
+        <input type="hidden" id="${prefix}_avar" value="">
+      </div>
+      `}
     </div>
     <div id="${prefix}_warn" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.4;margin-bottom:10px"></div>
     <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer;margin-bottom:10px;user-select:none">
       <input type="checkbox" id="${prefix}_force">
-      <span>Разрешить совмещение (игнорировать занятость арбитра в этом туре и дублирование ролей)</span>
+      <span>Разрешить совмещение (игнорировать занятость арбитра в туре, лигу допуска и дублирование ролей)</span>
     </label>
   `;
 }
 
 function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSaved, allFx = null) {
+  const supportsVar = clientFixtureSupportsVar(f);
+  const eligibleRefs = (refs || []).filter(r => clientRefereeEligibleForFixture(r, f));
   const headEl = rootEl.querySelector(`#${prefix}_head`);
   const a1El = rootEl.querySelector(`#${prefix}_a1`);
   const a2El = rootEl.querySelector(`#${prefix}_a2`);
@@ -2756,6 +2851,12 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
     };
   };
 
+  const isEligibleRefName = (name) => {
+    if (!name) return true;
+    const refObj = (refs || []).find(r => r.name === name);
+    return !refObj || clientRefereeEligibleForFixture(refObj, f);
+  };
+
   const updateWarnings = () => {
     if (!warnEl) return;
     const msgs = [];
@@ -2763,16 +2864,32 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
     const a1 = a1El.value;
     const a2 = a2El.value;
     const res = resEl.value;
-    const v = varEl.value;
-    const av = avarEl.value;
+    const v = supportsVar ? (varEl?.value || '') : '';
+    const av = supportsVar ? (avarEl?.value || '') : '';
+    const force = !!forceEl?.checked;
     if (h.busy) msgs.push(`⚠️ Арбитр <b>${e(h.refereeName)}</b> уже назначен главным в этом туре на матч «${e(h.busy)}».`);
+    if (!force && h.refereeId) {
+      const headObj = (refs || []).find(r => r.id === h.refereeId || r.name === h.refereeName);
+      if (headObj && !clientRefereeEligibleForFixture(headObj, f)) {
+        msgs.push(`⚠️ Главный арбитр <b>${e(h.refereeName)}</b> не входит в список судей этого турнира (отметьте «Разрешить совмещение» или выберите арбитра из нужной лиги).`);
+      }
+    }
+    if (!force && res && !isEligibleRefName(res)) {
+      msgs.push(`⚠️ Резервный судья <b>${e(res)}</b> относится к другой лиге.`);
+    }
+    if (!force && supportsVar && v && !isEligibleRefName(v)) {
+      msgs.push(`⚠️ Арбитр ВАР <b>${e(v)}</b> относится к другой лиге.`);
+    }
+    if (!force && supportsVar && av && !isEligibleRefName(av)) {
+      msgs.push(`⚠️ АВАР <b>${e(av)}</b> относится к другой лиге.`);
+    }
     if (a1 && a2 && a1 === a2) msgs.push('⚠️ 1-й и 2-й помощники судьи совпадают.');
     if (h.refereeName && res && h.refereeName === res) msgs.push('⚠️ Главный арбитр и резервный судья совпадают.');
-    if (h.refereeName && v && h.refereeName === v) msgs.push('⚠️ Главный арбитр и арбитр ВАР совпадают.');
-    if (h.refereeName && av && h.refereeName === av) msgs.push('⚠️ Главный арбитр и АВАР совпадают.');
-    if (v && av && v === av) msgs.push('⚠️ Арбитр ВАР и АВАР совпадают.');
-    if (res && v && res === v) msgs.push('⚠️ Резервный судья и арбитр ВАР совпадают.');
-    if (res && av && res === av) msgs.push('⚠️ Резервный судья и АВАР совпадают.');
+    if (supportsVar && h.refereeName && v && h.refereeName === v) msgs.push('⚠️ Главный арбитр и арбитр ВАР совпадают.');
+    if (supportsVar && h.refereeName && av && h.refereeName === av) msgs.push('⚠️ Главный арбитр и АВАР совпадают.');
+    if (supportsVar && v && av && v === av) msgs.push('⚠️ Арбитр ВАР и АВАР совпадают.');
+    if (supportsVar && res && v && res === v) msgs.push('⚠️ Резервный судья и арбитр ВАР совпадают.');
+    if (supportsVar && res && av && res === av) msgs.push('⚠️ Резервный судья и АВАР совпадают.');
     if (msgs.length) {
       warnEl.innerHTML = msgs.join('<br>');
       warnEl.style.display = 'block';
@@ -2781,13 +2898,17 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
     }
   };
 
-  [headEl, a1El, a2El, resEl, varEl, avarEl].forEach(el => {
+  [headEl, a1El, a2El, resEl, varEl, avarEl, forceEl].forEach(el => {
     if (el) el.onchange = updateWarnings;
   });
   updateWarnings();
 
   if (autoEl) {
     autoEl.onclick = () => {
+      if (!eligibleRefs.length) {
+        toast('Нет свободных арбитров с допуском к этому турниру (сначала добавьте судей нужной лиги)', true);
+        return;
+      }
       const homeCity = (S.st?.teams?.find(t => t.id === f.home)?.city || '').trim().toLowerCase();
       const awayCity = (S.st?.teams?.find(t => t.id === f.away)?.city || '').trim().toLowerCase();
       const tourKey = getClientFixtureTourKey(f);
@@ -2796,12 +2917,12 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
       const busyIds = new Set(sameTourFx.map(x => x.refereeId).filter(Boolean));
       const busyNames = new Set(sameTourFx.map(x => x.refereeName).filter(Boolean));
 
-      const freeRefs = (refs || []).filter(r => !busyIds.has(r.id) && !busyNames.has(r.name));
+      const freeRefs = eligibleRefs.filter(r => !busyIds.has(r.id) && !busyNames.has(r.name));
       const nonSameCity = freeRefs.filter(r => {
         const c = (r.city || '').trim().toLowerCase();
         return !c || (c !== homeCity && c !== awayCity);
       });
-      const headPool = nonSameCity.length ? nonSameCity : (freeRefs.length ? freeRefs : (refs || []));
+      const headPool = nonSameCity.length ? nonSameCity : (freeRefs.length ? freeRefs : eligibleRefs);
       if (headPool.length) {
         const picked = headPool[Math.floor(Math.random() * Math.min(headPool.length, 5))];
         headEl.value = picked.id;
@@ -2811,15 +2932,20 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
       if (freeAssts[0]) a1El.value = freeAssts[0].name;
       if (freeAssts[1]) a2El.value = freeAssts[1].name;
 
-      const others = (refs || []).filter(r => r.name !== headName && !busyNames.has(r.name));
-      const otherPool = others.length >= 3 ? others : (refs || []).filter(r => r.name !== headName);
+      const others = eligibleRefs.filter(r => r.name !== headName && !busyNames.has(r.name));
+      const otherPool = others.length >= 3 ? others : eligibleRefs.filter(r => r.name !== headName);
       const shuffled = [...otherPool].sort(() => Math.random() - 0.5);
       const pickRes = shuffled.find(r => r.role === 'Резервный судья') || shuffled[0];
-      if (pickRes) resEl.value = pickRes.name;
-      const pickVar = shuffled.find(r => r.varRole && r.name !== resEl.value) || shuffled.find(r => r.name !== resEl.value);
-      if (pickVar) varEl.value = pickVar.name;
-      const pickAvar = shuffled.find(r => r.name !== resEl.value && r.name !== varEl.value) || shuffled.find(r => r.name !== varEl.value);
-      if (pickAvar) avarEl.value = pickAvar.name;
+      resEl.value = pickRes ? pickRes.name : '';
+      if (supportsVar && varEl && avarEl) {
+        const pickVar = shuffled.find(r => r.varRole && r.name !== resEl.value) || shuffled.find(r => r.name !== resEl.value);
+        varEl.value = pickVar ? pickVar.name : '';
+        const pickAvar = shuffled.find(r => r.name !== resEl.value && r.name !== varEl.value) || shuffled.find(r => r.name !== varEl.value);
+        avarEl.value = pickAvar ? pickAvar.name : '';
+      } else {
+        if (varEl) varEl.value = '';
+        if (avarEl) avarEl.value = '';
+      }
 
       updateWarnings();
       toast('Свободная бригада подобрана (нажмите «Сохранить»)');
@@ -2832,8 +2958,8 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
       const a1 = (a1El.value || '').trim();
       const a2 = (a2El.value || '').trim();
       const reserveReferee = (resEl.value || '').trim();
-      const varReferee = (varEl.value || '').trim();
-      const avarReferee = (avarEl.value || '').trim();
+      const varReferee = supportsVar ? ((varEl?.value || '').trim()) : '';
+      const avarReferee = supportsVar ? ((avarEl?.value || '').trim()) : '';
       const force = !!forceEl?.checked;
 
       saveBtnEl.disabled = true;
@@ -2854,8 +2980,8 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
           refereeName: upd.refereeName ?? res.refereeName ?? (h.refereeName || null),
           assistants: upd.assistants ?? res.assistants ?? [a1, a2].filter(Boolean),
           reserveReferee: upd.reserveReferee ?? res.reserveReferee ?? (reserveReferee || null),
-          varReferee: upd.varReferee ?? res.varReferee ?? (varReferee || null),
-          avarReferee: upd.avarReferee ?? res.avarReferee ?? (avarReferee || null),
+          varReferee: supportsVar ? (upd.varReferee ?? res.varReferee ?? (varReferee || null)) : null,
+          avarReferee: supportsVar ? (upd.avarReferee ?? res.avarReferee ?? (avarReferee || null)) : null,
           manualReferees: true
         };
         Object.assign(f, patch);
@@ -5139,7 +5265,7 @@ function drawMatch(app, id) {
     <span>⏰ Реальное: <b>${fmtD(f.realDate || f.date)} ${f.realTime ? f.realTime + ' МСК' : ''}</b></span>
     ${S.me?.role === 'admin' ? `<button id="btn_edit_match_schedule" class="btn alt sm" type="button" style="padding:2px 8px;font-size:11px;font-weight:700;margin-left:6px;cursor:pointer">✏️ Изменить дату и время</button>` : ''}
   </div>
-  ${(f.refereeName || S.me?.role === 'admin') ? `<div class="meta" style="margin-top:4px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"><span>${f.refereeName ? `Судья: <b>${e(f.refereeName)}</b>${f.assistants?.length ? ` · Помощники: ${f.assistants.map(e).join(', ')}` : ''}${f.reserveReferee ? ` · Резервный: ${e(f.reserveReferee)}` : ''}${f.varReferee ? ` · ВАР: ${e(f.varReferee)}` : ''}${f.avarReferee ? ` · АВАР: ${e(f.avarReferee)}` : ''}` : 'Судейская бригада не назначена'}</span>${S.me?.role === 'admin' ? `<button id="btn_edit_match_referees" class="btn alt sm" type="button" style="padding:2px 8px;font-size:11px;font-weight:700;cursor:pointer">⚖️ ${f.refereeName ? 'Изменить бригаду арбитров' : 'Назначить бригаду арбитров'}</button>` : ''}</div>` : ''}
+  ${(f.refereeName || S.me?.role === 'admin') ? `<div class="meta" style="margin-top:4px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"><span>${f.refereeName ? `Судья: <b>${e(f.refereeName)}</b>${f.assistants?.length ? ` · Помощники: ${f.assistants.map(e).join(', ')}` : ''}${f.reserveReferee ? ` · Резервный: ${e(f.reserveReferee)}` : ''}${(clientFixtureSupportsVar(f) && f.varReferee) ? ` · ВАР: ${e(f.varReferee)}` : ''}${(clientFixtureSupportsVar(f) && f.avarReferee) ? ` · АВАР: ${e(f.avarReferee)}` : ''}${!clientFixtureSupportsVar(f) ? ' · Без VAR' : ''}` : `Судейская бригада не назначена${!clientFixtureSupportsVar(f) ? ' (без VAR)' : ''}`}</span>${S.me?.role === 'admin' ? `<button id="btn_edit_match_referees" class="btn alt sm" type="button" style="padding:2px 8px;font-size:11px;font-weight:700;cursor:pointer">⚖️ ${f.refereeName ? 'Изменить бригаду арбитров' : 'Назначить бригаду арбитров'}</button>` : ''}</div>` : ''}
   ${(f.commentator?.name || S.me?.role === 'admin') ? `<div class="booth-bar"><span title="${e(f.commentator?.assignmentReason || '')}">🎙️ ${f.commentator?.duo ? 'В кабине (дуэт)' : 'В эфире'}: <b style="color:#fff">${e(f.commentator?.label || 'Автовыбор')}</b>${f.commentator?.roleTitle ? ` · ${e(f.commentator.roleTitle)}` : ''}${f.commentator?.badge ? ` <span style="opacity:.82;font-size:11px">· ${e(f.commentator.badge)}</span>` : ''}</span>${S.me?.role === 'admin' ? `<button id="btn_edit_match_commentator" class="btn alt sm" type="button" style="padding:2px 8px;font-size:11px;font-weight:700;cursor:pointer">🎙️ Сменить комментатора</button>` : ''}</div>` : ''}
   <div class="line">
     <div class="tm-box r">
@@ -15831,6 +15957,11 @@ async function pgAdmin(app) {
     if (renderSeq !== ADMIN_RENDER_SEQ || !ab.isConnected) return;
     const refs = rData.referees || [];
     const assts = rData.assistants || [];
+    let rfLeagueFilter = window.__rfLeagueFilter || 'all';
+    const hasRefLeague = (r, lg) => Array.isArray(r.leagues) && r.leagues.map(x => String(x || '').toLowerCase()).includes(lg);
+    const rplCount = refs.filter(r => hasRefLeague(r, 'rpl')).length;
+    const fnlCount = refs.filter(r => hasRefLeague(r, 'fnl')).length;
+    const filteredRefs = refs.filter(r => rfLeagueFilter === 'all' ? true : hasRefLeague(r, rfLeagueFilter));
     ab.innerHTML = `
       <div class="panel">
         <div class="row sp" style="margin-bottom:10px">
@@ -15839,25 +15970,41 @@ async function pgAdmin(app) {
         </div>
         <div class="row" style="gap:8px;flex-wrap:wrap">
           <input id="rf_name" placeholder="Имя и фамилия" style="flex:2;min-width:180px">
-          <input id="rf_city" placeholder="Город" style="flex:1;min-width:120px">
-          <input id="rf_bio" placeholder="Портрет арбитра (необязательно)" style="flex:2;min-width:220px">
-          <input id="rf_leagues" value="rpl,fnl,cup,friendly" placeholder="Лиги (rpl,fnl,cup,friendly)" style="flex:1;min-width:150px">
+          <input id="rf_city" placeholder="Город" style="flex:1;min-width:110px">
+          <input id="rf_bio" placeholder="Портрет арбитра (необязательно)" style="flex:2;min-width:200px">
+          <select id="rf_league_preset" style="width:auto;min-width:170px">
+            <option value="rpl,cup,friendly">Корпус РПЛ (+ Кубок)</option>
+            <option value="fnl,cup,friendly">Корпус ФНЛ (+ Кубок)</option>
+            <option value="rpl,fnl,cup,friendly">РПЛ и ФНЛ (+ Кубок)</option>
+          </select>
+          <input id="rf_leagues" value="rpl,cup,friendly" placeholder="Лиги (rpl,fnl,cup,friendly)" style="flex:1;min-width:140px">
           <button class="btn alt" id="rf_add">Добавить судью</button>
         </div>
       </div>
       <div class="panel wrap">
-        <h3>Таблица рейтинга главных и резервных арбитров (${refs.length})</h3>
-        <p class="muted small">Рейтинг арбитра — среднее арифметическое его оценок за матчи в роли главного судьи. Нажмите на фамилию арбитра или «Профиль», чтобы посмотреть оценки по каждой игре, историю в поле и на VAR.</p>
+        <div class="row sp" style="gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <h3 style="margin:0">Таблица рейтинга главных и резервных арбитров (${filteredRefs.length}${rfLeagueFilter !== 'all' ? ` из ${refs.length}` : ''})</h3>
+          <div class="row" style="gap:6px;flex-wrap:wrap" id="rf_league_filters">
+            <button type="button" class="btn sm ${rfLeagueFilter === 'all' ? '' : 'alt'}" data-rfl="all">Все (${refs.length})</button>
+            <button type="button" class="btn sm ${rfLeagueFilter === 'rpl' ? '' : 'alt'}" data-rfl="rpl">РПЛ (${rplCount})</button>
+            <button type="button" class="btn sm ${rfLeagueFilter === 'fnl' ? '' : 'alt'}" data-rfl="fnl">ФНЛ (${fnlCount})</button>
+          </div>
+        </div>
+        <p class="muted small">Рейтинг арбитра — среднее арифметическое его оценок за матчи в роли главного судьи. В РПЛ и Пути РПЛ Кубка работают только судьи РПЛ, в ФНЛ — только судьи ФНЛ, в Пути регионов Кубка — судьи РПЛ и ФНЛ.</p>
         <table>
           <thead><tr><th>#</th><th class="l">Арбитр</th><th class="l">Город</th><th>Гл. матчи</th><th>ЖК</th><th>КК</th><th>Пен.</th><th>Ср. рейтинг</th><th></th></tr></thead>
           <tbody>
-            ${refs.map((r, i) => {
+            ${filteredRefs.length ? filteredRefs.map((r, i) => {
               const extraRoles = (r.varMatches || 0) + (r.reserveMatches || 0);
               const ratingDisp = (Number(r.matches || 0) > 0 || Number(r.rating || 0) > 0) ? Number(r.rating || 0).toFixed(2) : '—';
+              const isRpl = hasRefLeague(r, 'rpl');
+              const isFnl = hasRefLeague(r, 'fnl');
               return `<tr>
               <td><b>${i + 1}</b></td>
               <td class="l">
                 <a href="javascript:void(0)" data-rfp="${r.id}" style="font-weight:700;color:var(--deep);text-decoration:underline;text-underline-offset:3px">${e(r.name)}</a>
+                ${isRpl ? ` <span class="tag" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe">РПЛ</span>` : ''}
+                ${isFnl ? ` <span class="tag" style="background:#ecfdf5;color:#166534;border-color:#86efac">ФНЛ</span>` : ''}
                 ${r.varRole ? ` <span class="tag">${e(r.varRole)}</span>` : ''}
                 ${r.role && r.role !== 'Главный арбитр' ? ` <span class="tag" style="background:#f1f5f9;color:#475569">${e(r.role)}</span>` : ''}
               </td>
@@ -15869,7 +16016,7 @@ async function pgAdmin(app) {
               <td><b>${ratingDisp}</b></td>
               <td><button class="btn alt sm" data-rfp="${r.id}">Профиль и история</button></td>
             </tr>`;
-            }).join('')}
+            }).join('') : `<tr><td colspan="9" class="muted" style="text-align:center;padding:18px">В выбранной категории пока нет арбитров</td></tr>`}
           </tbody>
         </table>
       </div>
@@ -15900,7 +16047,7 @@ async function pgAdmin(app) {
           <button class="btn" id="rf_assign_btn">Назначить судей на тур</button>
           <button class="btn alt" id="rf_reassign_btn" type="button">🔄 Перераспределить будущие туры</button>
         </div>
-        <p class="small muted" style="margin:6px 0 0">Кнопка «Перераспределить будущие туры» равномерно распределяет всех главных арбитров РПЛ, Первой лиги и Кубка на ещё не сыгранные туры без ручных правок.</p>
+        <p class="small muted" style="margin:6px 0 0">Кнопка «Перераспределить будущие туры» равномерно распределяет главных арбитров РПЛ, Первой лиги и Кубка на ещё не сыгранные туры согласно их допуску (РПЛ / ФНЛ).</p>
       </div>
       <div class="panel" style="margin-top:14px">
         <h3 style="margin:0 0 6px">⚖️ Назначение бригады арбитров на отдельный матч</h3>
@@ -15918,6 +16065,15 @@ async function pgAdmin(app) {
         </div>
         <div id="rf_match_crew_preview" class="small muted"></div>
       </div>`;
+    ab.querySelectorAll('[data-rfl]').forEach(btn => btn.onclick = () => {
+      window.__rfLeagueFilter = btn.dataset.rfl;
+      re();
+    });
+    const rfPresetSel = $('#rf_league_preset');
+    const rfLeaguesInp = $('#rf_leagues');
+    if (rfPresetSel && rfLeaguesInp) {
+      rfPresetSel.onchange = () => { rfLeaguesInp.value = rfPresetSel.value; };
+    }
     const rfCompSel = $('#rf_match_comp');
     const rfMatchSel = $('#rf_match_sel');
     const rfPreview = $('#rf_match_crew_preview');
@@ -15948,15 +16104,17 @@ async function pgAdmin(app) {
     const renderCrewPreview = () => {
       const fxObj = (Array.isArray(fxAll) ? fxAll : []).find(x => x.id === rfMatchSel.value);
       if (!fxObj) { rfPreview.innerHTML = ''; return; }
+      const hasVar = clientFixtureSupportsVar(fxObj);
       if (!fxObj.refereeName) {
-        rfPreview.innerHTML = 'Текущая бригада: <i>не назначена</i>';
+        rfPreview.innerHTML = `Текущая бригада: <i>не назначена</i>${!hasVar ? ' · <b>Без VAR</b>' : ''}`;
         return;
       }
       rfPreview.innerHTML = `Текущая бригада: <b>${e(fxObj.refereeName)}</b>` +
         (fxObj.assistants?.length ? ` · Помощники: ${fxObj.assistants.map(e).join(', ')}` : '') +
         (fxObj.reserveReferee ? ` · Резервный: ${e(fxObj.reserveReferee)}` : '') +
-        (fxObj.varReferee ? ` · ВАР: ${e(fxObj.varReferee)}` : '') +
-        (fxObj.avarReferee ? ` · АВАР: ${e(fxObj.avarReferee)}` : '');
+        ((hasVar && fxObj.varReferee) ? ` · ВАР: ${e(fxObj.varReferee)}` : '') +
+        ((hasVar && fxObj.avarReferee) ? ` · АВАР: ${e(fxObj.avarReferee)}` : '') +
+        (!hasVar ? ' · <b>Без VAR</b>' : '');
     };
     rfCompSel.onchange = fillMatchSelector;
     rfMatchSel.onchange = renderCrewPreview;
@@ -15995,7 +16153,7 @@ async function pgAdmin(app) {
         city: $('#rf_city').value,
         bio: $('#rf_bio').value,
         rating: 0,
-        leagues: $('#rf_leagues').value.split(',').map(s => s.trim()).filter(Boolean)
+        leagues: $('#rf_leagues').value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
       }), 'Судья добавлен');
       if (r) re();
     };
@@ -16253,6 +16411,15 @@ async function pgAdmin(app) {
                 <input id="rf_varRole_inp" value="${e(r.varRole || '')}" placeholder="ВАР/АВАР или пусто">
               </div>
             </div>
+            <div style="margin-top:10px">
+              <label style="margin-top:2px;display:block;margin-bottom:6px">Допуск к турнирам (лиги судейства)</label>
+              <div class="row" style="gap:14px;flex-wrap:wrap;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 12px">
+                ${[['rpl', 'РПЛ (и Путь РПЛ Кубка)'], ['fnl', 'Первая лига (ФНЛ)'], ['cup', 'Кубок России (Путь регионов)'], ['friendly', 'Товарищеские']].map(([lg, lbl]) => {
+                  const chk = (r.leagues || []).map(x => String(x || '').toLowerCase()).includes(lg) ? 'checked' : '';
+                  return `<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin:0"><input type="checkbox" class="rf_league_chk" value="${lg}" ${chk}> <span>${lbl}</span></label>`;
+                }).join('')}
+              </div>
+            </div>
             <div class="row" style="margin-top:14px;gap:10px;flex-wrap:wrap">
               <button type="button" class="btn" id="rf_save_btn">💾 Сохранить портрет и профиль</button>
               <button type="button" class="btn alt" id="rf_gen_bio">✨ Сгенерировать портрет (ИИ)</button>
@@ -16388,6 +16555,9 @@ async function pgAdmin(app) {
         const saveBtn = box.querySelector('#rf_save_btn');
         if (saveBtn) {
           saveBtn.onclick = async () => {
+            const managedSet = new Set(['rpl', 'fnl', 'cup', 'friendly']);
+            const preservedLeagues = (r.leagues || []).map(x => String(x || '').toLowerCase()).filter(x => x && !managedSet.has(x));
+            const checkedLeagues = Array.from(box.querySelectorAll('.rf_league_chk:checked')).map(cb => cb.value);
             const payload = {
               id: r.id,
               name: r.name,
@@ -16395,7 +16565,8 @@ async function pgAdmin(app) {
               city: box.querySelector('#rf_city_inp').value,
               age: box.querySelector('#rf_age_inp').value,
               rating: box.querySelector('#rf_rating_inp').value,
-              varRole: box.querySelector('#rf_varRole_inp').value
+              varRole: box.querySelector('#rf_varRole_inp').value,
+              leagues: Array.from(new Set([...checkedLeagues, ...preservedLeagues]))
             };
             const res = await act(() => api('/admin/referee', payload), 'Портрет и профиль арбитра сохранены');
             if (res && res.referee) {

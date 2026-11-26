@@ -6916,7 +6916,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "european",
     styleDesc: "\u0414\u0438\u043D\u0430\u043C\u0438\u0447\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440 \u043D\u043E\u0432\u043E\u0439 \u0432\u043E\u043B\u043D\u044B, \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043D\u0430 \u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0443\u044E \u043F\u043B\u0430\u043D\u043A\u0443 \u0435\u0434\u0438\u043D\u043E\u0431\u043E\u0440\u0441\u0442\u0432. \u041D\u0435 \u043B\u044E\u0431\u0438\u0442 \u0434\u0440\u043E\u0431\u0438\u0442\u044C \u0438\u0433\u0440\u0443 \u043C\u0435\u043B\u043A\u0438\u043C\u0438 \u0441\u0432\u0438\u0441\u0442\u043A\u0430\u043C\u0438, \u043F\u043E\u043E\u0449\u0440\u044F\u0435\u0442 \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u0438\u0437 \u043E\u0431\u043E\u0440\u043E\u043D\u044B \u0432 \u0430\u0442\u0430\u043A\u0443, \u043D\u043E \u0436\u0451\u0441\u0442\u043A\u043E \u043F\u0440\u0435\u0441\u0435\u043A\u0430\u0435\u0442 \u043E\u043F\u0430\u0441\u043D\u044B\u0435 \u043F\u043E\u0434\u043A\u0430\u0442\u044B.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.4,
     matches: 0,
     yellows: 0,
@@ -6932,7 +6932,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "balanced",
     styleDesc: "\u0421\u043F\u043E\u043A\u043E\u0439\u043D\u044B\u0439, \u0440\u0430\u0441\u0441\u0443\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440 \u0441 \u0445\u043E\u0440\u043E\u0448\u0438\u043C \u0447\u0443\u0432\u0441\u0442\u0432\u043E\u043C \u0434\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u0438. \u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0435\u0442 \u0443\u0441\u0442\u043D\u043E\u0435 \u043F\u0440\u0435\u0434\u0443\u043F\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0435 \u0440\u0430\u043D\u043D\u0435\u0439 \u0436\u0451\u043B\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435, \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0432 \u043A\u043E\u043C\u043D\u0430\u0442\u0435 \u0412\u0410\u0420 \u0438 \u0440\u0435\u0434\u043A\u043E \u0442\u0435\u0440\u044F\u0435\u0442 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C \u043D\u0430\u0434 \u044D\u043C\u043E\u0446\u0438\u044F\u043C\u0438 \u0438\u0433\u0440\u043E\u043A\u043E\u0432.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.5,
     matches: 0,
     yellows: 0,
@@ -6948,7 +6948,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "balanced",
     styleDesc: "\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439 \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0449\u0438\u0439\u0441\u044F \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0442\u0440\u0430\u043A\u0442\u043E\u0432\u043A\u0438 \u043F\u0440\u0430\u0432\u0438\u043B. \u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0435\u043D \u043A \u0442\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u043C \u0444\u043E\u043B\u0430\u043C \u0438 \u0438\u0433\u0440\u0435 \u0440\u0443\u043A\u043E\u0439, \u0441\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u0442\u044C \u0432\u0437\u0432\u0435\u0448\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F \u0431\u0435\u0437 \u0441\u043F\u0435\u0448\u043A\u0438.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.3,
     matches: 0,
     yellows: 0,
@@ -6964,7 +6964,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "liberal",
     styleDesc: "\u041C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440 \u0441 \u0432\u044B\u0441\u043E\u043A\u043E\u0439 \u043F\u043B\u0430\u043D\u043A\u043E\u0439 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u043E\u0439 \u0431\u043E\u0440\u044C\u0431\u044B. \u0421\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0432\u043C\u0435\u0448\u0438\u0432\u0430\u0442\u044C\u0441\u044F \u0432 \u0438\u0433\u0440\u0443 \u0431\u0435\u0437 \u0432\u0435\u0441\u043A\u043E\u0439 \u043F\u0440\u0438\u0447\u0438\u043D\u044B, \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u044F \u0444\u0443\u0442\u0431\u043E\u043B\u0438\u0441\u0442\u0430\u043C \u0432\u0435\u0441\u0442\u0438 \u043F\u043B\u043E\u0442\u043D\u044B\u0435 \u0434\u0443\u044D\u043B\u0438.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.7,
     matches: 0,
     yellows: 0,
@@ -7044,7 +7044,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "liberal",
     styleDesc: "\u041B\u0438\u0431\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439, \xAB\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439\xBB \u0441\u0442\u0438\u043B\u044C \u0441\u0443\u0434\u0435\u0439\u0441\u0442\u0432\u0430. \u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043F\u043B\u0430\u043D\u043A\u0430 \u0444\u043E\u043B\u0430, \u043C\u0438\u043D\u0438\u043C\u0443\u043C \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043E\u043A, \u043C\u0430\u043A\u0441\u0438\u043C\u0443\u043C \u0434\u0438\u043D\u0430\u043C\u0438\u043A\u0438. \u041F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u043D\u0443\u044E \u0431\u043E\u0440\u044C\u0431\u0443 \u043F\u043B\u0435\u0447\u043E \u0432 \u043F\u043B\u0435\u0447\u043E \u0438 \u0436\u0451\u0441\u0442\u043A\u0438\u0435 \u0441\u0442\u044B\u043A\u0438, \u0435\u0441\u043B\u0438 \u043E\u043D\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u0432 \u043C\u044F\u0447. \u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u0434\u043E\u0441\u0442\u0430\u0451\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0437\u0430 \u043E\u0442\u043A\u0440\u043E\u0432\u0435\u043D\u043D\u0443\u044E \u0433\u0440\u0443\u0431\u043E\u0441\u0442\u044C \u0438\u043B\u0438 \u0441\u0440\u044B\u0432 \u043A\u043E\u043D\u0442\u0440\u0430\u0442\u0430\u043A.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.8,
     matches: 0,
     yellows: 0,
@@ -7092,7 +7092,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "strict",
     styleDesc: "\u0421\u0442\u0440\u043E\u0433\u0438\u0439 \u0438 \u043F\u0435\u0434\u0430\u043D\u0442\u0438\u0447\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440. \u0411\u044B\u0441\u0442\u0440\u043E \u043F\u0440\u0435\u0441\u0435\u043A\u0430\u0435\u0442 \u043B\u044E\u0431\u044B\u0435 \u043F\u043E\u043F\u044B\u0442\u043A\u0438 \u0433\u0440\u0443\u0431\u043E\u0439 \u0438\u0433\u0440\u044B, \u0430\u043A\u0442\u0438\u0432\u043D\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0436\u0451\u043B\u0442\u044B\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u0443\u0436\u0435 \u0432 \u043F\u0435\u0440\u0432\u043E\u043C \u0442\u0430\u0439\u043C\u0435, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u0434\u0430\u0442\u044C \u0436\u0451\u0441\u0442\u043A\u0438\u0435 \u0440\u0430\u043C\u043A\u0438. \u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u0441\u043B\u0435\u0434\u0438\u0442 \u0437\u0430 \u0441\u043E\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435\u043C \u0434\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u0438 \u0441\u0442\u0435\u043D\u043A\u0438 \u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\u044E \u0432\u0432\u043E\u0434\u0430 \u043C\u044F\u0447\u0430.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.5,
     matches: 0,
     yellows: 0,
@@ -7108,7 +7108,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "strict",
     styleDesc: "\u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043A \u0434\u0435\u0442\u0430\u043B\u044F\u043C \u0430\u0440\u0431\u0438\u0442\u0440, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0442\u0435\u0440\u043F\u0435\u0442\u044C \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0441\u0438\u043C\u0443\u043B\u044F\u0446\u0438\u0439, \u043F\u0440\u043E\u0432\u043E\u043A\u0430\u0446\u0438\u0439 \u0438 \u0437\u0430\u0442\u044F\u0436\u0435\u043A \u0432\u0440\u0435\u043C\u0435\u043D\u0438. \u0421\u0432\u0438\u0441\u0442\u0438\u0442 \u0447\u0451\u0442\u043A\u043E \u0438 \u0433\u0440\u043E\u043C\u043A\u043E, \u043D\u0435 \u0431\u043E\u0438\u0442\u0441\u044F \u0434\u0430\u0432\u0430\u0442\u044C \u0432\u0442\u043E\u0440\u044B\u0435 \u0436\u0451\u043B\u0442\u044B\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u0437\u0430 \u043D\u0435\u0441\u043F\u043E\u0440\u0442\u0438\u0432\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435. \u0412 \u0435\u0434\u0438\u043D\u043E\u0431\u043E\u0440\u0441\u0442\u0432\u0430\u0445 \u043F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0441\u0440\u0435\u0434\u043D\u0435\u0439 \u043F\u043B\u0430\u043D\u043A\u0438 \u0444\u043E\u043B\u0430.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.5,
     matches: 0,
     yellows: 0,
@@ -7140,7 +7140,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "european",
     styleDesc: "\u0421\u0442\u0440\u0435\u043C\u0438\u0442\u0441\u044F \u043A \u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u043E\u0439 \u043C\u0430\u043D\u0435\u0440\u0435 \u0441\u0443\u0434\u0435\u0439\u0441\u0442\u0432\u0430: \u043C\u0438\u043D\u0438\u043C\u0443\u043C \u043B\u0438\u0448\u043D\u0438\u0445 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043E\u043A, \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0434\u0438\u043D\u0430\u043C\u0438\u043A\u0430, \u0434\u043E\u0432\u0435\u0440\u0438\u0435 \u043A \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u0430\u043C. \u041D\u0435 \u043B\u044E\u0431\u0438\u0442 \u0441\u0432\u0438\u0441\u0442\u0435\u0442\u044C \u043C\u0435\u043B\u043A\u0438\u0435 \u0442\u043E\u043B\u0447\u043A\u0438 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435 \u043F\u043E\u043B\u044F, \u043F\u043E\u043E\u0449\u0440\u044F\u044F \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u0438\u0437 \u043E\u0431\u043E\u0440\u043E\u043D\u044B \u0432 \u0430\u0442\u0430\u043A\u0443.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.4,
     matches: 0,
     yellows: 0,
@@ -7156,7 +7156,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "strict",
     styleDesc: "\u0421\u043A\u0440\u0443\u043F\u0443\u043B\u0451\u0437\u043D\u044B\u0439 \u0438 \u043E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0447\u0430\u0441\u0442\u043E \u043F\u043E\u043B\u0430\u0433\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u043F\u043E\u043C\u043E\u0449\u044C \u0412\u0410\u0420 \u0432 \u043F\u043E\u0433\u0440\u0430\u043D\u0438\u0447\u043D\u044B\u0445 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044F\u0445. \u0424\u0438\u043A\u0441\u0438\u0440\u0443\u0435\u0442 \u043C\u0435\u043B\u043A\u0438\u0435 \u0444\u043E\u043B\u044B \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u0432 \u0448\u0442\u0440\u0430\u0444\u043D\u043E\u0439, \u0438\u0437-\u0437\u0430 \u0447\u0435\u0433\u043E \u0432 \u0435\u0433\u043E \u043C\u0430\u0442\u0447\u0430\u0445 \u043D\u0435\u0440\u0435\u0434\u043A\u043E \u043D\u0430\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u0441\u044F \u043F\u0435\u043D\u0430\u043B\u044C\u0442\u0438. \u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0441\u0442\u0440\u043E\u0433\u043E\u0433\u043E \u0441\u043E\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u044F \u043F\u0440\u0430\u0432\u0438\u043B.",
-    leagues: ["rpl", "fnl", "cup"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.3,
     matches: 0,
     yellows: 0,
@@ -7172,7 +7172,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "liberal",
     styleDesc: "\u042D\u043D\u0435\u0440\u0433\u0438\u0447\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0449\u0438\u0439 \u0432\u044B\u0441\u043E\u043A\u0438\u0439 \u0442\u0435\u043C\u043F \u0438\u0433\u0440\u044B. \u0414\u0430\u0451\u0442 \u0431\u043E\u0440\u043E\u0442\u044C\u0441\u044F \u0432\u0432\u0435\u0440\u0445\u0443 \u0438 \u0432\u043D\u0438\u0437\u0443, \u043D\u0435 \u0440\u0435\u0430\u0433\u0438\u0440\u0443\u0435\u0442 \u043D\u0430 \u043A\u0440\u0438\u043A\u0438 \u0438\u0433\u0440\u043E\u043A\u043E\u0432 \u043F\u0440\u0438 \u043B\u0451\u0433\u043A\u0438\u0445 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u0430\u0445. \u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u043E \u0437\u0430 \u0441\u0440\u044B\u0432 \u0431\u044B\u0441\u0442\u0440\u044B\u0445 \u0430\u0442\u0430\u043A \u0438 \u043E\u0442\u043A\u0440\u043E\u0432\u0435\u043D\u043D\u0443\u044E \u0433\u0440\u0443\u0431\u043E\u0441\u0442\u044C.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.3,
     matches: 0,
     yellows: 0,
@@ -7204,7 +7204,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "balanced",
     styleDesc: "\u0412\u044B\u0441\u043E\u043A\u043E\u043A\u0432\u0430\u043B\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u0443\u044E\u0449\u0438\u0439\u0441\u044F \u043D\u0430 \u0440\u0430\u0431\u043E\u0442\u0435 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u043C \u0441\u0443\u0434\u044C\u0451\u0439 \u0438 \u0432\u0438\u0434\u0435\u043E\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u043E\u043C (\u0412\u0410\u0420/\u0410\u0412\u0410\u0420). \u0411\u0435\u0437\u0443\u043F\u0440\u0435\u0447\u043D\u043E \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u0438\u0440\u0443\u0435\u0442 \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0443\u044E \u0437\u043E\u043D\u0443, \u0437\u0430\u043C\u0435\u043D\u044B \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F, \u043E\u043F\u0435\u0440\u0430\u0442\u0438\u0432\u043D\u043E \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0433\u043B\u0430\u0432\u043D\u043E\u043C\u0443 \u0430\u0440\u0431\u0438\u0442\u0440\u0443 \u043F\u0440\u0438 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u0444\u043E\u043B\u0430\u0445.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.2,
     matches: 0,
     yellows: 0,
@@ -7220,7 +7220,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "strict",
     styleDesc: "\u0416\u0451\u0441\u0442\u043A\u0438\u0439 \u0432 \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u0445 \u0442\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u0444\u043E\u043B\u043E\u0432 \u0430\u0440\u0431\u0438\u0442\u0440. \u041C\u0433\u043D\u043E\u0432\u0435\u043D\u043D\u043E \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0436\u0451\u043B\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u043E\u0439 \u0437\u0430 \u043F\u0440\u0438\u0445\u0432\u0430\u0442\u044B \u0440\u0443\u043A\u0430\u043C\u0438 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435 \u043F\u043E\u043B\u044F \u0438 \u0441\u0440\u044B\u0432 \u043A\u043E\u043D\u0442\u0440\u0430\u0442\u0430\u043A. \u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u043E\u0442 \u0438\u0433\u0440\u043E\u043A\u043E\u0432 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0439 \u043A\u043E\u043D\u0446\u0435\u043D\u0442\u0440\u0430\u0446\u0438\u0438 \u0438 \u043D\u0435 \u043F\u0440\u043E\u0449\u0430\u0435\u0442 \u0433\u0440\u0443\u0431\u044B\u0445 \u043F\u043E\u0434\u043A\u0430\u0442\u043E\u0432.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7.1,
     matches: 0,
     yellows: 0,
@@ -7236,7 +7236,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "principled",
     styleDesc: "\u0425\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043D\u044B\u0439 \u0438 \u043F\u0440\u0438\u043D\u0446\u0438\u043F\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F. \u041D\u0435 \u043F\u043E\u0434\u0434\u0430\u0451\u0442\u0441\u044F \u0434\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0445\u043E\u0437\u044F\u0435\u0432 \u043F\u043E\u043B\u044F, \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u043E \u0441\u0442\u0440\u043E\u0433\u043E \u0441\u0443\u0434\u0438\u0442 \u043E\u0431\u0435 \u043A\u043E\u043C\u0430\u043D\u0434\u044B. \u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0435\u043D \u043A \u0431\u043E\u0440\u044C\u0431\u0435 \u043D\u0430 \xAB\u0432\u0442\u043E\u0440\u043E\u043C \u044D\u0442\u0430\u0436\u0435\xBB \u0438 \u043B\u043E\u043A\u0442\u044F\u043C \u043F\u0440\u0438 \u0432\u0435\u0440\u0445\u043E\u0432\u044B\u0445 \u0434\u0443\u044D\u043B\u044F\u0445.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 7,
     matches: 0,
     yellows: 0,
@@ -7252,7 +7252,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "liberal",
     styleDesc: "\u041C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u0441\u0442\u0430\u0440\u0430\u044E\u0449\u0438\u0439\u0441\u044F \u043D\u0435 \u043F\u0435\u0440\u0435\u0433\u0440\u0443\u0436\u0430\u0442\u044C \u0438\u0433\u0440\u0443 \u0441\u0432\u0438\u0441\u0442\u043A\u0430\u043C\u0438. \u0414\u0430\u0451\u0442 \u0431\u043E\u0440\u043E\u0442\u044C\u0441\u044F \u0432 \u0440\u0430\u043C\u043A\u0430\u0445 \u043F\u0440\u0430\u0432\u0438\u043B, \u0440\u0435\u0434\u043A\u043E \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442 \u043C\u0430\u0442\u0447 \u043F\u0440\u0438 \u043D\u0435\u0437\u043D\u0430\u0447\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u0430\u0445, \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u044F \u0443\u0441\u0442\u043D\u044B\u0435 \u0437\u0430\u043C\u0435\u0447\u0430\u043D\u0438\u044F.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.9,
     matches: 0,
     yellows: 0,
@@ -7268,7 +7268,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "balanced",
     styleDesc: "\u0410\u043A\u043A\u0443\u0440\u0430\u0442\u043D\u044B\u0439 \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440. \u041F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0442\u0440\u0430\u043A\u0442\u043E\u0432\u043A\u0438 \u043F\u0440\u0430\u0432\u0438\u043B, \u0440\u043E\u0432\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u043C\u0435\u0436\u0434\u0443 \u043E\u0431\u043E\u0438\u043C\u0438 \u0442\u0430\u0439\u043C\u0430\u043C\u0438, \u0441\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u0438\u0437\u0431\u0435\u0433\u0430\u0442\u044C \u043D\u0435\u043E\u043F\u0440\u0430\u0432\u0434\u0430\u043D\u043D\u044B\u0445 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0439.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.8,
     matches: 0,
     yellows: 0,
@@ -7284,7 +7284,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "balanced",
     styleDesc: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439 \u0430\u0440\u0431\u0438\u0442\u0440 \u044D\u043B\u0438\u0442\u043D\u043E\u0433\u043E \u0434\u0438\u0432\u0438\u0437\u0438\u043E\u043D\u0430, \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u0441\u0442\u0440\u043E\u0433\u043E \u043F\u043E \u043C\u0435\u0442\u043E\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u043C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C. \u0421\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0440\u0438\u0441\u043A\u043E\u0432\u0430\u0442\u044C, \u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0435\u0442 \u043E\u0447\u0435\u0432\u0438\u0434\u043D\u044B\u0435 \u0444\u043E\u043B\u044B \u0438 \u0432\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u0441\u043B\u0435\u0434\u0438\u0442 \u0437\u0430 \u0434\u0438\u0441\u0446\u0438\u043F\u043B\u0438\u043D\u043E\u0439.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.7,
     matches: 0,
     yellows: 0,
@@ -7300,7 +7300,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "liberal",
     styleDesc: "\u041C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440 \u0441 \u0432\u044B\u0441\u043E\u043A\u043E\u0439 \u043F\u043B\u0430\u043D\u043A\u043E\u0439 \u0444\u043E\u043B\u0430. \u0421\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0441\u0432\u0438\u0441\u0442\u0435\u0442\u044C \u043C\u0435\u043B\u043A\u0438\u0435 \u0441\u0442\u044B\u043A\u0438, \u0434\u0430\u0451\u0442 \u043A\u043E\u043C\u0430\u043D\u0434\u0430\u043C \u0438\u0433\u0440\u0430\u0442\u044C \u0432 \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u0432\u0435\u0440\u0442\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u0443\u0442\u0431\u043E\u043B.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.6,
     matches: 0,
     yellows: 0,
@@ -7316,7 +7316,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "balanced",
     styleDesc: "\u0421\u043F\u043E\u043A\u043E\u0439\u043D\u044B\u0439 \u043C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0449\u0438\u0439\u0441\u044F \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E\u0439 \u043F\u043B\u0430\u043D\u043A\u0438 \u0435\u0434\u0438\u043D\u043E\u0431\u043E\u0440\u0441\u0442\u0432. \u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0435\u043D \u043A \u0438\u0433\u0440\u0435 \u0432 \u0448\u0442\u0440\u0430\u0444\u043D\u043E\u0439 \u0438 \u0441\u043E\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u0430\u0432\u0438\u043B \u043F\u0440\u0438 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u0430\u0445.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.6,
     matches: 0,
     yellows: 0,
@@ -7332,7 +7332,7 @@ var DEFAULT_REFEREES = [
     varRole: "",
     style: "strict",
     styleDesc: "\u0421\u0442\u0440\u043E\u0433\u0438\u0439 \u043C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u043F\u0440\u0435\u0441\u0435\u043A\u0430\u0442\u044C \u0433\u0440\u0443\u0431\u043E\u0441\u0442\u044C \u0438 \u043D\u0435\u0441\u043F\u043E\u0440\u0442\u0438\u0432\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u0436\u0451\u043B\u0442\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430\u043C\u0438, \u0447\u0442\u043E\u0431\u044B \u043D\u0435 \u0443\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C \u043D\u0430\u0434 \u0438\u0433\u0440\u043E\u0439.",
-    leagues: ["rpl", "fnl", "cup", "friendly"],
+    leagues: ["rpl", "cup", "friendly"],
     rating: 6.5,
     matches: 0,
     yellows: 0,
@@ -7413,6 +7413,43 @@ function getFixtureTourKey(f) {
   }
   return `${s}:${f.comp}:${f.round || 1}`;
 }
+function isRefereeManagedComp(f) {
+  const c = String(f?.comp || "");
+  return c === "rpl" || c === "fnl" || c === "cup" || c === "supercup" || c === "playoff" || c === "playoff_rpl_fnl";
+}
+function fixtureSupportsVar(f) {
+  if (!f) return false;
+  const c = String(f.comp || "");
+  if (c === "rpl" || c === "supercup" || c === "playoff" || c === "playoff_rpl_fnl") return true;
+  if (c === "cup") {
+    const cp = f.cupPath || (Number(f.round) <= 6 ? "rpl_group" : "regions_qual");
+    if (cp === "regions_qual" || (!f.cupPath && !f.cupStage && f.qualRound)) return false;
+    return true;
+  }
+  return false;
+}
+function getFixtureRefereeScope(f) {
+  if (!f) return "any";
+  const c = String(f.comp || "");
+  if (c === "rpl" || c === "supercup" || c === "playoff" || c === "playoff_rpl_fnl") return "rpl";
+  if (c === "fnl") return "fnl";
+  if (c === "cup") {
+    const cp = f.cupPath || (Number(f.round) <= 6 ? "rpl_group" : "regions_qual");
+    const stg = String(f.cupStage || "").toLowerCase();
+    if (cp === "regions_qual" || cp === "regions_playoff" || stg.startsWith("regions_")) return "rpl_and_fnl";
+    return "rpl";
+  }
+  return "any";
+}
+function isRefereeEligibleForFixture(r, f) {
+  if (!r || !f) return false;
+  const scope = getFixtureRefereeScope(f);
+  const ls = Array.isArray(r.leagues) ? r.leagues.map((x) => String(x || "").toLowerCase()) : [];
+  if (scope === "rpl") return ls.includes("rpl");
+  if (scope === "fnl") return ls.includes("fnl");
+  if (scope === "rpl_and_fnl") return ls.includes("rpl") || ls.includes("fnl") || ls.includes("cup");
+  return true;
+}
 function getTeamPowerScore(tid) {
   const ps = (db?.players || []).filter((p) => p.teamId === tid);
   if (!ps.length) return 70;
@@ -7471,8 +7508,8 @@ function getRefereeEffectiveSkill(r) {
   return seedR;
 }
 function assignTourReferees(tourList, force = false) {
-  const validMatches = tourList.filter((f) => f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup");
-  const invalidMatches = tourList.filter((f) => f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup");
+  const validMatches = tourList.filter((f) => isRefereeManagedComp(f));
+  const invalidMatches = tourList.filter((f) => !isRefereeManagedComp(f));
   for (const f of invalidMatches) {
     if (f.manualReferees && !force) continue;
     delete f.refereeId;
@@ -7488,11 +7525,16 @@ function assignTourReferees(tourList, force = false) {
     if (f.status === "done" || f.status === "live") return true;
     if (force) return !!f.manualReferees && f.manualReferees === "keep";
     if (f.manualReferees) return true;
-    return !!(f.refereeId && f.refereeName && Array.isArray(f.assistants) && f.assistants.length >= 2 && f.reserveReferee && f.varReferee && f.avarReferee);
+    const needsVar = fixtureSupportsVar(f);
+    return !!(f.refereeId && f.refereeName && Array.isArray(f.assistants) && f.assistants.length >= 2 && f.reserveReferee && (!needsVar || (f.varReferee && f.avarReferee)));
   };
   const unlockedIds = new Set(validMatches.filter((f) => !isLocked(f)).map((f) => f.id));
   const usedHeadIds = /* @__PURE__ */ new Set();
   for (const f of validMatches) {
+    if (!isLocked(f) && !fixtureSupportsVar(f)) {
+      delete f.varReferee;
+      delete f.avarReferee;
+    }
     if (isLocked(f) && f.refereeId) usedHeadIds.add(f.refereeId);
   }
   const curSeason = validMatches[0].season || S();
@@ -7516,13 +7558,11 @@ function assignTourReferees(tourList, force = false) {
     refById.set(r.id, r);
     refByName.set(r.name, r);
   }
-  const compRoundPairs = /* @__PURE__ */ new Set();
-  const curTourKey = getFixtureTourKey(validMatches[0]);
   const prevCompRound = (validMatches[0].comp === "rpl" || validMatches[0].comp === "fnl") && Number(validMatches[0].round) > 1 ? `${curSeason}:${validMatches[0].comp}:${Number(validMatches[0].round) - 1}` : null;
   const prevTourHeadIds = /* @__PURE__ */ new Set();
   for (const fxItem of db.fixtures || []) {
     if ((fxItem.season || S()) !== curSeason) continue;
-    if (fxItem.comp !== "rpl" && fxItem.comp !== "fnl" && fxItem.comp !== "cup") continue;
+    if (!isRefereeManagedComp(fxItem)) continue;
     if (unlockedIds.has(fxItem.id)) continue;
     const isCounted = fxItem.status === "done" || fxItem.status === "live" || !!(fxItem.refereeId || fxItem.refereeName);
     if (!isCounted) continue;
@@ -7535,13 +7575,12 @@ function assignTourReferees(tourList, force = false) {
       }
       if (prevCompRound && getFixtureTourKey(fxItem) === prevCompRound) prevTourHeadIds.add(hr.id);
     }
-    if (fxItem.varReferee && varLoad[fxItem.varReferee] !== void 0) varLoad[fxItem.varReferee]++;
-    if (fxItem.avarReferee && varLoad[fxItem.avarReferee] !== void 0) varLoad[fxItem.avarReferee]++;
+    if (fixtureSupportsVar(fxItem)) {
+      if (fxItem.varReferee && varLoad[fxItem.varReferee] !== void 0) varLoad[fxItem.varReferee]++;
+      if (fxItem.avarReferee && varLoad[fxItem.avarReferee] !== void 0) varLoad[fxItem.avarReferee]++;
+    }
     if (fxItem.reserveReferee && resLoad[fxItem.reserveReferee] !== void 0) resLoad[fxItem.reserveReferee]++;
   }
-  const comp = validMatches[0].comp;
-  let eligible = db.referees.filter((r) => !r.leagues || r.leagues.includes(comp) || (comp === "fnl" && r.leagues.includes("rpl")));
-  if (!eligible.length) eligible = db.referees;
   const sortedMatches = [...validMatches].sort((a, b) => {
     const aDerby = db.derbies?.some((x) => x.a === a.home && x.b === a.away || x.a === a.away && x.b === a.home) ? 1 : 0;
     const bDerby = db.derbies?.some((x) => x.a === b.home && x.b === b.away || x.a === b.away && x.b === b.home) ? 1 : 0;
@@ -7551,6 +7590,15 @@ function assignTourReferees(tourList, force = false) {
   for (const f of sortedMatches) {
     if (isLocked(f)) continue;
     if (force) delete f.manualReferees;
+    const eligible = db.referees.filter((r) => isRefereeEligibleForFixture(r, f));
+    if (!eligible.length) {
+      delete f.refereeId;
+      delete f.refereeName;
+      delete f.reserveReferee;
+      delete f.varReferee;
+      delete f.avarReferee;
+      continue;
+    }
     let pool2 = eligible.filter((r) => !usedHeadIds.has(r.id));
     if (!pool2.length) pool2 = eligible;
     const headSpecialists = pool2.filter((r) => r.role !== "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F");
@@ -7601,8 +7649,6 @@ function assignTourReferees(tourList, force = false) {
     }
   }
   const allHeadNames = new Set(validMatches.map((f) => f.refereeName).filter(Boolean));
-  const nonHeadRefs = db.referees.filter((r) => !usedHeadIds.has(r.id) && !allHeadNames.has(r.name));
-  const nonHeadPool = nonHeadRefs.length ? nonHeadRefs : db.referees.filter((r) => !usedHeadIds.has(r.id));
   const asstPool = (db.assistants || []).length ? db.assistants : ASSISTANT_REFEREES.map((n, i) => ({ id: "asst_" + i, name: n }));
   const asstLoad = {};
   for (const fxItem of db.fixtures || []) {
@@ -7622,6 +7668,16 @@ function assignTourReferees(tourList, force = false) {
   const usedTourAssts = /* @__PURE__ */ new Set();
   for (const f of validMatches) {
     if (isLocked(f)) continue;
+    const eligibleForF = db.referees.filter((r) => isRefereeEligibleForFixture(r, f));
+    if (!eligibleForF.length) {
+      delete f.assistants;
+      delete f.reserveReferee;
+      delete f.varReferee;
+      delete f.avarReferee;
+      continue;
+    }
+    const nonHeadRefsForF = eligibleForF.filter((r) => !usedHeadIds.has(r.id) && !allHeadNames.has(r.name));
+    const nonHeadPool = nonHeadRefsForF.length ? nonHeadRefsForF : eligibleForF.filter((r) => !usedHeadIds.has(r.id));
     let availAssts = asstPool.filter((a) => !usedTourAssts.has(a.name));
     if (availAssts.length < 2) availAssts = asstPool;
     const a1Obj = pickLeastLoaded(availAssts, asstLoad);
@@ -7637,19 +7693,27 @@ function assignTourReferees(tourList, force = false) {
     const resList = nonHeadPool.filter((r) => r.id !== f.refereeId);
     const resSpecialists = resList.filter((r) => r.role === "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F");
     const chosenRes = (resSpecialists.length && Math.random() < 0.45 ? pickLeastLoaded(resSpecialists, resLoad) : pickLeastLoaded(resList, resLoad));
-    f.reserveReferee = chosenRes?.name || "\u0412\u0435\u0440\u0430 \u041E\u043F\u0435\u0439\u043A\u0438\u043D\u0430";
-    let varList = nonHeadPool.filter((r) => r.varRole && r.id !== f.refereeId && r.name !== f.reserveReferee);
-    if (!varList.length) varList = nonHeadPool.filter((r) => r.name !== f.reserveReferee);
-    const chosenVar = pickLeastLoaded(varList, varLoad);
-    f.varReferee = chosenVar?.name || "\u0421\u0435\u0440\u0433\u0435\u0439 \u041A\u0430\u0440\u0430\u0441\u0435\u0432";
-    let avarList = nonHeadPool.filter((r) => r.id !== f.refereeId && r.name !== f.reserveReferee && r.name !== f.varReferee);
-    if (!avarList.length) avarList = nonHeadPool;
-    const chosenAvar = pickLeastLoaded(avarList, varLoad);
-    f.avarReferee = chosenAvar?.name || "\u041F\u0430\u0432\u0435\u043B \u041A\u0443\u043A\u0443\u044F\u043D";
+    if (chosenRes?.name) f.reserveReferee = chosenRes.name;
+    else delete f.reserveReferee;
+    if (fixtureSupportsVar(f)) {
+      let varList = nonHeadPool.filter((r) => r.varRole && r.id !== f.refereeId && r.name !== f.reserveReferee);
+      if (!varList.length) varList = nonHeadPool.filter((r) => r.id !== f.refereeId && r.name !== f.reserveReferee);
+      const chosenVar = pickLeastLoaded(varList, varLoad);
+      if (chosenVar?.name) f.varReferee = chosenVar.name;
+      else delete f.varReferee;
+      let avarList = nonHeadPool.filter((r) => r.id !== f.refereeId && r.name !== f.reserveReferee && r.name !== f.varReferee);
+      if (!avarList.length) avarList = nonHeadPool.filter((r) => r.id !== f.refereeId);
+      const chosenAvar = pickLeastLoaded(avarList, varLoad);
+      if (chosenAvar?.name) f.avarReferee = chosenAvar.name;
+      else delete f.avarReferee;
+    } else {
+      delete f.varReferee;
+      delete f.avarReferee;
+    }
   }
 }
 function assignReferee(f, siblingList) {
-  if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup") {
+  if (!isRefereeManagedComp(f)) {
     delete f.refereeId;
     delete f.refereeName;
     delete f.assistants;
@@ -7824,20 +7888,22 @@ function reconcileRefereeStats() {
       headRef.ratingHistory.push(entry);
     }
 
-    if (f.varReferee) {
-      const vr = refByName.get(String(f.varReferee).trim().toLowerCase());
-      if (vr && vr.id !== headRef?.id) {
-        vr.varOnlyMatches++;
-        vr.varMatches++;
-        vr.totalMatches++;
+    if (fixtureSupportsVar(f)) {
+      if (f.varReferee) {
+        const vr = refByName.get(String(f.varReferee).trim().toLowerCase());
+        if (vr && vr.id !== headRef?.id) {
+          vr.varOnlyMatches++;
+          vr.varMatches++;
+          vr.totalMatches++;
+        }
       }
-    }
-    if (f.avarReferee) {
-      const avr = refByName.get(String(f.avarReferee).trim().toLowerCase());
-      if (avr && avr.id !== headRef?.id && avr.name !== f.varReferee) {
-        avr.avarMatches++;
-        avr.varMatches++;
-        avr.totalMatches++;
+      if (f.avarReferee) {
+        const avr = refByName.get(String(f.avarReferee).trim().toLowerCase());
+        if (avr && avr.id !== headRef?.id && avr.name !== f.varReferee) {
+          avr.avarMatches++;
+          avr.varMatches++;
+          avr.totalMatches++;
+        }
       }
     }
     if (f.reserveReferee) {
@@ -8040,25 +8106,56 @@ function load() {
       assignFixtureWeather(f);
     }
   }
-  for (const r of db.referees || []) {
-    if (Array.isArray(r.leagues) && r.leagues.includes("rpl") && !r.leagues.includes("fnl")) {
-      r.leagues.push("fnl");
+  if (!db.settings.fnlRefPoolSeparated) {
+    const defaultRefIds = new Set(DEFAULT_REFEREES.map((x) => x.id));
+    for (const r of db.referees || []) {
+      if (defaultRefIds.has(r.id) && Array.isArray(r.leagues)) {
+        r.leagues = r.leagues.filter((l) => l !== "fnl");
+        if (!r.leagues.length) r.leagues = ["rpl", "cup", "friendly"];
+      }
     }
+    for (const f of db.fixtures || []) {
+      if (f.comp === "fnl" && f.status !== "done" && f.status !== "live" && !f.manualReferees) {
+        delete f.refereeId;
+        delete f.refereeName;
+        delete f.assistants;
+        delete f.reserveReferee;
+        delete f.varReferee;
+        delete f.avarReferee;
+      }
+    }
+    db.settings.fnlRefPoolSeparated = true;
   }
+  const refByIdStartup = new Map((db.referees || []).map((r) => [r.id, r]));
+  const refByNameStartup = new Map((db.referees || []).map((r) => [r.name, r]));
   for (const f of db.fixtures) {
-    if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup" && !f.manualReferees) {
+    if (!isRefereeManagedComp(f) && !f.manualReferees) {
       delete f.refereeId;
       delete f.refereeName;
       delete f.assistants;
       delete f.reserveReferee;
       delete f.varReferee;
       delete f.avarReferee;
+    } else if (f.status !== "done" && f.status !== "live" && !f.manualReferees) {
+      if (!fixtureSupportsVar(f)) {
+        delete f.varReferee;
+        delete f.avarReferee;
+      }
+      if (f.refereeId || f.refereeName) {
+        const assignedRef = (f.refereeId ? refByIdStartup.get(f.refereeId) : null) || (f.refereeName ? refByNameStartup.get(f.refereeName) : null);
+        if (!assignedRef || !isRefereeEligibleForFixture(assignedRef, f)) {
+          delete f.refereeId;
+          delete f.refereeName;
+          delete f.assistants;
+          delete f.reserveReferee;
+        }
+      }
     }
   }
   reconcileRefereeStats();
   const tours: Record<string, any[]> = {};
   for (const f of db.fixtures) {
-    if (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup") {
+    if (isRefereeManagedComp(f)) {
       const k = getFixtureTourKey(f);
       tours[k] = tours[k] || [];
       tours[k].push(f);
@@ -8069,7 +8166,7 @@ function load() {
     const bd = String(b[0]?.date || "9999-99-99");
     return ad.localeCompare(bd) || (Number(a[0]?.round || 0) - Number(b[0]?.round || 0));
   });
-  const schedRplCup = db.fixtures.filter((f) => (f.season || S()) === S() && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup") && f.status === "scheduled" && !f.manualReferees);
+  const schedRplCup = db.fixtures.filter((f) => (f.season || S()) === S() && isRefereeManagedComp(f) && f.status === "scheduled" && !f.manualReferees);
   const distinctScheduledHeads = new Set(schedRplCup.map((f) => f.refereeId).filter(Boolean));
   const headCapableCount = (db.referees || []).filter((r) => r.role !== "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F").length;
   const needsRotationRebalance = schedRplCup.length >= 16 && headCapableCount >= 18 && distinctScheduledHeads.size > 0 && distinctScheduledHeads.size <= 10;
@@ -12262,7 +12359,9 @@ async function buildCtx(f) {
       away: rA ? formatStandingRow(rA, lpA.name) : `${lpA.name} (${lpA.level}) \u2014 \u043D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0437\u043E\u043D\u0430`
     };
   }
-  if (!f.refereeName && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
+  const supportsVar = fixtureSupportsVar(f);
+  ctx.supportsVar = supportsVar;
+  if (!f.refereeName && isRefereeManagedComp(f)) {
     assignReferee(f);
   }
   const headRef = db.referees?.find((r) => r.id === f.refereeId || r.name === f.refereeName) || (f.refereeName ? {
@@ -12275,10 +12374,12 @@ async function buildCtx(f) {
     reds: 0,
     penalties: 0
   } : null);
-  const varRef = db.referees?.find((r) => r.name === f.varReferee) || (f.varReferee ? {
-    name: f.varReferee,
-    bio: `\u0410\u0440\u0431\u0438\u0442\u0440 VAR \u2014 ${f.varReferee}`
-  } : null);
+  const varName = supportsVar ? (f.varReferee || "\u0421\u0435\u0440\u0433\u0435\u0439 \u041A\u0430\u0440\u0430\u0441\u0435\u0432") : null;
+  const avarName = supportsVar ? (f.avarReferee || "\u041F\u0430\u0432\u0435\u043B \u041A\u0443\u043A\u0443\u044F\u043D") : null;
+  const varRef = supportsVar ? (db.referees?.find((r) => r.name === varName) || (varName ? {
+    name: varName,
+    bio: `\u0410\u0440\u0431\u0438\u0442\u0440 VAR \u2014 ${varName}`
+  } : null)) : null;
   const assts = Array.isArray(f.assistants) && f.assistants.length >= 2 ? f.assistants : ["\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u041C\u043E\u0441\u044F\u043A\u0438\u043D", "\u0412\u0430\u043B\u0435\u043D\u0442\u0438\u043D \u041C\u0443\u0440\u0430\u0448\u043E\u0432"];
   ctx.refereeCrew = {
     head: headRef,
@@ -12286,9 +12387,9 @@ async function buildCtx(f) {
     asst1: assts[0],
     asst2: assts[1],
     fourth: f.reserveReferee || "\u0412\u0435\u0440\u0430 \u041E\u043F\u0435\u0439\u043A\u0438\u043D\u0430",
-    var: f.varReferee || ((f.comp === "rpl" || f.comp === "fnl") ? "\u0421\u0435\u0440\u0433\u0435\u0439 \u041A\u0430\u0440\u0430\u0441\u0435\u0432" : null),
+    var: varName,
     varProfile: varRef,
-    avar: f.avarReferee || ((f.comp === "rpl" || f.comp === "fnl") ? "\u041F\u0430\u0432\u0435\u043B \u041A\u0443\u043A\u0443\u044F\u043D" : null)
+    avar: avarName
   };
   const isDerbyBool = !!(dv && !dv.principled);
   const isRivalryBool = !!(dv && dv.principled);
@@ -12402,20 +12503,20 @@ function buildUser(ctx, a, b, st, issues, mode = "full") {
     const staffNote = ctx.staff?.[s] && ctx.staff[s] !== "\u043D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445 \u043E \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u043E\u043C \u0448\u0442\u0430\u0431\u0435" ? ` \u0422\u0440\u0435\u043D\u0435\u0440\u0441\u043A\u0438\u0439 \u0448\u0442\u0430\u0431: ${ctx.staff[s]}.` : "";
     return `${c.coach.name} (${c.coach.nationality || "\u0420\u043E\u0441\u0441\u0438\u044F"}, ${c.coach.age || 45} \u043B\u0435\u0442, \u0444\u0438\u043B\u043E\u0441\u043E\u0444\u0438\u044F: ${c.coach.styleTitle || c.coach.style}). \u0425\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u043D\u0430 \u0431\u0440\u043E\u0432\u043A\u0435: ${c.coach.temperament || "\u0443\u0440\u0430\u0432\u043D\u043E\u0432\u0435\u0448\u0435\u043D\u043D\u044B\u0439"}. \u041B\u044E\u0431\u0438\u043C\u0430\u044F \u0441\u0445\u0435\u043C\u0430: ${c.coach.favoriteFormation || "4-3-3"}. \u0426\u0438\u0442\u0430\u0442\u0430: ${c.coach.quote || "\xAB\u0418\u0433\u0440\u0430\u0442\u044C \u043D\u0430 \u043F\u043E\u0431\u0435\u0434\u0443\xBB"}.${staffNote}`;
   };
+  const supportsVar = ctx.supportsVar !== undefined ? !!ctx.supportsVar : !!ctx.refereeCrew?.var;
   const refInfo = () => {
     const rc = ctx.refereeCrew;
-    if (!rc || !rc.head) return "\u0421\u0443\u0434\u0435\u0439\u0441\u043A\u0430\u044F \u0431\u0440\u0438\u0433\u0430\u0434\u0430: \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043D\u0430 \u043C\u0430\u0442\u0447 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E\u0435.";
+    const varLine = supportsVar && rc?.var
+      ? `\n  Видеоассистенты (VAR): Главный ВАР — ${rc.var}, АВАР — ${rc.avar || "ассистент ВАР"}.`
+      : `\n  Система VAR (видеоповторы) на этом матче НЕ используется! Все решения принимаются главным судьёй и ассистентами на поле в реальном времени — не создавай события type="var" и не упоминай ВАР/видеоповторы/монитор.`;
+    if (!rc || !rc.head) return `\u0421\u0443\u0434\u0435\u0439\u0441\u043A\u0430\u044F \u0431\u0440\u0438\u0433\u0430\u0434\u0430: \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043D\u0430 \u043C\u0430\u0442\u0447 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E\u0435.${varLine}`;
     const h = rc.head;
     const refDispRating = Number(h.rating || 0) > 0 ? `${Number(h.rating).toFixed(2)}/10 (ср. в сезоне)` : `${getRefereeSeedRating(h).toFixed(1)}/10 (уровень арбитра, дебют в сезоне)`;
     let s = `\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F: ${h.name} (${h.city || "\u0420\u0424"}, ${refDispRating}).${h.bio ? `\n  Портрет арбитра: ${h.bio}` : ""} \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430: ${h.matches || 0} \u043C\u0430\u0442\u0447\u0435\u0439 \u0433\u043B\u0430\u0432\u043D\u044B\u043C, ${h.yellows || 0} \u0416\u041A, ${h.reds || 0} \u041A\u041A, ${h.penalties || 0} \u043F\u0435\u043D\u0430\u043B\u044C\u0442\u0438.`;
     s += `
   \u041F\u043E\u043C\u043E\u0449\u043D\u0438\u043A\u0438 \u043D\u0430 \u043B\u0438\u043D\u0438\u044F\u0445: 1-\u0439 \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442 \u2014 ${rc.asst1}, 2-\u0439 \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442 \u2014 ${rc.asst2}.`;
     s += `
-  \u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440: ${rc.fourth}.`;
-    if (rc.var) {
-      s += `
-  \u0412\u0438\u0434\u0435\u043E\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u044B (VAR): \u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0412\u0410\u0420 \u2014 ${rc.var}, \u0410\u0412\u0410\u0420 \u2014 ${rc.avar || "\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442 \u0412\u0410\u0420"}.`;
-    }
+  \u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440: ${rc.fourth}.${varLine}`;
     return s;
   };
   let u = `\u2550\u2550\u2550 \u041C\u0410\u0422\u0427: ${H}${ctx.sides.home?.leagueName ? ` [${ctx.sides.home.leagueName}]` : ""} \u2014 ${A}${ctx.sides.away?.leagueName ? ` [${ctx.sides.away.leagueName}]` : ""} | ${ctx.comp}, ${ctx.roundLabel} | ${ctx.date} ${ctx.time} | \u0421\u0442\u0430\u0434\u0438\u043E\u043D: ${ctx.stadium}${ctx.neutralField ? " [\u041D\u0415\u0419\u0422\u0420\u0410\u041B\u042C\u041D\u041E\u0415 \u041F\u041E\u041B\u0415 \u2014 \u0424\u0418\u041D\u0410\u041B]" : ""} \u2550\u2550\u2550
@@ -13100,12 +13201,21 @@ function normalizeEvents(raw, a, b, ctx, prev, minEv = 3, opts?: { strictLegionS
       }
     }
     const evText = String(e.text || "").slice(0, 500);
+    const supportsVar = ctx?.supportsVar !== false;
     let disallowedGoal = false;
     if ((type === "goal" || type === "own_goal") && isDisallowedGoalText(evText)) {
-      type = /вар|var|монитор|видео/i.test(evText) ? "var" : /офсайд|вне\s+игры/i.test(evText) ? "offside" : "highlight";
+      type = (supportsVar && /вар|var|монитор|видео/i.test(evText)) ? "var" : /офсайд|вне\s+игры/i.test(evText) ? "offside" : "highlight";
       disallowedGoal = true;
     } else if (["var", "offside", "ref_error", "highlight"].includes(type) && isDisallowedGoalText(evText)) {
       disallowedGoal = true;
+    }
+    if (!supportsVar && type === "var") {
+      if (disallowedGoal || /офсайд|вне\s+игры/i.test(evText)) {
+        type = "offside";
+        disallowedGoal = true;
+      } else {
+        continue;
+      }
     }
     const actor = type === "sub" || type === "save" ? null : pids[0];
     if (actor && off.has(norm(ctx.names[actor])) && !["yellow", "red", "injury", "foul"].includes(type) && !NONACT_TYPES.has(type)) {
@@ -13354,7 +13464,7 @@ function normalizeEvents(raw, a, b, ctx, prev, minEv = 3, opts?: { strictLegionS
         cur.disallowedGoal = true;
         nxt.disallowedGoal = true;
         if (!/отмен|не\s+засчит|провер/i.test(cur.text)) {
-          cur.text = `${cur.text} (взятие ворот проверяется арбитрами)`;
+          cur.text = `${cur.text} (${ctx?.supportsVar !== false ? "взятие ворот проверяется арбитрами" : "боковой арбитр поднимает флажок"})`;
         }
         break;
       }
@@ -13409,7 +13519,7 @@ function normalizeEvents(raw, a, b, ctx, prev, minEv = 3, opts?: { strictLegionS
   if (probs.length > 3) throw new Error([...new Set(probs)].slice(0, 6).join("; "));
   if (!out.length && minEv > 0) throw new Error("\u043D\u0435\u0442 \u0432\u0430\u043B\u0438\u0434\u043D\u044B\u0445 \u0441\u043E\u0431\u044B\u0442\u0438\u0439");
   // Enforce realistic match-clock waiting time for ongoing VAR checks (slow & tense, especially complex checks)
-  if (minEv > 0 && out.length > 1) {
+  if (ctx?.supportsVar !== false && minEv > 0 && out.length > 1) {
     const maxAllowedMin = (b === 45 || b >= 90) ? b + 9 : b + 2;
     const maxAllowedSec = maxAllowedMin * 60 + 50;
     for (let i = 0; i < out.length - 1; i++) {
@@ -13668,54 +13778,79 @@ function fakePeriod(a, b, ctx, prev) {
       const attN = ctx.names[att];
       const defN = ctx.names[def];
       const refN = ctx.refereeCrew?.head?.name || "Арбитр";
-      const varN = ctx.refereeCrew?.var || "видеоассистент";
       const spA = leadShort || "Комментатор";
       const spB = coShort || leadShort || "Комментатор";
-      const varKind = R();
-      if (varKind < 0.28) {
-        // Offside / buildup review — varied scenarios & commentator opinion can differ
-        if (R() < 0.5) {
-          push(m, 15, s, "highlight", [att], `${attN} вколачивает мяч под перекладину, но флажок не поднят — при этом защитники ${ctx.sides[o].name} сразу машут в сторону офсайда!`);
-          push(m, 32, "none", "var", [att], `${refN} тормозит возобновление игры: ${varN} перепроверяет момент передачи в глубину и пассивное положение на линии вратарской.`);
-          push(m + 1, 20, "none", "commentator_intro", [], `${spB}: «Слушайте, по первому повтору мне кажется, ${attN} удержался за спиной защитника и гол чистый — хотя с боковой камеры всё очень на тоненького».`, { varPause: true });
-          push(m + 2, 10, o, "offside", [att], `ГОЛ ОТМЕНЁН! ВАР фиксирует миллиметровый выход корпуса ${attN} за линию — ${spB} в эфире: «Вот те раз, в динамике показалось иначе, но стоп-кадр не обманешь». Счёт остаётся ${score[0]}:${score[1]}.`, { disallowedGoal: true });
+      if (ctx?.supportsVar === false) {
+        const noVarKind = R();
+        if (noVarKind < 0.45) {
+          push(m, 15, s, "highlight", [att], `${attN} вколачивает мяч в сетку, но тут же поднимается флажок лайнсмена на ближней бровке!`);
+          push(m + 1, 5, o, "offside", [att], `ГОЛ НЕ ЗАСЧИТАН! Помощник арбитра сразу фиксирует офсайд у ${attN}, а ${refN} указывает на свободный удар. Счёт остаётся ${score[0]}:${score[1]}.`, { disallowedGoal: true });
+          m += 1;
+        } else if (noVarKind < 0.78) {
+          const penTaker = onPitchTaker("penalty") || att;
+          const gk = Q.find((p) => ctx.pos[p] === "ВР") || null;
+          push(m, 14, o, "foul", [def, att], `${defN} сбивает ${attN} в штрафной площади — ${refN} находился рядом и без колебаний указывает на точку!`);
+          push(m + 1, 20, s, "penalty", [penTaker], `ПЕНАЛЬТИ в ворота ${ctx.sides[o].name}! ${spA}: «Сразу увидел фол арбитр и взял решение на себя».`);
+          if (R() < 0.76) {
+            push(m + 2, 5, s, "goal", [penTaker], `ГОЛ! ${ctx.names[penTaker]} уверенно реализует 11-метровый!`);
+          } else if (gk) {
+            push(m + 2, 5, o, "save", [gk, penTaker], `${ctx.names[gk]} угадывает направление и спасает ворота!`);
+          } else {
+            push(m + 2, 5, s, "miss", [penTaker], `${ctx.names[penTaker]} бьёт с точки мимо створа!`);
+          }
           m += 2;
         } else {
-          push(m, 15, s, "highlight", [att, def], `${attN} отправляет мяч в сетку после скидки, но игроки ${ctx.sides[o].name} спорят о перекрытии обзора вратарю!`);
-          push(m, 30, "none", "var", [att], `Пауза перед центром поля: видеоассистенты проверяют, мешал ли партнёр ${attN} из офсайда голкиперу увидеть момент удара.`);
-          push(m + 1, 18, "none", "commentator_intro", [], `${spA}: «На мой вкус, игрок в центре вратарской перекрывал угол обзора — скорее всего, взятие ворот отменят».`, { varPause: true });
-          push(m + 2, 12, s, "goal", [att], `ГОЛ ЗАСЧИТАН! ${refN} убеждается, что вратарь видел траекторию с самого начала — ${spA}: «Признаю, перестраховался я в прогнозе, здесь всё по делу!»`);
-          m += 2;
+          push(m, 16, s, "highlight", [att, def], `${attN} падает в штрафной ${ctx.sides[o].name} после стыка с ${defN} — ${refN} разводит руками и призывает продолжать игру!`);
+          push(m, 35, "none", "tactical_note", [], `${spB}: «Очень пограничный эпизод, но в этом турнире без ВАР всё решает свисток арбитра в поле — игра продолжается».`);
         }
-      } else if (varKind < 0.52) {
-        // Penalty overturn (no foul / rebound off thigh into arm)
-        push(m, 14, s, "highlight", [att, def], `${attN} оказывается на газоне в штрафной ${ctx.sides[o].name} в плотной дуэли с ${defN} — свисток молчит, но трибуны требуют повтора!`);
-        push(m, 34, "none", "var", [att, def], `${refN} бежит к экрану у бровки оценить момент: мяч чиркнул по отставленной ноге или попал в прижатую руку?`);
-        push(m + 1, 22, "none", "commentator_intro", [], `${spA}: «С крупного плана я бы ставил пенальти — ${defN} оставлял колено на пути форварда и явно перекрыл движение!»`, { varPause: true });
-        push(m + 2, 15, "none", "var", [def], `Пенальти НЕ назначен: у монитора ${refN} увидел, что ${defN} сначала задел мяч, а касание было уже по инерции — ${spA}: «Ошибся я в первом впечатлении, повтор из-за ворот всё поменял!»`);
-        m += 2;
-      } else if (varKind < 0.78) {
-        // Penalty awarded + kick
-        push(m, 12, s, "highlight", [att, def], `Прострел в штрафную ${ctx.sides[o].name} прерывается в жёстком подкате ${defN} против ${attN} — игроки ${ctx.sides[s].name} хватаются за голову!`);
-        push(m, 35, "none", "var", [att, def], `Игру останавливают ради просмотра у бокового экрана: проверяется дистанция до руки и движение корпуса ${defN}.`);
-        push(m + 1, 20, "none", "commentator_intro", [], `${spB}: «Дистанция была минимальной, рука вроде бы шла к корпусу — мне кажется, арбитр пожалеет обороняющихся и оставит игру без точки».`, { varPause: true });
-        const penTaker = onPitchTaker("penalty") || att;
-        push(m + 2, 35, s, "penalty", [penTaker], `После детального просмотра назначен ПЕНАЛЬТИ в ворота ${ctx.sides[o].name}! ${spB}: «Судья посчитал иначе — рука увеличила площадь тела, мой прогноз мимо!»`);
-        const gk = Q.find((p) => ctx.pos[p] === "ВР") || null;
-        if (R() < 0.76) {
-          push(m + 3, 5, s, "goal", [penTaker], `ГОЛ! ${ctx.names[penTaker]} хладнокровно реализует пенальти!`);
-        } else if (gk) {
-          push(m + 3, 5, o, "save", [gk, penTaker], `${ctx.names[gk]} читает угол и тащит пенальти!`);
-        } else {
-          push(m + 3, 5, s, "miss", [penTaker], `${ctx.names[penTaker]} бьёт с точки выше перекладины!`);
-        }
-        m += 3;
       } else {
-        // Goal confirmed after quick check on earlier phase / shoulder vs hand
-        push(m, 18, s, "shot", [att], `Резкий удар ${attN} низом из-под защитника!`);
-        push(m, 22, s, "highlight", [att], `Мяч в воротах, но гости требуют проверить обработку мяча ${attN} в начале атаки — было касание плечом или выше допустимой зоны?`);
-        push(m + 1, 5, s, "goal", [att], `ГОЛ ЗАСЧИТАН! Повтор с лицевой показал чистый приём на границе плеча и груди — быстрое подтверждение ВАР!`);
-        m += 1;
+        const varN = ctx.refereeCrew?.var || "видеоассистент";
+        const varKind = R();
+        if (varKind < 0.28) {
+          // Offside / buildup review — varied scenarios & commentator opinion can differ
+          if (R() < 0.5) {
+            push(m, 15, s, "highlight", [att], `${attN} вколачивает мяч под перекладину, но флажок не поднят — при этом защитники ${ctx.sides[o].name} сразу машут в сторону офсайда!`);
+            push(m, 32, "none", "var", [att], `${refN} тормозит возобновление игры: ${varN} перепроверяет момент передачи в глубину и пассивное положение на линии вратарской.`);
+            push(m + 1, 20, "none", "commentator_intro", [], `${spB}: «Слушайте, по первому повтору мне кажется, ${attN} удержался за спиной защитника и гол чистый — хотя с боковой камеры всё очень на тоненького».`, { varPause: true });
+            push(m + 2, 10, o, "offside", [att], `ГОЛ ОТМЕНЁН! ВАР фиксирует миллиметровый выход корпуса ${attN} за линию — ${spB} в эфире: «Вот те раз, в динамике показалось иначе, но стоп-кадр не обманешь». Счёт остаётся ${score[0]}:${score[1]}.`, { disallowedGoal: true });
+            m += 2;
+          } else {
+            push(m, 15, s, "highlight", [att, def], `${attN} отправляет мяч в сетку после скидки, но игроки ${ctx.sides[o].name} спорят о перекрытии обзора вратарю!`);
+            push(m, 30, "none", "var", [att], `Пауза перед центром поля: видеоассистенты проверяют, мешал ли партнёр ${attN} из офсайда голкиперу увидеть момент удара.`);
+            push(m + 1, 18, "none", "commentator_intro", [], `${spA}: «На мой вкус, игрок в центре вратарской перекрывал угол обзора — скорее всего, взятие ворот отменят».`, { varPause: true });
+            push(m + 2, 12, s, "goal", [att], `ГОЛ ЗАСЧИТАН! ${refN} убеждается, что вратарь видел траекторию с самого начала — ${spA}: «Признаю, перестраховался я в прогнозе, здесь всё по делу!»`);
+            m += 2;
+          }
+        } else if (varKind < 0.52) {
+          // Penalty overturn (no foul / rebound off thigh into arm)
+          push(m, 14, s, "highlight", [att, def], `${attN} оказывается на газоне в штрафной ${ctx.sides[o].name} в плотной дуэли с ${defN} — свисток молчит, но трибуны требуют повтора!`);
+          push(m, 34, "none", "var", [att, def], `${refN} бежит к экрану у бровки оценить момент: мяч чиркнул по отставленной ноге или попал в прижатую руку?`);
+          push(m + 1, 22, "none", "commentator_intro", [], `${spA}: «С крупного плана я бы ставил пенальти — ${defN} оставлял колено на пути форварда и явно перекрыл движение!»`, { varPause: true });
+          push(m + 2, 15, "none", "var", [def], `Пенальти НЕ назначен: у монитора ${refN} увидел, что ${defN} сначала задел мяч, а касание было уже по инерции — ${spA}: «Ошибся я в первом впечатлении, повтор из-за ворот всё поменял!»`);
+          m += 2;
+        } else if (varKind < 0.78) {
+          // Penalty awarded + kick
+          push(m, 12, s, "highlight", [att, def], `Прострел в штрафную ${ctx.sides[o].name} прерывается в жёстком подкате ${defN} против ${attN} — игроки ${ctx.sides[s].name} хватаются за голову!`);
+          push(m, 35, "none", "var", [att, def], `Игру останавливают ради просмотра у бокового экрана: проверяется дистанция до руки и движение корпуса ${defN}.`);
+          push(m + 1, 20, "none", "commentator_intro", [], `${spB}: «Дистанция была минимальной, рука вроде бы шла к корпусу — мне кажется, арбитр пожалеет обороняющихся и оставит игру без точки».`, { varPause: true });
+          const penTaker = onPitchTaker("penalty") || att;
+          push(m + 2, 35, s, "penalty", [penTaker], `После детального просмотра назначен ПЕНАЛЬТИ в ворота ${ctx.sides[o].name}! ${spB}: «Судья посчитал иначе — рука увеличила площадь тела, мой прогноз мимо!»`);
+          const gk = Q.find((p) => ctx.pos[p] === "ВР") || null;
+          if (R() < 0.76) {
+            push(m + 3, 5, s, "goal", [penTaker], `ГОЛ! ${ctx.names[penTaker]} хладнокровно реализует пенальти!`);
+          } else if (gk) {
+            push(m + 3, 5, o, "save", [gk, penTaker], `${ctx.names[gk]} читает угол и тащит пенальти!`);
+          } else {
+            push(m + 3, 5, s, "miss", [penTaker], `${ctx.names[penTaker]} бьёт с точки выше перекладины!`);
+          }
+          m += 3;
+        } else {
+          // Goal confirmed after quick check on earlier phase / shoulder vs hand
+          push(m, 18, s, "shot", [att], `Резкий удар ${attN} низом из-под защитника!`);
+          push(m, 22, s, "highlight", [att], `Мяч в воротах, но гости требуют проверить обработку мяча ${attN} в начале атаки — было касание плечом или выше допустимой зоны?`);
+          push(m + 1, 5, s, "goal", [att], `ГОЛ ЗАСЧИТАН! Повтор с лицевой показал чистый приём на границе плеча и груди — быстрое подтверждение ВАР!`);
+          m += 1;
+        }
       }
     }
   }
@@ -18788,12 +18923,14 @@ var pubFx = (f) => {
     full: f.status === "live" || f.status === "done" ? !!f.st || f.status === "live" : fullSim(f),
     derby: !!db.derbies.find((d) => !d.principled && (d.a === f.home && d.b === f.away || d.a === f.away && d.b === f.home)),
     rivalry: !!db.derbies.find((d) => d.principled && (d.a === f.home && d.b === f.away || d.a === f.away && d.b === f.home)),
-    refereeId: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeId || null : null,
-    refereeName: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeName || null : null,
-    assistants: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? (Array.isArray(f.assistants) ? f.assistants : []) : [],
-    reserveReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.reserveReferee || null : null,
-    varReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.varReferee || null : null,
-    avarReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.avarReferee || null : null,
+    supportsVar: fixtureSupportsVar(f),
+    refereeScope: getFixtureRefereeScope(f),
+    refereeId: (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeId || null : null,
+    refereeName: (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeName || null : null,
+    assistants: (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? (Array.isArray(f.assistants) ? f.assistants : []) : [],
+    reserveReferee: (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? f.reserveReferee || null : null,
+    varReferee: (fixtureSupportsVar(f) || f.manualReferees) && (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? f.varReferee || null : null,
+    avarReferee: (fixtureSupportsVar(f) || f.manualReferees) && (isRefereeManagedComp(f) || f.manualReferees || f.refereeId || f.refereeName) ? f.avarReferee || null : null,
     manualReferees: !!f.manualReferees,
     stadium,
     city,
@@ -27058,7 +27195,7 @@ app.post("/api/admin/referee", admin, (req, res) => {
       city: city || "\u041C\u043E\u0441\u043A\u0432\u0430",
       age: Number(age2) || 38,
       varRole: varRole || "",
-      leagues: Array.isArray(leagues) && leagues.length ? leagues : ["rpl", "fnl", "cup"],
+      leagues: Array.isArray(leagues) && leagues.length ? leagues : ["rpl", "cup", "friendly"],
       rating: initR,
       matches: 0,
       varMatches: 0,
@@ -27066,7 +27203,7 @@ app.post("/api/admin/referee", admin, (req, res) => {
       yellows: 0,
       reds: 0,
       penalties: 0,
-      bio: bio || "\u0410\u0440\u0431\u0438\u0442\u0440 \u0420\u041F\u041B, \u041F\u0435\u0440\u0432\u043E\u0439 \u043B\u0438\u0433\u0438 \u0438 \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438.",
+      bio: bio || "\u0410\u0440\u0431\u0438\u0442\u0440 \u0438\u0437 \u0441\u0443\u0434\u0435\u0439\u0441\u043A\u043E\u0433\u043E \u043A\u043E\u0440\u043F\u0443\u0441\u0430.",
       ratingHistory: []
     };
     if (initR > 0) newRef.manualRating = true;
@@ -27102,7 +27239,12 @@ app.post("/api/admin/fixture/referee", admin, async (req, res) => {
     if (b.refereeId) {
       const r = (db.referees || []).find((x) => x.id === b.refereeId);
       if (!r) return fail(res, "\u0421\u0443\u0434\u044C\u044F \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D");
-      if (!force && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
+      if (!force && isRefereeManagedComp(f) && !isRefereeEligibleForFixture(r, f)) {
+        const sc = getFixtureRefereeScope(f);
+        const scMsg = sc === "fnl" ? "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0424\u041D\u041B" : sc === "rpl" ? "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0420\u041F\u041B" : "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0420\u041F\u041B \u0438\u043B\u0438 \u0424\u041D\u041B";
+        return fail(res, `\u0410\u0440\u0431\u0438\u0442\u0440 ${r.name} \u043D\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0441\u044F \u043A \u0434\u043E\u043F\u0443\u0449\u0435\u043D\u043D\u043E\u0439 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0442\u0443\u0440\u043D\u0438\u0440\u0430 (\u0442\u0440\u0435\u0431\u0443\u044E\u0442\u0441\u044F ${scMsg}).`);
+      }
+      if (!force && isRefereeManagedComp(f)) {
         const tourKey = getFixtureTourKey(f);
         const conflict = (db.fixtures || []).find((x) => x.id !== f.id && getFixtureTourKey(x) === tourKey && x.refereeId === r.id);
         if (conflict) {
@@ -27114,7 +27256,12 @@ app.post("/api/admin/fixture/referee", admin, async (req, res) => {
     } else if (b.refereeName) {
       const customName = String(b.refereeName).trim();
       const matched = (db.referees || []).find((x) => x.name === customName);
-      if (matched && !force && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
+      if (matched && !force && isRefereeManagedComp(f) && !isRefereeEligibleForFixture(matched, f)) {
+        const sc = getFixtureRefereeScope(f);
+        const scMsg = sc === "fnl" ? "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0424\u041D\u041B" : sc === "rpl" ? "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0420\u041F\u041B" : "\u0430\u0440\u0431\u0438\u0442\u0440\u044B \u0420\u041F\u041B \u0438\u043B\u0438 \u0424\u041D\u041B";
+        return fail(res, `\u0410\u0440\u0431\u0438\u0442\u0440 ${matched.name} \u043D\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0441\u044F \u043A \u0434\u043E\u043F\u0443\u0449\u0435\u043D\u043D\u043E\u0439 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0442\u0443\u0440\u043D\u0438\u0440\u0430 (\u0442\u0440\u0435\u0431\u0443\u044E\u0442\u0441\u044F ${scMsg}).`);
+      }
+      if (matched && !force && isRefereeManagedComp(f)) {
         const tourKey = getFixtureTourKey(f);
         const conflict = (db.fixtures || []).find((x) => x.id !== f.id && getFixtureTourKey(x) === tourKey && x.refereeId === matched.id);
         if (conflict) {
@@ -27142,8 +27289,9 @@ app.post("/api/admin/fixture/referee", admin, async (req, res) => {
   }
 
   const nextReserve = b.reserveReferee !== undefined ? (String(b.reserveReferee || "").trim() || null) : (f.reserveReferee || null);
-  const nextVar = b.varReferee !== undefined ? (String(b.varReferee || "").trim() || null) : (f.varReferee || null);
-  const nextAvar = b.avarReferee !== undefined ? (String(b.avarReferee || "").trim() || null) : (f.avarReferee || null);
+  const supportsVar = fixtureSupportsVar(f);
+  const nextVar = supportsVar ? (b.varReferee !== undefined ? (String(b.varReferee || "").trim() || null) : (f.varReferee || null)) : null;
+  const nextAvar = supportsVar ? (b.avarReferee !== undefined ? (String(b.avarReferee || "").trim() || null) : (f.avarReferee || null)) : null;
 
   if (!force) {
     if (nextHeadName && nextReserve && nextHeadName === nextReserve) {
@@ -27277,7 +27425,15 @@ app.post("/api/admin/referees/assign-round", admin, (req, res) => {
     (f) => f.comp === comp && f.status !== "done" && (label ? f.label === label : round !== void 0 ? String(f.round) === String(round) : true)
   );
   if (!matches.length) return fail(res, "\u041D\u0435\u0442 \u0437\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043C\u0430\u0442\u0447\u0435\u0439 \u0432 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C \u0442\u0443\u0440\u0435");
-  assignTourReferees(matches, true);
+  const tourGroups: Record<string, any[]> = {};
+  for (const m of matches) {
+    const tk = getFixtureTourKey(m);
+    tourGroups[tk] = tourGroups[tk] || [];
+    tourGroups[tk].push(m);
+  }
+  for (const grp of Object.values(tourGroups)) {
+    assignTourReferees(grp, true);
+  }
   save();
   res.json({ ok: 1, count: matches.length });
 });
@@ -27286,7 +27442,7 @@ app.post("/api/admin/referees/reassign-upcoming", admin, (req, res) => {
   const tours: Record<string, any[]> = {};
   for (const f of db.fixtures || []) {
     if ((f.season || S()) !== S()) continue;
-    if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup") continue;
+    if (!isRefereeManagedComp(f)) continue;
     if (f.status !== "scheduled" || f.manualReferees) continue;
     const k = getFixtureTourKey(f);
     tours[k] = tours[k] || [];
