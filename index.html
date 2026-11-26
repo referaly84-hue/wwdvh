@@ -3882,7 +3882,15 @@ const fxRow = (f, showComp = false) => {
     } else if (f.comp === 'fnl') {
       compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#eff6ff;color:#1e40af;border-color:#bfdbfe;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">Первая лига</span>`;
     } else if (f.comp === 'cup') {
-      compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">Кубок</span>`;
+      const cp = f.cupPath || (Number(f.round) <= 6 ? 'rpl_group' : '');
+      const stg = String(f.cupStage || '').toLowerCase();
+      const lbl = String(f.label || '').toLowerCase();
+      const cupTag = (cp === 'rpl_group' || cp === 'rpl_playoff' || stg.startsWith('rpl_') || lbl.includes('путь рпл') || lbl.includes('пути рпл'))
+        ? 'Кубок · РПЛ'
+        : (cp === 'regions_qual' || cp === 'regions_playoff' || stg.startsWith('regions_') || lbl.includes('путь регион') || lbl.includes('пути регион') || (!f.cupPath && !f.cupStage && f.qualRound))
+          ? 'Кубок · Регионы'
+          : (cp === 'superfinal' || stg === 'superfinal' ? 'Суперфинал' : 'Кубок');
+      compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">${cupTag}</span>`;
     } else if (f.comp === 'supercup') {
       compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#fef3c7;color:#92400e;border-color:#fde68a;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">Суперкубок</span>`;
     } else if (f.comp === 'playoff' || f.comp === 'playoff_rpl_fnl') {
@@ -4254,9 +4262,46 @@ async function pgHome(app) {
     ...((ntU21?.current?.matches || []).map(m => mapNationalMatchToFixture(m, 'u21', ntU21?.current?.title || '')))
   ];
   const fx = [
-    ...allFx.filter(f => f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'friendly_match' || rplTeamIds.has(f.home) || rplTeamIds.has(f.away)),
+    ...allFx.filter(f => f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'cup' || f.comp === 'friendly_match' || rplTeamIds.has(f.home) || rplTeamIds.has(f.away)),
     ...ntFixtures
   ];
+  const isCupRplPath = f => {
+    if (!f || f.comp !== 'cup') return false;
+    if (f.cupPath === 'rpl_group' || f.cupPath === 'rpl_playoff') return true;
+    const stg = String(f.cupStage || '').toLowerCase();
+    if (stg.startsWith('rpl_')) return true;
+    const lbl = String(f.label || '').toLowerCase();
+    return lbl.includes('путь рпл') || lbl.includes('пути рпл');
+  };
+  const isCupRegionsPath = f => {
+    if (!f || f.comp !== 'cup') return false;
+    if (f.cupPath === 'regions_qual' || f.cupPath === 'regions_playoff') return true;
+    const stg = String(f.cupStage || '').toLowerCase();
+    if (stg.startsWith('regions_')) return true;
+    const lbl = String(f.label || '').toLowerCase();
+    if (lbl.includes('путь регион') || lbl.includes('пути регион')) return true;
+    return !f.cupPath && !f.cupStage && !!f.qualRound;
+  };
+  const myTeamId = S.me?.role === 'club' ? (CLUB_TID || S.me?.teamId || '') : '';
+  const myTeam = myTeamId ? (S.st?.teams || []).find(t => t.id === myTeamId) : null;
+  let myComp = myTeam?.comp || (myTeamId && rplTeamIds.has(myTeamId) ? 'rpl' : '');
+  if (myTeamId && !myComp) {
+    myComp = allFx.find(f => (f.comp === 'rpl' || f.comp === 'fnl') && (f.home === myTeamId || f.away === myTeamId))?.comp || '';
+  }
+
+  let leagueFx = fx;
+  let leagueScopeTag = '';
+  if (myComp === 'rpl') {
+    leagueFx = allFx.filter(f => f.comp === 'rpl' || isCupRplPath(f));
+    leagueScopeTag = 'РПЛ и Кубок (Путь РПЛ)';
+  } else if (myComp === 'fnl') {
+    leagueFx = allFx.filter(f => f.comp === 'fnl' || isCupRegionsPath(f));
+    leagueScopeTag = 'ФНЛ и Кубок (Путь регионов)';
+  } else if (myTeamId && myComp) {
+    leagueFx = allFx.filter(f => f.comp === myComp || isCupRegionsPath(f));
+    leagueScopeTag = compName(myComp);
+  }
+
   const fxRealTs = f => {
     if (Number.isFinite(f?.realStartAt)) return f.realStartAt;
     const rd = String(f?.realDate || f?.date || '').trim();
@@ -4277,12 +4322,18 @@ async function pgHome(app) {
     if (aFuture) return ta - tb || String((a.date || '') + (a.time || '')).localeCompare(String((b.date || '') + (b.time || '')));
     return tb - ta || String((a.date || '') + (a.time || '')).localeCompare(String((b.date || '') + (b.time || '')));
   };
-  const next = fx
+  const teamNext = myTeamId
+    ? allFx
+        .filter(f => (f.home === myTeamId || f.away === myTeamId) && (f.status === 'scheduled' || f.status === 'queued' || f.status === 'generating'))
+        .sort(sortUpcoming)
+        .slice(0, 3)
+    : [];
+  const next = leagueFx
     .filter(f => f.status === 'scheduled' || f.status === 'queued' || f.status === 'generating')
     .sort(sortUpcoming)
     .slice(0, 3);
 
-  const last = fx
+  const last = leagueFx
     .filter(f => f.status === 'done')
     .sort((a, b) => fxRealTs(b) - fxRealTs(a) || String((b.date || '') + (b.time || '')).localeCompare(String((a.date || '') + (a.time || ''))))
     .slice(0, 3);
@@ -4292,8 +4343,9 @@ async function pgHome(app) {
   ${live.length ? `<div class="panel"><h3><span class="live-dot"></span>Сейчас идут</h3>${live.map(f => fxRow(f, true)).join('')}</div>` : ''}
   <div class="grid g2">
     <div>
-      <div class="panel"><h3>Ближайшие матчи</h3>${next.length ? next.map(f => fxRow(f, true)).join('') : '<div class="empty">Расписание ещё не создано или сезон завершён.</div>'}</div>
-      <div class="panel"><h3>Последние результаты</h3>${last.length ? last.map(f => fxRow(f, true)).join('') : '<div class="empty">Матчей пока не было.</div>'}</div>
+      ${myTeamId ? `<div class="panel"><h3>Ближайшие матчи команды${myTeam?.name ? ` <span class="tag" style="margin-left:6px;font-weight:600;vertical-align:middle">${e(myTeam.name)}</span>` : ''}</h3>${teamNext.length ? teamNext.map(f => fxRow(f, true)).join('') : '<div class="empty">У команды пока нет ближайших матчей.</div>'}</div>` : ''}
+      <div class="panel"><h3>Ближайшие матчи${leagueScopeTag ? ` <span class="tag" style="margin-left:6px;font-weight:600;vertical-align:middle">${e(leagueScopeTag)}</span>` : ''}</h3>${next.length ? next.map(f => fxRow(f, true)).join('') : '<div class="empty">Расписание ещё не создано или сезон завершён.</div>'}</div>
+      <div class="panel"><h3>Последние результаты${leagueScopeTag ? ` <span class="tag" style="margin-left:6px;font-weight:600;vertical-align:middle">${e(leagueScopeTag)}</span>` : ''}</h3>${last.length ? last.map(f => fxRow(f, true)).join('') : '<div class="empty">Матчей пока не было.</div>'}</div>
     </div>
     <div class="panel">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
