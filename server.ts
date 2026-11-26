@@ -7204,7 +7204,7 @@ var DEFAULT_REFEREES = [
     varRole: "\u0412\u0410\u0420/\u0410\u0412\u0410\u0420",
     style: "balanced",
     styleDesc: "\u0412\u044B\u0441\u043E\u043A\u043E\u043A\u0432\u0430\u043B\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u0443\u044E\u0449\u0438\u0439\u0441\u044F \u043D\u0430 \u0440\u0430\u0431\u043E\u0442\u0435 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u043C \u0441\u0443\u0434\u044C\u0451\u0439 \u0438 \u0432\u0438\u0434\u0435\u043E\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u043E\u043C (\u0412\u0410\u0420/\u0410\u0412\u0410\u0420). \u0411\u0435\u0437\u0443\u043F\u0440\u0435\u0447\u043D\u043E \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u0438\u0440\u0443\u0435\u0442 \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0443\u044E \u0437\u043E\u043D\u0443, \u0437\u0430\u043C\u0435\u043D\u044B \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F, \u043E\u043F\u0435\u0440\u0430\u0442\u0438\u0432\u043D\u043E \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0433\u043B\u0430\u0432\u043D\u043E\u043C\u0443 \u0430\u0440\u0431\u0438\u0442\u0440\u0443 \u043F\u0440\u0438 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u0444\u043E\u043B\u0430\u0445.",
-    leagues: ["rpl", "cup", "friendly"],
+    leagues: ["rpl", "fnl", "cup", "friendly"],
     rating: 7.2,
     matches: 0,
     yellows: 0,
@@ -7215,12 +7215,12 @@ var DEFAULT_REFEREES = [
   {
     id: "ref_matveev",
     name: "\u0421\u0442\u0430\u043D\u0438\u0441\u043B\u0430\u0432 \u041C\u0430\u0442\u0432\u0435\u0435\u0432",
-    city: "\u041C\u043E\u0441\u043A\u0432\u0430",
+    city: "\u0422\u0440\u043E\u0438\u0446\u043A",
     role: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440",
     varRole: "",
     style: "strict",
     styleDesc: "\u0416\u0451\u0441\u0442\u043A\u0438\u0439 \u0432 \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u0445 \u0442\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u0444\u043E\u043B\u043E\u0432 \u0430\u0440\u0431\u0438\u0442\u0440. \u041C\u0433\u043D\u043E\u0432\u0435\u043D\u043D\u043E \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0436\u0451\u043B\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u043E\u0439 \u0437\u0430 \u043F\u0440\u0438\u0445\u0432\u0430\u0442\u044B \u0440\u0443\u043A\u0430\u043C\u0438 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435 \u043F\u043E\u043B\u044F \u0438 \u0441\u0440\u044B\u0432 \u043A\u043E\u043D\u0442\u0440\u0430\u0442\u0430\u043A. \u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u043E\u0442 \u0438\u0433\u0440\u043E\u043A\u043E\u0432 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0439 \u043A\u043E\u043D\u0446\u0435\u043D\u0442\u0440\u0430\u0446\u0438\u0438 \u0438 \u043D\u0435 \u043F\u0440\u043E\u0449\u0430\u0435\u0442 \u0433\u0440\u0443\u0431\u044B\u0445 \u043F\u043E\u0434\u043A\u0430\u0442\u043E\u0432.",
-    leagues: ["rpl", "cup", "friendly"],
+    leagues: ["rpl", "fnl", "cup", "friendly"],
     rating: 7.1,
     matches: 0,
     yellows: 0,
@@ -7263,12 +7263,12 @@ var DEFAULT_REFEREES = [
   {
     id: "ref_novikov",
     name: "\u041D\u0438\u043A\u0438\u0442\u0430 \u041D\u043E\u0432\u0438\u043A\u043E\u0432",
-    city: "\u041C\u043E\u0441\u043A\u0432\u0430",
+    city: "\u041F\u0435\u0442\u0440\u043E\u0437\u0430\u0432\u043E\u0434\u0441\u043A",
     role: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440",
     varRole: "",
     style: "balanced",
     styleDesc: "\u0410\u043A\u043A\u0443\u0440\u0430\u0442\u043D\u044B\u0439 \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440. \u041F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0442\u0440\u0430\u043A\u0442\u043E\u0432\u043A\u0438 \u043F\u0440\u0430\u0432\u0438\u043B, \u0440\u043E\u0432\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u043C\u0435\u0436\u0434\u0443 \u043E\u0431\u043E\u0438\u043C\u0438 \u0442\u0430\u0439\u043C\u0430\u043C\u0438, \u0441\u0442\u0430\u0440\u0430\u0435\u0442\u0441\u044F \u0438\u0437\u0431\u0435\u0433\u0430\u0442\u044C \u043D\u0435\u043E\u043F\u0440\u0430\u0432\u0434\u0430\u043D\u043D\u044B\u0445 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0439.",
-    leagues: ["rpl", "cup", "friendly"],
+    leagues: ["rpl", "fnl", "cup", "friendly"],
     rating: 6.8,
     matches: 0,
     yellows: 0,
@@ -7311,12 +7311,12 @@ var DEFAULT_REFEREES = [
   {
     id: "ref_naboka",
     name: "\u0414\u0430\u043D\u0438\u043B \u041D\u0430\u0431\u043E\u043A\u0430",
-    city: "\u043D\u043E\u0432\u0438\u0447\u043E\u043A",
+    city: "\u041A\u0440\u0430\u0441\u043D\u043E\u0434\u0430\u0440",
     role: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0430\u0440\u0431\u0438\u0442\u0440",
     varRole: "",
     style: "balanced",
     styleDesc: "\u0421\u043F\u043E\u043A\u043E\u0439\u043D\u044B\u0439 \u043C\u043E\u043B\u043E\u0434\u043E\u0439 \u0430\u0440\u0431\u0438\u0442\u0440, \u043F\u0440\u0438\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0449\u0438\u0439\u0441\u044F \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E\u0439 \u043F\u043B\u0430\u043D\u043A\u0438 \u0435\u0434\u0438\u043D\u043E\u0431\u043E\u0440\u0441\u0442\u0432. \u0412\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0435\u043D \u043A \u0438\u0433\u0440\u0435 \u0432 \u0448\u0442\u0440\u0430\u0444\u043D\u043E\u0439 \u0438 \u0441\u043E\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u0430\u0432\u0438\u043B \u043F\u0440\u0438 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u0430\u0445.",
-    leagues: ["rpl", "cup", "friendly"],
+    leagues: ["rpl", "fnl", "cup", "friendly"],
     rating: 6.6,
     matches: 0,
     yellows: 0,
@@ -7339,40 +7339,366 @@ var DEFAULT_REFEREES = [
     reds: 0,
     penalties: 0,
     bio: "\u041C\u0438\u0445\u0430\u0438\u043B \u041F\u043B\u0438\u0441\u043A\u043E \u2014 \u043C\u043E\u043B\u043E\u0434\u043E\u0439 \u0441\u0443\u0434\u044C\u044F \u0441 \u0436\u0451\u0441\u0442\u043A\u043E\u0439 \u043C\u0430\u043D\u0435\u0440\u043E\u0439 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044F \u0434\u0438\u0441\u0446\u0438\u043F\u043B\u0438\u043D\u044B. \u0411\u044B\u0441\u0442\u0440\u043E \u0440\u0435\u0430\u0433\u0438\u0440\u0443\u0435\u0442 \u043D\u0430 \u0433\u0440\u0443\u0431\u044B\u0435 \u043F\u043E\u0434\u043A\u0430\u0442\u044B \u0438 \u0441\u043F\u043E\u0440\u044B \u0441 \u0430\u0440\u0431\u0438\u0442\u0440\u043E\u043C."
+  },
+  {
+    id: "ref_fnl_shishkin",
+    name: "Павел Шишкин",
+    city: "Тамбов",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Опытный арбитр Первой лиги, уверенно контролирующий темп игры и силовую борьбу в центре поля.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.2,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Павел Шишкин (Тамбов) — стабильный арбитр корпуса ФНЛ, отличающийся последовательной трактовкой единоборств и умением гасить споры без лишних карточек."
+  },
+  {
+    id: "ref_fnl_gusakov",
+    name: "Олег Гусаков",
+    city: "Кисловодск",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "strict",
+    styleDesc: "Принципиальный судья, требующий строгой дисциплины на стандартах и в штрафной площади.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Олег Гусаков (Кисловодск) — арбитр ФНЛ с жёстким контролем дисциплины и внимательным отношением к тактическим фолам."
+  },
+  {
+    id: "ref_fnl_kharitonov",
+    name: "Владислав Харитонов",
+    city: "Казань",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "liberal",
+    styleDesc: "Даёт командам вести плотную мужскую борьбу, старается не дробить матч мелкими свистками.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Владислав Харитонов (Казань) — арбитр корпуса ФНЛ, поддерживающий высокий темп игры и пресекающий лишь откровенную грубость."
+  },
+  {
+    id: "ref_fnl_moldovan",
+    name: "Виталий Молдован",
+    city: "Краснодар",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Уравновешенный арбитр с хорошей физической готовностью и точным выбором позиции.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.1,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Виталий Молдован (Краснодар) — квалифицированный судья Первой лиги, ровно проводящий матчи любой напряжённости."
+  },
+  {
+    id: "ref_fnl_medvedev",
+    name: "Семён Медведев",
+    city: "Екатеринбург",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Спокойный, методичный судья, придерживающийся классической трактовки правил.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Семён Медведев (Екатеринбург) — арбитр корпуса ФНЛ, спокойно управляющий игрой и внимательно следящий за борьбой в штрафной."
+  },
+  {
+    id: "ref_fnl_fedotov",
+    name: "Сергей Федотов",
+    city: "Павлово",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "principled",
+    styleDesc: "Не поддаётся давлению трибун и скамеек, твёрдо фиксирует нарушения в штрафной.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.1,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Сергей Федотов (Павлово) — принципиальный арбитр ФНЛ, одинаково требовательный к обеим командам в контактных эпизодах."
+  },
+  {
+    id: "ref_fnl_ziyakov",
+    name: "Ранель Зияков",
+    city: "Набережные Челны",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "liberal",
+    styleDesc: "Мобильный арбитр новой волны, поощряющий быстрые атаки и принцип преимущества.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.1,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Ранель Зияков (Набережные Челны) — динамичный судья Первой лиги, старающийся сохранять непрерывность и темп игры."
+  },
+  {
+    id: "ref_fnl_mashlyakevich",
+    name: "Александр Машлякевич",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Один из наиболее опытных и авторитетных арбитров ФНЛ, уверенно проводящий ключевые матчи тура.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.5,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Александр Машлякевич (Москва) — статусный арбитр Первой лиги с богатым опытом сложных игр и отличным взаимодействием с бригадой."
+  },
+  {
+    id: "ref_fnl_cheremnykh",
+    name: "Михаил Черемных",
+    city: "Пермь",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "principled",
+    styleDesc: "Опытный и требовательный арбитр, строго пресекающий симуляции и срывы атак.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.4,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Михаил Черемных (Пермь) — опытный судья корпуса ФНЛ, отличающийся твёрдостью решений и строгим контролем дисциплины."
+  },
+  {
+    id: "ref_fnl_tsurkov",
+    name: "Данила Цурков",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "liberal",
+    styleDesc: "Молодой мобильный судья с высокой планкой фола и ставкой на диалог с футболистами.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 6.9,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Данила Цурков (Москва) — перспективный арбитр ФНЛ, поддерживающий высокий темп матча без избыточного числа остановок."
+  },
+  {
+    id: "ref_fnl_rubtsov",
+    name: "Ефим Рубцов",
+    city: "Санкт-Петербург",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Аккуратный арбитр петербургской школы, уверенно читающий тактические перестроения.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Ефим Рубцов (Санкт-Петербург) — последовательный судья корпуса ФНЛ с чёткой жестикуляцией и вниманием к деталям."
+  },
+  {
+    id: "ref_fnl_anopa",
+    name: "Антон Анопа",
+    city: "Благовещенск",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "strict",
+    styleDesc: "Опытный и строгий арбитр, не позволяющий командам переходить грань жёсткости.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.4,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Антон Анопа (Благовещенск) — один из самых опытных судей Первой лиги, держащий игру под жёстким контролем."
+  },
+  {
+    id: "ref_fnl_voloshin",
+    name: "Николай Волошин",
+    city: "Смоленск",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Высококвалифицированный арбитр с опытом работы на матчах самого высокого уровня.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.6,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Николай Волошин (Смоленск) — авторитетный судья с большим опытом высших дивизионов, идеально читающий борьбу в штрафной."
+  },
+  {
+    id: "ref_fnl_lapatukhin",
+    name: "Алексей Лапатухин",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Хладнокровный и стабильный судья, ровно проводящий оба тайма без резких перепадов планки.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.3,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Алексей Лапатухин (Москва) — надёжный арбитр ФНЛ, известный предсказуемой трактовкой единоборств."
+  },
+  {
+    id: "ref_fnl_y_matveev",
+    name: "Юрий Матвеев",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "strict",
+    styleDesc: "Внимателен к борьбе руками и задержкам, оперативно охлаждает эмоции предупреждениями.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Юрий Матвеев (Москва) — строгий и внимательный арбитр Первой лиги, требовательный к дисциплине в центре поля."
+  },
+  {
+    id: "ref_fnl_zhuravlev",
+    name: "Олег Журавлев",
+    city: "Подольск",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Ровный, рассудительный арбитр, уверенно контролирующий стандартные положения.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Олег Журавлев (Подольск) — уравновешенный судья ФНЛ, предпочитающий профилактику нарушений."
+  },
+  {
+    id: "ref_fnl_shamara",
+    name: "Владимир Шамара",
+    city: "Ростов-на-Дону",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "principled",
+    styleDesc: "Авторитетный судья южной школы, не боящийся резонансных решений и пенальти.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.3,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Владимир Шамара (Ростов-на-Дону) — опытный арбитр ФНЛ с твёрдым характером и уверенным контролем жёстких матчей."
+  },
+  {
+    id: "ref_fnl_sagdiev",
+    name: "Артур Сагдиев",
+    city: "Набережные Челны",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "liberal",
+    styleDesc: "Динамичный арбитр, дающий бороться и грамотно использующий принцип преимущества.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.1,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Артур Сагдиев (Набережные Челны) — современный судья Первой лиги, поддерживающий высокий игровой ритм."
+  },
+  {
+    id: "ref_fnl_sidorin",
+    name: "Антон Сидорин",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Грамотно выбирает позицию, редко вмешивается без веской причины.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.2,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Антон Сидорин (Москва) — собранный арбитр корпуса ФНЛ со спокойной манерой ведения игры."
+  },
+  {
+    id: "ref_fnl_galimov",
+    name: "Евгений Галимов",
+    city: "Екатеринбург",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "principled",
+    styleDesc: "Опытный уральский арбитр, умеющий держать накал принципиальных встреч ФНЛ.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.4,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Евгений Галимов (Екатеринбург) — один из ключевых судей Первой лиги, уверенно работающий на матчах лидеров."
+  },
+  {
+    id: "ref_fnl_garafutdinov",
+    name: "Кирилл Гарафутдинов",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "strict",
+    styleDesc: "Чётко фиксирует срывы атак и неспортивное поведение, строго соблюдает методику.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.0,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Кирилл Гарафутдинов (Москва) — дисциплинированный арбитр ФНЛ с вниманием к мелким тактическим нарушениям."
+  },
+  {
+    id: "ref_fnl_safyan",
+    name: "Роман Сафьян",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Авторитетный и последовательный арбитр с отличным чтением борьбы в штрафной.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.5,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Роман Сафьян (Москва) — опытный судья корпуса ФНЛ, регулярно получающий высокие оценки инспекторов."
+  },
+  {
+    id: "ref_fnl_falov",
+    name: "Владимир Фалов",
+    city: "Москва",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "liberal",
+    styleDesc: "Старается поддерживать быстрый футбол и не перегружать игру предупреждениями в дебюте.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 6.9,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Владимир Фалов (Москва) — молодой арбитр Первой лиги с высокой планкой допустимой силовой борьбы."
+  },
+  {
+    id: "ref_fnl_mayun",
+    name: "Александр Маюн",
+    city: "Челябинск",
+    role: "Главный арбитр",
+    varRole: "",
+    style: "balanced",
+    styleDesc: "Уверенный и выносливый судья, ровно контролирующий оба тайма.",
+    leagues: ["fnl", "cup", "friendly"],
+    rating: 7.1,
+    matches: 0, yellows: 0, reds: 0, penalties: 0,
+    bio: "Александр Маюн (Челябинск) — стабильный арбитр корпуса ФНЛ, отличающийся хорошей физической формой и точностью решений."
   }
 ];
-var ASSISTANT_REFEREES = [
-  "\u041C\u0430\u043A\u0441\u0438\u043C \u0411\u0435\u043B\u043E\u043A\u0443\u0440",
-  "\u0414\u0435\u043D\u0438\u0441 \u0411\u0435\u0440\u0435\u0437\u043D\u043E\u0432",
-  "\u0410\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 \u0411\u043E\u0433\u0434\u0430\u043D\u043E\u0432",
-  "\u0410\u043D\u0434\u0440\u0435\u0439 \u0411\u043E\u043B\u043E\u0442\u0435\u043D\u043A\u043E\u0432",
-  "\u0415\u0433\u043E\u0440 \u0411\u043E\u043B\u0445\u043E\u0432\u0438\u0442\u0438\u043D",
-  "\u041A\u0438\u0440\u0438\u043B\u043B \u0411\u043E\u043B\u044C\u0448\u0430\u043A\u043E\u0432",
-  "\u0410\u043D\u0434\u0440\u0435\u0439 \u0412\u0435\u0440\u0435\u0442\u0435\u0448\u043A\u0438\u043D",
-  "\u041C\u0430\u043A\u0441\u0438\u043C \u0413\u0430\u0432\u0440\u0438\u043B\u0438\u043D",
-  "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u0415\u0440\u043C\u0430\u043A\u043E\u0432",
-  "\u0410\u043B\u0435\u043A\u0441\u0435\u0439 \u0415\u0440\u043C\u0438\u043B\u043E\u0432",
-  "\u041C\u0438\u0445\u0430\u0438\u043B \u0418\u0432\u0430\u043D\u043E\u0432",
-  "\u042F\u0440\u043E\u0441\u043B\u0430\u0432 \u041A\u0430\u043B\u0438\u043D\u0438\u0447\u0435\u043D\u043A\u043E",
-  "\u0415\u043A\u0430\u0442\u0435\u0440\u0438\u043D\u0430 \u041A\u0443\u0440\u043E\u0447\u043A\u0438\u043D\u0430",
-  "\u0410\u043B\u0435\u043A\u0441\u0435\u0439 \u041B\u0443\u043D\u0435\u0432",
-  "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u041C\u0430\u043B\u0438\u043A\u043E\u0432",
-  "\u041D\u0438\u043A\u0438\u0442\u0430 \u041C\u0430\u0442\u0438\u0435\u0441\u043A\u0443",
-  "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u041C\u043E\u0441\u044F\u043A\u0438\u043D",
-  "\u0420\u0443\u0441\u0442\u0430\u043C \u041C\u0443\u0445\u0442\u0430\u0440\u043E\u0432",
-  "\u0410\u043D\u0434\u0440\u0435\u0439 \u041E\u0431\u0440\u0430\u0437\u043A\u043E",
-  "\u0410\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 \u041F\u0430\u0432\u043B\u043E\u0432",
-  "\u0414\u0435\u043D\u0438\u0441 \u041F\u0435\u0442\u0440\u043E\u0432",
-  "\u0412\u0430\u0440\u0430\u043D\u0446\u043E \u041F\u0435\u0442\u0440\u043E\u0441\u044F\u043D",
-  "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u0421\u0430\u0444\u044C\u044F\u043D",
-  "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u0421\u0435\u043C\u0435\u043D\u043E\u0432",
-  "\u0410\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 \u0422\u0443\u0440\u043A\u0438\u043D",
-  "\u0410\u043D\u0434\u0440\u0435\u0439 \u0424\u0438\u043B\u0438\u043F\u043A\u0438\u043D",
-  "\u0410\u043B\u044C\u043C\u0438\u0440 \u0425\u0430\u0442\u043C\u0443\u043B\u043B\u0438\u043D",
-  "\u0410\u0434\u043B\u0430\u043D \u0425\u0430\u0442\u0443\u0435\u0432",
-  "\u0420\u0443\u0441\u043B\u0430\u043D \u0428\u0435\u043A\u0435\u043C\u043E\u0432",
-  "\u0410\u043B\u0435\u043A\u0441\u0435\u0439 \u0428\u0438\u0440\u044F\u0435\u0432"
+var DEFAULT_ASSISTANT_DETAILS = [
+  { name: "Максим Белокур", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Денис Березнов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Александр Богданов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Андрей Болотенков", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Егор Болховитин", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Кирилл Большаков", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Андрей Веретешкин", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Максим Гаврилин", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Дмитрий Ермаков", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Алексей Ермилов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Михаил Иванов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Ярослав Калиниченко", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Екатерина Курочкина", city: "Малаховка", leagues: ["rpl", "fnl", "cup", "friendly"] },
+  { name: "Алексей Лунев", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Дмитрий Маликов", city: "Новоалтайск", leagues: ["rpl", "fnl", "cup", "friendly"] },
+  { name: "Никита Матиеску", city: "Псков", leagues: ["rpl", "fnl", "cup", "friendly"] },
+  { name: "Дмитрий Мосякин", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Рустам Мухтаров", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Андрей Образко", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Александр Павлов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Денис Петров", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Варанцо Петросян", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Дмитрий Сафьян", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Дмитрий Семенов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Александр Туркин", city: "Астрахань", leagues: ["rpl", "fnl", "cup", "friendly"] },
+  { name: "Андрей Филипкин", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Альмир Хатмуллин", city: "Московская область", leagues: ["rpl", "fnl", "cup", "friendly"] },
+  { name: "Адлан Хатуев", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Руслан Шекемов", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Алексей Ширяев", city: "", leagues: ["rpl", "cup", "friendly"] },
+  { name: "Дмитрий Лысенко", city: "Благовещенск", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Вячеслав Охрименко", city: "Майкоп", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Арсений Новиков", city: "Подольск", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Евгений Синянский", city: "Ярославль", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Алексей Линкин", city: "Воронеж", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Игорь Золотарёв", city: "Брянск", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Андрей Пелых", city: "Санкт-Петербург", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Яков Клепцов", city: "Ростов-на-Дону", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Александр Приходько", city: "Москва", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Виктор Медведев", city: "Москва", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Денис Мирошник", city: "Ставрополь", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Фёдор Валявин", city: "Саратов", leagues: ["fnl", "cup", "friendly"] },
+  { name: "Степан Щербаков", city: "Омск", leagues: ["fnl", "cup", "friendly"] }
 ];
+var ASSISTANT_REFEREES = DEFAULT_ASSISTANT_DETAILS.map((a) => a.name);
 function computeBreakWindow(baseDateStr, durationDays) {
   const dow = (/* @__PURE__ */ new Date(baseDateStr + "T12:00:00Z")).getUTCDay();
   let start = baseDateStr;
@@ -7423,7 +7749,13 @@ function fixtureSupportsVar(f) {
   if (c === "rpl" || c === "supercup" || c === "playoff" || c === "playoff_rpl_fnl") return true;
   if (c === "cup") {
     const cp = f.cupPath || (Number(f.round) <= 6 ? "rpl_group" : "regions_qual");
-    if (cp === "regions_qual" || (!f.cupPath && !f.cupStage && f.qualRound)) return false;
+    if (cp === "regions_qual") {
+      const qr = Number(f.qualRound || (Number(f.round) > 100 && Number(f.round) < 200 ? Number(f.round) - 100 : f.round) || 1);
+      return qr >= 7;
+    }
+    if (!f.cupPath && !f.cupStage && f.qualRound) {
+      return Number(f.qualRound) >= 7;
+    }
     return true;
   }
   return false;
@@ -7445,6 +7777,16 @@ function isRefereeEligibleForFixture(r, f) {
   if (!r || !f) return false;
   const scope = getFixtureRefereeScope(f);
   const ls = Array.isArray(r.leagues) ? r.leagues.map((x) => String(x || "").toLowerCase()) : [];
+  if (scope === "rpl") return ls.includes("rpl");
+  if (scope === "fnl") return ls.includes("fnl");
+  if (scope === "rpl_and_fnl") return ls.includes("rpl") || ls.includes("fnl") || ls.includes("cup");
+  return true;
+}
+function isAssistantEligibleForFixture(a, f) {
+  if (!a || !f) return false;
+  const ls = Array.isArray(a.leagues) ? a.leagues.map((x) => String(x || "").toLowerCase()).filter(Boolean) : [];
+  if (!ls.length) return true;
+  const scope = getFixtureRefereeScope(f);
   if (scope === "rpl") return ls.includes("rpl");
   if (scope === "fnl") return ls.includes("fnl");
   if (scope === "rpl_and_fnl") return ls.includes("rpl") || ls.includes("fnl") || ls.includes("cup");
@@ -7649,7 +7991,7 @@ function assignTourReferees(tourList, force = false) {
     }
   }
   const allHeadNames = new Set(validMatches.map((f) => f.refereeName).filter(Boolean));
-  const asstPool = (db.assistants || []).length ? db.assistants : ASSISTANT_REFEREES.map((n, i) => ({ id: "asst_" + i, name: n }));
+  const asstPool = (db.assistants || []).length ? db.assistants : DEFAULT_ASSISTANT_DETAILS.map((a, i) => ({ id: "asst_" + (i + 1), name: a.name, city: a.city, leagues: [...a.leagues] }));
   const asstLoad = {};
   for (const fxItem of db.fixtures || []) {
     if ((fxItem.season || S()) !== curSeason || unlockedIds.has(fxItem.id)) continue;
@@ -7678,18 +8020,32 @@ function assignTourReferees(tourList, force = false) {
     }
     const nonHeadRefsForF = eligibleForF.filter((r) => !usedHeadIds.has(r.id) && !allHeadNames.has(r.name));
     const nonHeadPool = nonHeadRefsForF.length ? nonHeadRefsForF : eligibleForF.filter((r) => !usedHeadIds.has(r.id));
-    let availAssts = asstPool.filter((a) => !usedTourAssts.has(a.name));
-    if (availAssts.length < 2) availAssts = asstPool;
+    const eligibleAsstsForF = asstPool.filter((a) => isAssistantEligibleForFixture(a, f));
+    const scopedAssts = eligibleAsstsForF.length >= 2 ? eligibleAsstsForF : asstPool;
+    const fHomeCity = (team(f.home)?.city || "").trim().toLowerCase();
+    const fAwayCity = (team(f.away)?.city || "").trim().toLowerCase();
+    const nonCityAssts = scopedAssts.filter((a) => {
+      const ac = (a.city || "").trim().toLowerCase();
+      return !ac || (ac !== fHomeCity && ac !== fAwayCity);
+    });
+    const citySafeAssts = nonCityAssts.length >= 2 ? nonCityAssts : scopedAssts;
+    let availAssts = citySafeAssts.filter((a) => !usedTourAssts.has(a.name));
+    if (availAssts.length < 2) availAssts = scopedAssts.filter((a) => !usedTourAssts.has(a.name));
+    if (availAssts.length < 2) availAssts = citySafeAssts;
     const a1Obj = pickLeastLoaded(availAssts, asstLoad);
     if (a1Obj) usedTourAssts.add(a1Obj.name);
-    let availAssts2 = asstPool.filter((a) => a.name !== a1Obj?.name && !usedTourAssts.has(a.name));
-    if (!availAssts2.length) availAssts2 = asstPool.filter((a) => a.name !== a1Obj?.name);
+    let availAssts2 = citySafeAssts.filter((a) => a.name !== a1Obj?.name && !usedTourAssts.has(a.name));
+    if (!availAssts2.length) availAssts2 = scopedAssts.filter((a) => a.name !== a1Obj?.name && !usedTourAssts.has(a.name));
+    if (!availAssts2.length) availAssts2 = scopedAssts.filter((a) => a.name !== a1Obj?.name);
     const a2Obj = pickLeastLoaded(availAssts2, asstLoad);
     if (a2Obj) usedTourAssts.add(a2Obj.name);
-    f.assistants = [
-      a1Obj?.name || "\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u041C\u043E\u0441\u044F\u043A\u0438\u043D",
-      a2Obj?.name || "\u0415\u0433\u043E\u0440 \u0411\u043E\u043B\u0445\u043E\u0432\u0438\u0442\u0438\u043D"
-    ];
+    if (a1Obj?.name && a2Obj?.name) {
+      f.assistants = [a1Obj.name, a2Obj.name];
+    } else if (a1Obj?.name) {
+      f.assistants = [a1Obj.name];
+    } else {
+      delete f.assistants;
+    }
     const resList = nonHeadPool.filter((r) => r.id !== f.refereeId);
     const resSpecialists = resList.filter((r) => r.role === "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F");
     const chosenRes = (resSpecialists.length && Math.random() < 0.45 ? pickLeastLoaded(resSpecialists, resLoad) : pickLeastLoaded(resList, resLoad));
@@ -8049,9 +8405,11 @@ function load() {
   }
   if (!db.referees || db.referees.length < 26) db.referees = JSON.parse(JSON.stringify(DEFAULT_REFEREES));
   if (!db.assistants || !db.assistants.length) {
-    db.assistants = ASSISTANT_REFEREES.map((name, i) => ({
+    db.assistants = DEFAULT_ASSISTANT_DETAILS.map((a, i) => ({
       id: "asst_" + (i + 1),
-      name,
+      name: a.name,
+      city: a.city || "",
+      leagues: [...a.leagues],
       rating: 0,
       matches: 0,
       bio: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u043F\u043E\u0440\u0442\u0440\u0435\u0442 (\u0418\u0418)\xBB, \u0447\u0442\u043E\u0431\u044B \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0435 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u0430."
@@ -8125,6 +8483,55 @@ function load() {
       }
     }
     db.settings.fnlRefPoolSeparated = true;
+  }
+  if (!db.settings.fnlRefRosterAdded2026) {
+    const normPersonName = (s) => String(s || "").trim().toLowerCase().replace(/ё/g, "е");
+    if (!Array.isArray(db.referees)) db.referees = [];
+    if (!Array.isArray(db.assistants)) db.assistants = [];
+    const sharedUpdateIds = new Set(["ref_matveev", "ref_opeykina", "ref_naboka", "ref_novikov"]);
+    for (const defRef of DEFAULT_REFEREES) {
+      const existing = db.referees.find((r) => r.id === defRef.id || normPersonName(r.name) === normPersonName(defRef.name));
+      if (existing) {
+        const curLeagues = Array.isArray(existing.leagues) ? existing.leagues.map((l) => String(l || "").toLowerCase()) : [];
+        for (const lg of defRef.leagues || []) {
+          if (!curLeagues.includes(lg)) curLeagues.push(lg);
+        }
+        existing.leagues = curLeagues;
+        if (sharedUpdateIds.has(defRef.id) || !existing.city || existing.city === "новичок") {
+          if (defRef.city) existing.city = defRef.city;
+        }
+      } else {
+        db.referees.push(JSON.parse(JSON.stringify(defRef)));
+      }
+    }
+    let nextAsstNum = db.assistants.length + 1;
+    for (const defAsst of DEFAULT_ASSISTANT_DETAILS) {
+      const existingA = db.assistants.find((a) => normPersonName(a.name) === normPersonName(defAsst.name));
+      if (existingA) {
+        if (defAsst.city) existingA.city = defAsst.city;
+        const curLeagues = Array.isArray(existingA.leagues) ? existingA.leagues.map((l) => String(l || "").toLowerCase()) : [];
+        for (const lg of defAsst.leagues || []) {
+          if (!curLeagues.includes(lg)) curLeagues.push(lg);
+        }
+        existingA.leagues = curLeagues;
+      } else {
+        db.assistants.push({
+          id: "asst_" + nextAsstNum++,
+          name: defAsst.name,
+          city: defAsst.city || "",
+          leagues: [...defAsst.leagues],
+          rating: 0,
+          matches: 0,
+          bio: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u043F\u043E\u0440\u0442\u0440\u0435\u0442 (\u0418\u0418)\xBB, \u0447\u0442\u043E\u0431\u044B \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0435 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043D\u0442\u0430."
+        });
+      }
+    }
+    for (const a of db.assistants) {
+      if (!Array.isArray(a.leagues) || !a.leagues.length) {
+        a.leagues = ["rpl", "cup", "friendly"];
+      }
+    }
+    db.settings.fnlRefRosterAdded2026 = true;
   }
   const refByIdStartup = new Map((db.referees || []).map((r) => [r.id, r]));
   const refByNameStartup = new Map((db.referees || []).map((r) => [r.name, r]));
@@ -27213,10 +27620,12 @@ app.post("/api/admin/referee", admin, (req, res) => {
   }
 });
 app.post("/api/admin/assistant", admin, (req, res) => {
-  const { id, bio, name, rating } = req.body || {};
+  const { id, bio, name, rating, city, leagues } = req.body || {};
   const a = (db.assistants || []).find((x) => x.id === id);
   if (!a) return fail(res, "\u041F\u043E\u043C\u043E\u0449\u043D\u0438\u043A \u0441\u0443\u0434\u044C\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D");
   if (name) a.name = name;
+  if (city !== undefined) a.city = String(city);
+  if (Array.isArray(leagues)) a.leagues = leagues.map((x) => String(x || "").toLowerCase()).filter(Boolean);
   if (bio !== undefined) a.bio = String(bio);
   if (rating !== undefined && rating !== "" && Number.isFinite(Number(rating)) && !(a.matches > 0)) {
     a.rating = Number(rating);

@@ -2647,7 +2647,13 @@ function clientFixtureSupportsVar(f) {
   if (c === 'rpl' || c === 'supercup' || c === 'playoff' || c === 'playoff_rpl_fnl') return true;
   if (c === 'cup') {
     const cp = f.cupPath || (Number(f.round) <= 6 ? 'rpl_group' : 'regions_qual');
-    if (cp === 'regions_qual' || (!f.cupPath && !f.cupStage && f.qualRound)) return false;
+    if (cp === 'regions_qual') {
+      const qr = Number(f.qualRound || (Number(f.round) > 100 && Number(f.round) < 200 ? Number(f.round) - 100 : f.round) || 1);
+      return qr >= 7;
+    }
+    if (!f.cupPath && !f.cupStage && f.qualRound) {
+      return Number(f.qualRound) >= 7;
+    }
     return true;
   }
   return false;
@@ -2678,6 +2684,17 @@ function clientRefereeEligibleForFixture(r, f) {
   return true;
 }
 
+function clientAssistantEligibleForFixture(a, f) {
+  if (!a || !f) return false;
+  const ls = Array.isArray(a.leagues) ? a.leagues.map(x => String(x || '').toLowerCase()).filter(Boolean) : [];
+  if (!ls.length) return true;
+  const scope = clientFixtureRefereeScope(f);
+  if (scope === 'rpl') return ls.includes('rpl');
+  if (scope === 'fnl') return ls.includes('fnl');
+  if (scope === 'rpl_and_fnl') return ls.includes('rpl') || ls.includes('fnl') || ls.includes('cup');
+  return true;
+}
+
 function clientRefLeaguesLabel(r) {
   const ls = Array.isArray(r?.leagues) ? r.leagues.map(x => String(x || '').toLowerCase()) : [];
   const tags = [];
@@ -2693,6 +2710,8 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
   const eligibleRefs = sortedRefs.filter(r => clientRefereeEligibleForFixture(r, f));
   const otherRefs = sortedRefs.filter(r => !clientRefereeEligibleForFixture(r, f));
   const sortedAssts = [...(assts || [])].sort((a, b) => String(a.name).localeCompare(String(b.name), 'ru'));
+  const eligibleAssts = sortedAssts.filter(a => clientAssistantEligibleForFixture(a, f));
+  const otherAssts = sortedAssts.filter(a => !clientAssistantEligibleForFixture(a, f));
   const varEligibleRefs = [...eligibleRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
   const varOtherRefs = [...otherRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
   const tourKey = getClientFixtureTourKey(f);
@@ -2729,13 +2748,24 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
       : [])
   ].join('');
 
+  const renderAsstOpt = (a, selectedName) => {
+    const lgLbl = clientRefLeaguesLabel(a);
+    const meta = [lgLbl || null, a.city || null, a.rating ? `★${Number(a.rating).toFixed(2)}` : null].filter(Boolean).join(' · ');
+    return `<option value="${e(a.name)}" ${a.name === selectedName ? 'selected' : ''}>${e(a.name)}${meta ? ` (${e(meta)})` : ''}</option>`;
+  };
+
   const buildAsstOptions = (selectedName) => {
     const names = sortedAssts.map(a => a.name);
     const hasCustom = selectedName && !names.includes(selectedName);
     return [
       `<option value="">— Не назначен —</option>`,
       ...(hasCustom ? [`<option value="${e(selectedName)}" selected>${e(selectedName)} (текущий)</option>`] : []),
-      ...sortedAssts.map(a => `<option value="${e(a.name)}" ${a.name === selectedName ? 'selected' : ''}>${e(a.name)}${a.rating ? ` (★${Number(a.rating).toFixed(2)})` : ''}</option>`)
+      ...(eligibleAssts.length && otherAssts.length
+        ? [`<optgroup label="Подходят для турнира (${eligibleAssts.length})">${eligibleAssts.map(a => renderAsstOpt(a, selectedName)).join('')}</optgroup>`]
+        : eligibleAssts.map(a => renderAsstOpt(a, selectedName))),
+      ...(otherAssts.length
+        ? [`<optgroup label="Помощники других лиг (при совмещении)">${otherAssts.map(a => renderAsstOpt(a, selectedName)).join('')}</optgroup>`]
+        : [])
     ].join('');
   };
 
@@ -2857,6 +2887,12 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
     return !refObj || clientRefereeEligibleForFixture(refObj, f);
   };
 
+  const isEligibleAsstName = (name) => {
+    if (!name) return true;
+    const asstObj = (assts || []).find(a => a.name === name);
+    return !asstObj || clientAssistantEligibleForFixture(asstObj, f);
+  };
+
   const updateWarnings = () => {
     if (!warnEl) return;
     const msgs = [];
@@ -2873,6 +2909,12 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
       if (headObj && !clientRefereeEligibleForFixture(headObj, f)) {
         msgs.push(`⚠️ Главный арбитр <b>${e(h.refereeName)}</b> не входит в список судей этого турнира (отметьте «Разрешить совмещение» или выберите арбитра из нужной лиги).`);
       }
+    }
+    if (!force && a1 && !isEligibleAsstName(a1)) {
+      msgs.push(`⚠️ 1-й помощник <b>${e(a1)}</b> относится к другой лиге.`);
+    }
+    if (!force && a2 && !isEligibleAsstName(a2)) {
+      msgs.push(`⚠️ 2-й помощник <b>${e(a2)}</b> относится к другой лиге.`);
     }
     if (!force && res && !isEligibleRefName(res)) {
       msgs.push(`⚠️ Резервный судья <b>${e(res)}</b> относится к другой лиге.`);
@@ -2928,7 +2970,14 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
         headEl.value = picked.id;
       }
       const headName = getHeadInfo().refereeName;
-      const freeAssts = [...(assts || [])].sort(() => Math.random() - 0.5);
+      const eligAsstsPool = (assts || []).filter(a => clientAssistantEligibleForFixture(a, f));
+      const baseAssts = eligAsstsPool.length >= 2 ? eligAsstsPool : (assts || []);
+      const neutralAssts = baseAssts.filter(a => {
+        const c = (a.city || '').trim().toLowerCase();
+        return !c || (c !== homeCity && c !== awayCity);
+      });
+      const asstPickPool = neutralAssts.length >= 2 ? neutralAssts : baseAssts;
+      const freeAssts = [...asstPickPool].sort(() => Math.random() - 0.5);
       if (freeAssts[0]) a1El.value = freeAssts[0].name;
       if (freeAssts[1]) a2El.value = freeAssts[1].name;
 
@@ -15962,6 +16011,7 @@ async function pgAdmin(app) {
     const rplCount = refs.filter(r => hasRefLeague(r, 'rpl')).length;
     const fnlCount = refs.filter(r => hasRefLeague(r, 'fnl')).length;
     const filteredRefs = refs.filter(r => rfLeagueFilter === 'all' ? true : hasRefLeague(r, rfLeagueFilter));
+    const filteredAssts = assts.filter(a => rfLeagueFilter === 'all' ? true : (!Array.isArray(a.leagues) || !a.leagues.length || hasRefLeague(a, rfLeagueFilter)));
     ab.innerHTML = `
       <div class="panel">
         <div class="row sp" style="margin-bottom:10px">
@@ -16021,17 +16071,26 @@ async function pgAdmin(app) {
         </table>
       </div>
       <div class="panel wrap">
-        <h3>Помощники судьи (${assts.length})</h3>
+        <h3>Помощники судьи (${filteredAssts.length}${rfLeagueFilter !== 'all' ? ` из ${assts.length}` : ''})</h3>
         <table>
-          <thead><tr><th>#</th><th class="l">Помощник</th><th>Матчи</th><th>Ср. рейтинг</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th class="l">Помощник</th><th class="l">Город</th><th>Матчи</th><th>Ср. рейтинг</th><th></th></tr></thead>
           <tbody>
-            ${assts.map((a, i) => `<tr>
+            ${filteredAssts.length ? filteredAssts.map((a, i) => {
+              const isRpl = hasRefLeague(a, 'rpl');
+              const isFnl = hasRefLeague(a, 'fnl');
+              return `<tr>
               <td>${i + 1}</td>
-              <td class="l"><a href="javascript:void(0)" data-asp="${a.id}" style="font-weight:700;color:var(--deep);text-decoration:underline;text-underline-offset:3px">${e(a.name)}</a></td>
+              <td class="l">
+                <a href="javascript:void(0)" data-asp="${a.id}" style="font-weight:700;color:var(--deep);text-decoration:underline;text-underline-offset:3px">${e(a.name)}</a>
+                ${isRpl ? ` <span class="tag" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe">РПЛ</span>` : ''}
+                ${isFnl ? ` <span class="tag" style="background:#ecfdf5;color:#166534;border-color:#86efac">ФНЛ</span>` : ''}
+              </td>
+              <td class="l">${e(a.city || '—')}</td>
               <td>${a.matches || 0}</td>
               <td><b>${(Number(a.matches || 0) > 0 || Number(a.rating || 0) > 0) ? Number(a.rating || 0).toFixed(2) : '—'}</b></td>
               <td><button class="btn alt sm" data-asp="${a.id}">Портрет / профиль</button></td>
-            </tr>`).join('')}
+            </tr>`;
+            }).join('') : `<tr><td colspan="6" class="muted" style="text-align:center;padding:18px">В выбранной категории пока нет помощников</td></tr>`}
           </tbody>
         </table>
       </div>
@@ -16160,23 +16219,47 @@ async function pgAdmin(app) {
     ab.querySelectorAll('[data-asp]').forEach(b => b.onclick = () => {
       const a = assts.find(x => x.id === b.dataset.asp);
       if (!a) return;
+      const curLeagues = Array.isArray(a.leagues) ? a.leagues.map(x => String(x || '').toLowerCase()) : ['rpl', 'cup', 'friendly'];
       const m = modal(`
         <div class="row sp" style="margin-bottom:8px">
           <h3 style="margin:0">Профиль помощника судьи: ${e(a.name)}</h3>
           <button type="button" class="btn alt sm" id="as_close">✕</button>
         </div>
         <p class="small"><b>Матчи:</b> ${a.matches || 0} · <b>Рейтинг:</b> ${Number(a.rating || 0).toFixed(2)} <span class="tag" style="background:#fef3c7;color:#92400e">🔒 Только для админа</span></p>
+        <div class="row" style="gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <div style="flex:1;min-width:160px">
+            <label>Город</label>
+            <input id="as_city_inp" value="${e(a.city || '')}" placeholder="Например, Москва">
+          </div>
+          <div style="flex:1;min-width:180px">
+            <label>Допуск к лигам</label>
+            <div class="row" style="gap:12px;margin-top:6px">
+              <label style="display:flex;align-items:center;gap:5px;font-weight:600;margin:0"><input type="checkbox" id="as_lg_rpl" ${curLeagues.includes('rpl') ? 'checked' : ''}> РПЛ</label>
+              <label style="display:flex;align-items:center;gap:5px;font-weight:600;margin:0"><input type="checkbox" id="as_lg_fnl" ${curLeagues.includes('fnl') ? 'checked' : ''}> ФНЛ</label>
+            </div>
+          </div>
+        </div>
         <label>Портрет помощника судьи (можно редактировать вручную)</label>
         <textarea id="as_bio_inp" rows="5" placeholder="Опишите манеру работы ассистента на линии, точность офсайдов, взаимодействие с главным арбитром...">${e(a.bio || '')}</textarea>
         <div class="row" style="margin-top:12px">
-          <button type="button" class="btn" id="as_save_bio">💾 Сохранить портрет</button>
+          <button type="button" class="btn" id="as_save_bio">💾 Сохранить профиль</button>
         </div>
       `);
       m.querySelector('#as_close').onclick = () => m.remove();
       m.querySelector('#as_save_bio').onclick = async () => {
         const newBio = m.querySelector('#as_bio_inp').value;
-        const res = await act(() => api('/admin/assistant', { id: a.id, bio: newBio }), 'Портрет помощника сохранён');
-        if (res) a.bio = newBio;
+        const newCity = m.querySelector('#as_city_inp').value.trim();
+        const nextLeagues = [];
+        if (m.querySelector('#as_lg_rpl').checked) nextLeagues.push('rpl');
+        if (m.querySelector('#as_lg_fnl').checked) nextLeagues.push('fnl');
+        nextLeagues.push('cup', 'friendly');
+        const res = await act(() => api('/admin/assistant', { id: a.id, bio: newBio, city: newCity, leagues: nextLeagues }), 'Профиль помощника сохранён');
+        if (res) {
+          a.bio = newBio;
+          a.city = newCity;
+          a.leagues = nextLeagues;
+          re();
+        }
       };
     });
 
