@@ -3744,10 +3744,13 @@ async function boot() {
 function drawChrome() {
   const isDrawLive = !!(S.st?.liveDraw?.active);
   const isAdmin = S.me?.role === 'admin';
+  const navTeamId = S.me?.role === 'club' ? (CLUB_TID || S.me?.teamId || '') : '';
+  const navTeamComp = navTeamId ? ((S.st?.teams || []).find(t => t.id === navTeamId)?.comp || '') : '';
+  const navComp = ['rpl', 'fnl', '2la_gold', '2la_silver', '2lb_1', '2lb_2', '2lb_3', '2lb_4', 'media', 'media_div2'].includes(navTeamComp) ? navTeamComp : 'rpl';
   const links = [
     ['#/', 'Главная'],
-    ['#/table/rpl', 'Таблицы'],
-    ['#/fixtures/rpl', 'Расписание'],
+    ['#/table/' + navComp, 'Таблицы'],
+    ['#/fixtures/' + navComp, 'Расписание'],
   ];
   // Вкладка жеребьевки появляется у пользователей только когда админ запускает трансляцию
   if (isAdmin || isDrawLive) {
@@ -4245,18 +4248,36 @@ async function pgLogin(app) {
 
 /* ───── главная ───── */
 async function pgHome(app) {
-  const [rawFx, rawTb, ntMain, ntU21] = await Promise.all([
+  const myTeamId = S.me?.role === 'club' ? (CLUB_TID || S.me?.teamId || '') : '';
+  const myTeam = myTeamId ? (S.st?.teams || []).find(t => t.id === myTeamId) : null;
+  let myComp = myTeam?.comp || '';
+  const tableCompFor = c => c === 'fnl' ? 'fnl' : (c === 'rpl' ? 'rpl' : (['2la_gold', '2la_silver', '2lb_1', '2lb_2', '2lb_3', '2lb_4', 'media', 'media_div2'].includes(c) ? c : 'rpl'));
+  let resolvedTableComp = tableCompFor(myComp);
+
+  const [rawFx, rawTbInitial, ntMain, ntU21] = await Promise.all([
     api('/fixtures').catch(() => []),
-    api('/table/rpl').catch(() => []),
+    api('/table/' + resolvedTableComp).catch(() => []),
     api('/national').catch(() => null),
     api('/national?team=u21').catch(() => null)
   ]);
   const allFx = Array.isArray(rawFx) ? rawFx : [];
+  if (myTeamId && !myComp) {
+    myComp = allFx.find(f => (f.comp === 'rpl' || f.comp === 'fnl') && (f.home === myTeamId || f.away === myTeamId))?.comp || '';
+  }
+  const nextTableComp = tableCompFor(myComp);
+  let rawTb = rawTbInitial;
+  if (nextTableComp !== resolvedTableComp) {
+    resolvedTableComp = nextTableComp;
+    rawTb = await api('/table/' + resolvedTableComp).catch(() => []);
+  }
   const tb = Array.isArray(rawTb) ? rawTb : [];
   const rplTeamIds = new Set([
     ...((S.st?.teams || []).filter(t => t.comp === 'rpl').map(t => t.id)),
-    ...(tb.map(r => r.id).filter(Boolean))
+    ...(resolvedTableComp === 'rpl' ? tb.map(r => r.id).filter(Boolean) : [])
   ]);
+  if (myTeamId && !myComp && rplTeamIds.has(myTeamId)) {
+    myComp = 'rpl';
+  }
   const ntFixtures = [
     ...((ntMain?.current?.matches || []).map(m => mapNationalMatchToFixture(m, 'main', ntMain?.current?.title || ''))),
     ...((ntU21?.current?.matches || []).map(m => mapNationalMatchToFixture(m, 'u21', ntU21?.current?.title || '')))
@@ -4282,12 +4303,6 @@ async function pgHome(app) {
     if (lbl.includes('путь регион') || lbl.includes('пути регион')) return true;
     return !f.cupPath && !f.cupStage && !!f.qualRound;
   };
-  const myTeamId = S.me?.role === 'club' ? (CLUB_TID || S.me?.teamId || '') : '';
-  const myTeam = myTeamId ? (S.st?.teams || []).find(t => t.id === myTeamId) : null;
-  let myComp = myTeam?.comp || (myTeamId && rplTeamIds.has(myTeamId) ? 'rpl' : '');
-  if (myTeamId && !myComp) {
-    myComp = allFx.find(f => (f.comp === 'rpl' || f.comp === 'fnl') && (f.home === myTeamId || f.away === myTeamId))?.comp || '';
-  }
 
   let leagueFx = fx;
   let leagueScopeTag = '';
@@ -4338,6 +4353,13 @@ async function pgHome(app) {
     .sort((a, b) => fxRealTs(b) - fxRealTs(a) || String((b.date || '') + (b.time || '')).localeCompare(String((a.date || '') + (a.time || ''))))
     .slice(0, 3);
 
+  const tableTitle = resolvedTableComp === 'fnl'
+    ? 'Таблица ФНЛ (Первая лига)'
+    : resolvedTableComp === 'rpl'
+      ? 'Таблица РПЛ'
+      : `Таблица · ${compName(resolvedTableComp)}`;
+  const tableLogoUrl = compLogo(resolvedTableComp) || '/logos/leagues/rpl.svg';
+
   app.innerHTML = `<h1>Сезон ${e(S.st?.season || '2026/27')}</h1>
 
   ${live.length ? `<div class="panel"><h3><span class="live-dot"></span>Сейчас идут</h3>${live.map(f => fxRow(f, true)).join('')}</div>` : ''}
@@ -4349,11 +4371,11 @@ async function pgHome(app) {
     </div>
     <div class="panel">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <img src="/logos/leagues/rpl.svg" alt="РПЛ" style="width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.15));"/>
-        <h3 style="margin:0;">Таблица РПЛ</h3>
+        <img src="${tableLogoUrl}" alt="${e(tableTitle)}" style="width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.15));"/>
+        <h3 style="margin:0;">${e(tableTitle)}</h3>
       </div>
-      ${tb.some(r => r.p) || tb.length ? tableHtml(tb, { top: 3, bad: 2 }) : '<div class="empty">Нет команд</div>'}
-      <p class="small" style="margin-top:12px"><a href="#/table/rpl">Все турнирные таблицы с эмблемами лиг →</a></p>
+      ${tb.some(r => r.p) || tb.length ? tableHtml(tb, { comp: resolvedTableComp }) : '<div class="empty">Нет команд</div>'}
+      <p class="small" style="margin-top:12px"><a href="#/table/${e(resolvedTableComp)}">Все турнирные таблицы с эмблемами лиг →</a></p>
     </div>
   </div>`;
 }
