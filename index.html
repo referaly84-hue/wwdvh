@@ -2631,7 +2631,7 @@ window.loadAdminRefereesPool = async function(forceRefresh = false) {
 function getClientFixtureTourKey(f) {
   if (!f) return '';
   const s = f.season || S.st?.season || S.st?.settings?.season || '';
-  if (f.comp === 'rpl') return `${s}:rpl:${f.round}`;
+  if (f.comp === 'rpl' || f.comp === 'fnl') return `${s}:${f.comp}:${f.round}`;
   if (f.comp === 'cup') {
     const p = f.cupPath || (Number(f.round) <= 6 ? 'rpl_group' : 'regions_qual');
     const r = f.qualRound || f.round || f.cupStage || 1;
@@ -2646,7 +2646,7 @@ function buildRefereeCrewEditorHtml(f, refs, assts, prefix = 'ref_ed', allFx = n
   const varRefs = [...sortedRefs].sort((a, b) => (b.varRole ? 1 : 0) - (a.varRole ? 1 : 0) || (b.rating || 0) - (a.rating || 0));
   const tourKey = getClientFixtureTourKey(f);
   const fxPool = Array.isArray(allFx) ? allFx : (window.__adminRefPool?.data?.fixtures || S.st?.fixtures || []);
-  const sameTourFx = fxPool.filter(x => x.id !== f.id && getClientFixtureTourKey(x) === tourKey && (f.comp === 'rpl' || f.comp === 'cup'));
+  const sameTourFx = fxPool.filter(x => x.id !== f.id && getClientFixtureTourKey(x) === tourKey && (f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'cup'));
 
   const curHeadId = f.refereeId || (sortedRefs.find(r => r.name === f.refereeName)?.id) || '';
   const curHeadName = f.refereeName || '';
@@ -2792,7 +2792,7 @@ function bindRefereeCrewEditor(rootEl, f, refs, assts, prefix, saveBtnEl, onSave
       const awayCity = (S.st?.teams?.find(t => t.id === f.away)?.city || '').trim().toLowerCase();
       const tourKey = getClientFixtureTourKey(f);
       const fxPool = Array.isArray(allFx) ? allFx : (window.__adminRefPool?.data?.fixtures || S.st?.fixtures || []);
-      const sameTourFx = fxPool.filter(x => x.id !== f.id && getClientFixtureTourKey(x) === tourKey && (f.comp === 'rpl' || f.comp === 'cup'));
+      const sameTourFx = fxPool.filter(x => x.id !== f.id && getClientFixtureTourKey(x) === tourKey && (f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'cup'));
       const busyIds = new Set(sameTourFx.map(x => x.refereeId).filter(Boolean));
       const busyNames = new Set(sameTourFx.map(x => x.refereeName).filter(Boolean));
 
@@ -3701,9 +3701,11 @@ const fxRow = (f, showComp = false) => {
 
   let compBadgeHtml = '';
   if (showComp === true) {
-    const fullTip = e(f.label || (f.comp === 'rpl' && f.round ? `РПЛ · ${f.round}-й тур` : compName(f.comp)));
+    const fullTip = e(f.label || (f.comp === 'rpl' && f.round ? `РПЛ · ${f.round}-й тур` : f.comp === 'fnl' && f.round ? `Первая лига · ${f.round}-й тур` : compName(f.comp)));
     if (f.comp === 'rpl') {
       compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#ecfdf5;color:#065f46;border-color:#a7f3d0;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">РПЛ</span>`;
+    } else if (f.comp === 'fnl') {
+      compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#eff6ff;color:#1e40af;border-color:#bfdbfe;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">Первая лига</span>`;
     } else if (f.comp === 'cup') {
       compBadgeHtml = `<span class="tag" title="${fullTip}" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-size:10px;padding:1px 5px;line-height:1.2;white-space:nowrap">Кубок</span>`;
     } else if (f.comp === 'supercup') {
@@ -4077,7 +4079,7 @@ async function pgHome(app) {
     ...((ntU21?.current?.matches || []).map(m => mapNationalMatchToFixture(m, 'u21', ntU21?.current?.title || '')))
   ];
   const fx = [
-    ...allFx.filter(f => f.comp === 'rpl' || f.comp === 'friendly_match' || rplTeamIds.has(f.home) || rplTeamIds.has(f.away)),
+    ...allFx.filter(f => f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'friendly_match' || rplTeamIds.has(f.home) || rplTeamIds.has(f.away)),
     ...ntFixtures
   ];
   const fxRealTs = f => {
@@ -8255,7 +8257,7 @@ async function pgClub(app) {
     if (moraleMod?.syncGlobalCooldown) moraleMod.syncGlobalCooldown(c.playerTalkCooldown);
     if (window.__RPL_MORALE_CD_STOP__) { try { window.__RPL_MORALE_CD_STOP__(); } catch {} }
     const gp = { ВР: 0, ЛЗ: 1, ЦЗ: 2, ПЗ: 3, ЛП: 4, ОП: 5, ЦП: 6, АП: 7, ПП: 8, ЛВ: 9, ЦФ: 10, ПВ: 11 };
-    const isRpl = c.team.comp === 'rpl';
+    const isRpl = c.team.comp === 'rpl' || c.team.comp === 'fnl';
     const limit = c.legionLimit || { inSquad: 12, onPitch: 7, label: '12+7' };
     const rosterList = [...(c.roster || c.squad || [])];
     const regList = [...(c.squad || [])];
@@ -8286,7 +8288,7 @@ async function pgClub(app) {
       <div class="panel" style="background:${curLegions > limit.inSquad ? '#fef2f2' : '#f0fdf4'};border:1.5px solid ${curLegions > limit.inSquad ? '#f87171' : '#86efac'};margin-bottom:12px">
         <div class="row sp" style="flex-wrap:wrap;gap:8px">
           <div>
-            <b style="font-size:15px">Лимит на легионеров в РПЛ: ${limit.label}</b>
+            <b style="font-size:15px">Лимит на легионеров (${c.team.comp === 'fnl' ? 'Первая лига' : 'РПЛ'}): ${limit.label}</b>
             <span class="muted small" style="margin-left:8px">(в заявке на сезон до ${limit.inSquad}, на поле до ${limit.onPitch}; общий состав клуба — без лимита)</span>
           </div>
           <span class="tag" style="font-weight:700;background:${curLegions > limit.inSquad ? '#b91c1c' : '#15803d'};color:#fff">
@@ -10158,7 +10160,7 @@ async function pgClub(app) {
       $('#fr_venue').onchange = () => { $('#fr_neutral').style.display = $('#fr_venue').value === 'neutral' ? 'flex' : 'none'; };
       $('#fr_opp').onchange = () => {
         const o = $('#fr_opp').selectedOptions[0];
-        $('#fr_route').innerHTML = !o || !o.value ? 'Выберите соперника — покажу, кто должен согласовать матч.' : o.dataset.comp === 'rpl' ? '👥 Соперник из РПЛ: нужны согласие его клуба <b>и</b> администратора.' : '🛡 Соперник не из РПЛ: заявку рассмотрит только администратор.';
+        $('#fr_route').innerHTML = !o || !o.value ? 'Выберите соперника — покажу, кто должен согласовать матч.' : (o.dataset.comp === 'rpl' || o.dataset.comp === 'fnl') ? '👥 Соперник из РПЛ / Первой лиги: нужны согласие его клуба <b>и</b> администратора.' : '🛡 Соперник из низших лиг: заявку рассмотрит только администратор.';
       };
       cb.querySelectorAll('[data-fr-b]').forEach(b => b.onclick = () => { $('#fr_budget').value = b.dataset.frB; });
       $('#fr_send').onclick = async () => {
@@ -10202,7 +10204,7 @@ async function pgClub(app) {
 
     const trSubTabs = `
       <div class="tabs" style="margin-bottom:14px">
-        <button type="button" data-ctt="rpl" class="${CTT === 'rpl' ? 'on' : ''}">🔄 Трансферы РПЛ ${(inc.length + outg.length) ? `(${inc.length + outg.length})` : ''}</button>
+        <button type="button" data-ctt="rpl" class="${CTT === 'rpl' ? 'on' : ''}">🔄 Трансферы лиги ${(inc.length + outg.length) ? `(${inc.length + outg.length})` : ''}</button>
         <button type="button" data-ctt="euro" class="${CTT === 'euro' ? 'on' : ''}">🌍 Из Европы</button>
         <button type="button" data-ctt="free" class="${CTT === 'free' ? 'on' : ''}">🆓 Свободные агенты (${c.freeAgentsCount || 0})</button>
         <button type="button" data-ctt="watchlist" class="${CTT === 'watchlist' ? 'on' : ''}">✏️ На карандаш${wlList.length ? ` (${wlList.length})` : ''}</button>
@@ -10773,7 +10775,7 @@ async function pgClub(app) {
         <div class="row sp" style="margin-bottom:8px">
           <div>
             <h3 style="margin:0">Входящие предложения по вашим игрокам (${inc.length})</h3>
-            <p class="muted small" style="margin:4px 0 0">Запросы на покупку, аренду или обмен игроков вашего клуба. По регламенту РПЛ сделка состоится только при согласии владельца клуба и администратора.</p>
+            <p class="muted small" style="margin:4px 0 0">Запросы на покупку, аренду или обмен игроков вашего клуба. По регламенту лиги сделка состоится только при согласии владельца клуба и администратора.</p>
           </div>
         </div>
         ${inc.length ? inc.map(t => {
@@ -10829,7 +10831,7 @@ async function pgClub(app) {
 
       <div class="panel">
         <h3 style="margin:0 0 6px">Исходящие предложения вашего клуба (${outg.length})</h3>
-        <p class="muted small" style="margin-bottom:10px">Игроки, которых ваш клуб хочет приобрести, взять в аренду или выменять у других клубов РПЛ.</p>
+        <p class="muted small" style="margin-bottom:10px">Игроки, которых ваш клуб хочет приобрести, взять в аренду или выменять у других клубов.</p>
         ${outg.length ? outg.map(t => {
           const isExchange = t.type === 'exchange';
           const isFreeAgent = t.type === 'free_agent';
@@ -10868,12 +10870,12 @@ async function pgClub(app) {
       </div>
 
       <div class="panel">
-        <h3>Сделать предложение по игроку РПЛ</h3>
+        <h3>Сделать предложение по игроку</h3>
         <p class="muted small">Найдите футболиста в чемпионате России и направьте предложение клубу-владельцу и администратору лиги с указанием предложенной суммы или условий обмена. Перерыв между подачей заявок — 1 мин.</p>
         <div data-tr-cd-banner class="warn" style="display:none;margin:8px 0"></div>
         <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-start">
           <div class="sug" style="flex:2;min-width:220px">
-            <label class="small muted">Поиск игрока в РПЛ</label>
+            <label class="small muted">Поиск игрока (РПЛ / Первая лига)</label>
             <input id="cl_tr_psearch" placeholder="Начните вводить фамилию игрока..." autocomplete="off">
             <div class="list" id="cl_tr_plist" hidden></div>
           </div>
@@ -11159,7 +11161,7 @@ async function pgClub(app) {
         const isClLoan = typeVal.includes('loan') || mandatoryBuyout;
         const clLoanUntil = isClLoan ? ($('#cl_tr_loan_until')?.value?.trim() || defaultLoanUntil(typeVal)) : undefined;
         btnSubmitOffer.disabled = true;
-        const adProof = await ensureTransferAdProof('Заявка на трансфер в РПЛ');
+        const adProof = await ensureTransferAdProof('Заявка на трансфер');
         if (!adProof) {
           if (getTransferCooldownLeftMs(c.team.id) > 0) syncTransferCooldownUi(c.team.id);
           else btnSubmitOffer.disabled = false;
@@ -11891,7 +11893,7 @@ function lineupForm(box, f, c, withT, app) {
   const order = { ВР: 0, ЛЗ: 1, ЦЗ: 2, ПЗ: 3, ЛП: 4, ОП: 5, ЦП: 6, АП: 7, ПП: 8, ЛВ: 9, ЦФ: 10, ПВ: 11 };
   const sq = [...c.squad].sort((a, b) => (order[a.pos] ?? 6) - (order[b.pos] ?? 6));
   const isFriendlyComp = f.comp === 'friendly' || f.comp === 'friendly_match' || f.isIntraSquad;
-  const isRpl = !isFriendlyComp && (f.comp === 'rpl' || f.comp === 'cup' || f.comp === 'supercup' || (c.team.comp === 'rpl' && f.comp !== 'fnl'));
+  const isRpl = !isFriendlyComp && (f.comp === 'rpl' || f.comp === 'fnl' || f.comp === 'cup' || f.comp === 'supercup' || c.team.comp === 'rpl' || c.team.comp === 'fnl');
   const limit = c.legionLimit || { inSquad: 12, onPitch: 7, label: '12+7' };
   const fFatMap = isAdmin ? (f.fatigueByPid || {}) : {};
   const fAvailMap = f.availByPid || {};
@@ -15839,7 +15841,7 @@ async function pgAdmin(app) {
           <input id="rf_name" placeholder="Имя и фамилия" style="flex:2;min-width:180px">
           <input id="rf_city" placeholder="Город" style="flex:1;min-width:120px">
           <input id="rf_bio" placeholder="Портрет арбитра (необязательно)" style="flex:2;min-width:220px">
-          <input id="rf_leagues" value="rpl,cup,friendly" placeholder="Лиги (rpl,fnl,cup,friendly)" style="flex:1;min-width:150px">
+          <input id="rf_leagues" value="rpl,fnl,cup,friendly" placeholder="Лиги (rpl,fnl,cup,friendly)" style="flex:1;min-width:150px">
           <button class="btn alt" id="rf_add">Добавить судью</button>
         </div>
       </div>
@@ -15891,13 +15893,14 @@ async function pgAdmin(app) {
         <div class="row" style="gap:8px;flex-wrap:wrap">
           <select id="rf_assign_comp" style="width:auto">
             <option value="rpl">РПЛ</option>
+            <option value="fnl">Первая лига (ФНЛ)</option>
             <option value="cup">FONBET Кубок России</option>
           </select>
           <input id="rf_assign_round" type="number" min="1" value="1" style="width:90px" placeholder="Тур №"/>
           <button class="btn" id="rf_assign_btn">Назначить судей на тур</button>
           <button class="btn alt" id="rf_reassign_btn" type="button">🔄 Перераспределить будущие туры</button>
         </div>
-        <p class="small muted" style="margin:6px 0 0">Кнопка «Перераспределить будущие туры» равномерно распределяет всех главных арбитров РПЛ/Кубка на ещё не сыгранные туры без ручных правок.</p>
+        <p class="small muted" style="margin:6px 0 0">Кнопка «Перераспределить будущие туры» равномерно распределяет всех главных арбитров РПЛ, Первой лиги и Кубка на ещё не сыгранные туры без ручных правок.</p>
       </div>
       <div class="panel" style="margin-top:14px">
         <h3 style="margin:0 0 6px">⚖️ Назначение бригады арбитров на отдельный матч</h3>
@@ -15905,6 +15908,7 @@ async function pgAdmin(app) {
         <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <select id="rf_match_comp" style="width:auto">
             <option value="rpl">РПЛ</option>
+            <option value="fnl">Первая лига (ФНЛ)</option>
             <option value="cup">FONBET Кубок России</option>
             <option value="supercup">Суперкубок России</option>
             <option value="all">Все турниры</option>
@@ -17553,7 +17557,7 @@ async function pgAdmin(app) {
                       ${isExchange ? '🔄 Обмен игроками' : isFreeAgent ? '🆓 Свободный агент' : (t.type === 'loan' || t.type === 'loan_mandatory_rpl') ? `🔄 Аренда${t.loanUntil ? ' до ' + fmtRuDate(t.loanUntil) : ''}` : '📦 Трансфер'}
                     </span>
                     <span class="tag" style="background:#fef3c7;color:#92400e;font-weight:800;font-size:13px">💰 ${e(t.fee || 'По договоренности')}</span>
-                    ${isRpl ? '<span class="tag" style="background:#e0f2fe;color:#0369a1;font-weight:700">РПЛ ↔ РПЛ (Двойное одобрение)</span>' : ''}
+                    ${isRpl ? '<span class="tag" style="background:#e0f2fe;color:#0369a1;font-weight:700">РПЛ / ФНЛ (Двойное одобрение)</span>' : ''}
                     ${(t.mandatoryBuyoutOnRplRetention || t.mandatoryBuyout) ? `<span class="tag sm" style="background:#fffbeb;color:#92400e;font-weight:700;border:1px solid #fde68a">🛡️ Выкуп (${e(t.loanCondition || 'при сохранении в РПЛ')})</span>` : ''}
                     ${t.sellOnPercent ? `<span class="tag sm" style="background:#f5f3ff;color:#6b21a8;font-weight:700;border:1px solid #ddd6fe">🏷️ Sell-on ${t.sellOnPercent}%</span>` : ''}
                   </div>

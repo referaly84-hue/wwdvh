@@ -549,12 +549,13 @@ export function resolveMatchCommentatorBooth(
   const seedStr = `${f?.id || ""}:${f?.home || hName}:${f?.away || aName}:${f?.round || ""}`;
   const h = stableHash(seedStr);
 
-  const isMainMarquee = isBigStage || bothTop6 || (oneTop4OtherTop8 && marqueeNames) || (comp === "rpl" && marqueeNames);
-  const isTopTier = isMainMarquee || oneTop4OtherTop8 || strongPowers || (comp === "rpl" && oneBigClub && ((h % 100) < 35));
+  const isTopLeague = comp === "rpl" || comp === "fnl";
+  const isMainMarquee = isBigStage || bothTop6 || (oneTop4OtherTop8 && marqueeNames) || (isTopLeague && marqueeNames);
+  const isTopTier = isMainMarquee || oneTop4OtherTop8 || strongPowers || (isTopLeague && oneBigClub && ((h % 100) < 35));
 
   const bothLowerHalf = hPos !== null && aPos !== null && hPos >= 9 && aPos >= 9;
   const preseasonLowerPairing = hPos === null && aPos === null && !oneBigClub && !isCaucasusDerby && ((h >>> 2) % 100) < 55;
-  const isLowerMatch = !isTopTier && !isBigStage && (bothLowerHalf || preseasonLowerPairing || /^(fnl|2la|2lb|media)/.test(comp));
+  const isLowerMatch = !isTopTier && !isBigStage && (bothLowerHalf || preseasonLowerPairing || /^(2la|2lb|media)/.test(comp));
 
   // Determine main lead pool according to tier rules
   let leadPoolIds: string[];

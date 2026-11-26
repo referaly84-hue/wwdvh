@@ -126,6 +126,7 @@ function getClubLeagueContext(db2: any, clubObj: any) {
   const total = Math.max(compTeams.length || (comp === "fnl" ? 18 : 16), 2);
   let rank = Math.ceil(total / 2);
   const pct = rank / total;
+  const isTopLeague = comp === "rpl" || comp === "fnl";
   return {
     comp,
     season: targetSeason,
@@ -133,10 +134,10 @@ function getClubLeagueContext(db2: any, clubObj: any) {
     total,
     played: 0,
     pct,
-    isRelegationOrBottom: comp === "fnl" || pct > 0.72,
-    isBottomHalf: comp === "fnl" || rank > Math.ceil(total / 2),
-    isTopContender: comp === "rpl" && rank <= 6,
-    isUpperHalf: comp === "rpl" && rank <= Math.min(10, Math.ceil(total * 0.63))
+    isRelegationOrBottom: (!isTopLeague) || pct > 0.72,
+    isBottomHalf: (!isTopLeague) || rank > Math.ceil(total / 2),
+    isTopContender: isTopLeague && rank <= 6,
+    isUpperHalf: isTopLeague && rank <= Math.min(10, Math.ceil(total * 0.63))
   };
 }
 
@@ -151,12 +152,11 @@ function getEligibleForeignClubPool(player2: any, clubCtx?: any, db2?: any, seas
   const isTopContender = clubCtx ? !!clubCtx.isTopContender : true;
   const isUpperHalf = clubCtx ? !!clubCtx.isUpperHalf : true;
   const isRelegationOrBottom = clubCtx ? !!clubCtx.isRelegationOrBottom : false;
+  const isTopLeague = comp === "rpl" || comp === "fnl";
 
   let maxReputation = 84;
   if (isBenchTarget) {
-    maxReputation = (comp === "rpl" && ovr >= 75 && age <= 23) ? 78 : 75;
-  } else if (comp === "fnl") {
-    maxReputation = rank <= 3 && age <= 22 && ovr >= 73 ? 75 : 72;
+    maxReputation = (isTopLeague && ovr >= 75 && age <= 23) ? 78 : 75;
   } else if (isRelegationOrBottom) {
     maxReputation = age <= 22 && ovr >= 75 && avgR >= 7.3 && games >= 6 ? 76 : 74;
   } else if (!isUpperHalf) {
@@ -172,10 +172,10 @@ function getEligibleForeignClubPool(player2: any, clubCtx?: any, db2?: any, seas
   } else if (ovr >= 80 && isTopContender) {
     const pTop = pool.filter((c) => c.reputation >= 78);
     if (pTop.length) pool = pTop;
-  } else if (ovr >= 75 && !isRelegationOrBottom && comp === "rpl") {
+  } else if (ovr >= 75 && !isRelegationOrBottom && isTopLeague) {
     const pMid = pool.filter((c) => c.reputation >= 74);
     if (pMid.length) pool = pMid;
-  } else if (ovr < 73 || isRelegationOrBottom || comp === "fnl") {
+  } else if (ovr < 73 || isRelegationOrBottom) {
     const pLow = pool.filter((c) => c.reputation <= Math.min(maxReputation, 75));
     if (pLow.length) pool = pLow;
   }

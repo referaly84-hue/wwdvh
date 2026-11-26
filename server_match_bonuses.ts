@@ -239,26 +239,17 @@ function ensureBonusesDb(db: any) {
 
 function leagueScaleRef(comp?: string): number {
   const c = String(comp || "rpl");
-  if (c === "rpl" || c === "cup" || c === "supercup") return 250000;
-  if (c === "fnl") return 90000;
+  if (c === "rpl" || c === "fnl" || c === "cup" || c === "supercup") return 250000;
   return 35000;
 }
 
 export function getBonusPresetsForTeam(comp?: string) {
   const c = String(comp || "rpl");
-  if (c === "rpl" || c === "cup" || c === "supercup") {
+  if (c === "rpl" || c === "fnl" || c === "cup" || c === "supercup") {
     return {
       teamPresets: [50000, 150000, 300000, 500000, 1000000],
       playerPresets: [15000, 30000, 50000, 100000, 200000],
       minTeam: 5000,
-      minPlayer: 1000,
-    };
-  }
-  if (c === "fnl") {
-    return {
-      teamPresets: [20000, 50000, 100000, 200000, 350000],
-      playerPresets: [5000, 15000, 25000, 50000, 100000],
-      minTeam: 2000,
       minPlayer: 1000,
     };
   }

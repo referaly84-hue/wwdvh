@@ -224,7 +224,7 @@ function computeClientMotivationPreview(
   startersSet?: Set<string>,
   benchSet?: Set<string>
 ) {
-  const ref = comp === "rpl" || comp === "cup" || comp === "supercup" ? 250000 : comp === "fnl" ? 90000 : 35000;
+  const ref = comp === "rpl" || comp === "fnl" || comp === "cup" || comp === "supercup" ? 250000 : 35000;
   let teamMod = 0;
   if (teamEnabled && teamAmount > 0) {
     teamMod = Math.min(1.05, 0.22 + Math.log1p(teamAmount / ref) * 0.42);
@@ -272,11 +272,12 @@ function mountBonusEditor(
   const teamConds = bonusMeta.conditions?.team || DEFAULT_TEAM_CONDS;
   const playerConds = bonusMeta.conditions?.player || DEFAULT_PLAYER_CONDS;
   const comp = String(c.team?.comp || f.comp || "rpl");
+  const isTopBonusComp = comp === "rpl" || comp === "fnl" || comp === "cup" || comp === "supercup";
   const presets = bonusMeta.presets || {
-    teamPresets: comp === "rpl" ? [50000, 150000, 300000, 500000, 1000000] : [20000, 50000, 100000, 200000],
-    playerPresets: comp === "rpl" ? [15000, 30000, 50000, 100000, 200000] : [5000, 15000, 25000, 50000],
-    minTeam: comp === "rpl" ? 5000 : 1000,
-    minPlayer: comp === "rpl" ? 1000 : 500,
+    teamPresets: isTopBonusComp ? [50000, 150000, 300000, 500000, 1000000] : [20000, 50000, 100000, 200000],
+    playerPresets: isTopBonusComp ? [15000, 30000, 50000, 100000, 200000] : [5000, 15000, 25000, 50000],
+    minTeam: isTopBonusComp ? 5000 : 1000,
+    minPlayer: isTopBonusComp ? 1000 : 500,
   };
 
   const totalClubBudget = Math.max(0, Number(c.budget ?? c.team?.budget ?? 0));

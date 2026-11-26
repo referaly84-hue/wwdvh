@@ -163,8 +163,7 @@ function roundMoney100(n: number): number {
 
 export function leagueScaleForFine(comp?: string): number {
   const c = String(comp || "rpl");
-  if (c === "rpl" || c === "cup" || c === "supercup") return 1;
-  if (c === "fnl") return 0.5;
+  if (c === "rpl" || c === "fnl" || c === "cup" || c === "supercup") return 1;
   return 0.3;
 }
 

@@ -4372,7 +4372,7 @@ export function registerAdsAndPredictionsRoutes(app: Express, ctx: AdServerConte
     const openFixtures = (db.fixtures || [])
       .filter((f: any) => {
         if ((f.season || season) !== season) return false;
-        if (f.comp !== 'rpl' && f.comp !== 'cup' && f.comp !== 'supercup' && f.comp !== 'friendly_match') return false;
+        if (f.comp !== 'rpl' && f.comp !== 'fnl' && f.comp !== 'cup' && f.comp !== 'supercup' && f.comp !== 'friendly_match') return false;
         return !getFixtureBetLockInfo(f, now).locked;
       })
       .sort((a: any, b: any) => {

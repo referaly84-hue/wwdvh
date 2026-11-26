@@ -537,7 +537,7 @@ export function buildLogisticsCatalog(ctx: AwayLogisticsServerContext, f: any, t
   const myTeam = ctx.team(tid);
   const comp = String(myTeam?.comp || f?.comp || "rpl");
   // Realistic pricing in € (~100 ₽ per €1) scaled by league budget
-  const scaleFactor = comp === "rpl" ? 1 : comp === "fnl" ? 0.55 : 0.35;
+  const scaleFactor = (comp === "rpl" || comp === "fnl") ? 1 : 0.35;
   const dist = geo.distKm;
   const isSameCity = dist < 70;
   const isEnclave = geo.destCity === "Калининград" || geo.originCity === "Калининград";

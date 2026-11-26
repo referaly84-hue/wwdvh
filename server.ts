@@ -489,7 +489,7 @@ var SUB_COND_LABELS: Record<string, string> = {
 };
 function getFixtureLegionLimit(f: any, tid?: string) {
   if (!f || isIntraSquad(f) || f.comp === FRIENDLY_COMP || f.comp === "friendly" || f.comp === "friendly_match" || f.comp === "national") return null;
-  if (f.comp === "rpl" || f.comp === "cup" || f.comp === "supercup" || (tid && team(tid)?.comp === "rpl" && f.comp !== "fnl")) {
+  if (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.comp === "supercup" || (tid && (team(tid)?.comp === "rpl" || team(tid)?.comp === "fnl"))) {
     return getRplLegionLimit(f.season || S());
   }
   return null;
@@ -5081,10 +5081,11 @@ function getClubLeagueContext(db2: any, clubObj: any) {
     if (sIdx >= 0) rank = sIdx + 1;
   }
   const pct = rank / total;
-  const isRelegationOrBottom = comp === "fnl" || rank >= Math.max(12, total - 4) || pct > 0.72;
-  const isBottomHalf = comp === "fnl" || rank > Math.ceil(total / 2);
-  const isTopContender = comp === "rpl" && rank <= 6;
-  const isUpperHalf = comp === "rpl" && rank <= Math.min(10, Math.ceil(total * 0.63));
+  const isTopLeague = comp === "rpl" || comp === "fnl";
+  const isRelegationOrBottom = (!isTopLeague) || rank >= Math.max(12, total - 4) || pct > 0.72;
+  const isBottomHalf = (!isTopLeague) || rank > Math.ceil(total / 2);
+  const isTopContender = isTopLeague && rank <= 6;
+  const isUpperHalf = isTopLeague && rank <= Math.min(10, Math.ceil(total * 0.63));
   return { comp, season: targetSeason, rank, total, played, pct, isRelegationOrBottom, isBottomHalf, isTopContender, isUpperHalf };
 }
 function getForeignClubQuota(db2: any, clubObjOrId: any, targetSeason?: string) {
@@ -5125,11 +5126,12 @@ function getEligibleForeignClubPool(player2: any, clubCtx?: any, db2?: any, seas
   const isUpperHalf = clubCtx ? !!clubCtx.isUpperHalf : true;
   const isRelegationOrBottom = clubCtx ? !!clubCtx.isRelegationOrBottom : false;
 
+  const isTopLeague = comp === "rpl" || comp === "fnl";
   let maxReputation = 84;
   if (isBenchTarget) {
     // За игроком скамейки/ротации приходят скромные или средние зарубежные клубы (усиление глубины или аренда)
-    maxReputation = (comp === "rpl" && ovr >= 75 && age <= 23) ? 78 : 76;
-  } else if (comp === "fnl" || comp === "2la_gold" || comp === "2la_silver") {
+    maxReputation = (isTopLeague && ovr >= 75 && age <= 23) ? 78 : 76;
+  } else if (comp === "2la_gold" || comp === "2la_silver") {
     maxReputation = rank <= 3 && age <= 22 && ovr >= 73 ? 75 : 73;
   } else if (isRelegationOrBottom) {
     maxReputation = age <= 22 && ovr >= 75 && avgR >= 7.25 && games >= 5 ? 76 : 74;
@@ -5146,10 +5148,10 @@ function getEligibleForeignClubPool(player2: any, clubCtx?: any, db2?: any, seas
   } else if (ovr >= 80 && isTopContender) {
     const pTop = pool.filter((c) => c.reputation >= 78);
     if (pTop.length) pool = pTop;
-  } else if (ovr >= 75 && !isRelegationOrBottom && comp === "rpl") {
+  } else if (ovr >= 75 && !isRelegationOrBottom && isTopLeague) {
     const pMid = pool.filter((c) => c.reputation >= 74);
     if (pMid.length) pool = pMid;
-  } else if (ovr < 73 || isRelegationOrBottom || comp === "fnl") {
+  } else if (ovr < 73 || isRelegationOrBottom) {
     const pLow = pool.filter((c) => c.reputation <= Math.min(maxReputation, 75));
     if (pLow.length) pool = pLow;
   }
@@ -7403,7 +7405,7 @@ function isInInternationalBreak(dateStr) {
 }
 function getFixtureTourKey(f) {
   const s = f.season || S();
-  if (f.comp === "rpl") return `${s}:rpl:${f.round}`;
+  if (f.comp === "rpl" || f.comp === "fnl") return `${s}:${f.comp}:${f.round}`;
   if (f.comp === "cup") {
     const p = f.cupPath || (f.round <= 6 ? "rpl_group" : "regions_qual");
     const r = f.qualRound || f.round || f.cupStage || 1;
@@ -7420,8 +7422,9 @@ function classifyMatchTier(f) {
   if (!f) return { tier: "mid", label: "Обычный матч", reason: "Стандартный матч" };
   const isDerby = (db?.derbies || []).some((x) => (x.a === f.home && x.b === f.away) || (x.a === f.away && x.b === f.home));
   const isCupDecisive = f.comp === "cup" && (f.cupStage === "final" || f.cupStage === "semi" || f.cupStage === "quarter" || /финал|полуфинал|1\/2|1\/4/i.test(f.label || ""));
-  const rplTeams = (db?.teams || []).filter((t) => t.comp === "rpl");
-  const pool = rplTeams.length >= 6 ? rplTeams : (db?.teams || []);
+  const leagueComp = f.comp === "fnl" ? "fnl" : "rpl";
+  const leagueTeams = (db?.teams || []).filter((t) => t.comp === leagueComp);
+  const pool = leagueTeams.length >= 6 ? leagueTeams : (db?.teams || []);
   const ranked = [...pool].map((t) => ({ id: t.id, pow: getTeamPowerScore(t.id) })).sort((a, b) => b.pow - a.pow);
   const topCount = Math.max(4, Math.min(6, Math.floor(ranked.length * 0.375) || 6));
   const botCount = Math.max(4, Math.min(6, Math.floor(ranked.length * 0.375) || 6));
@@ -7444,9 +7447,7 @@ function classifyMatchTier(f) {
   if ((topIds.has(f.home) || topIds.has(f.away)) && avgPow >= topCut) {
     return { tier: "top", label: "Топовый матч", reason: "Матч высокой статусности", avgPower: +avgPow.toFixed(1) };
   }
-  const tH = team(f.home);
-  const tA = team(f.away);
-  if (f.comp === "fnl" || (tH?.comp === "fnl" && tA?.comp === "fnl") || (!topIds.has(f.home) && !topIds.has(f.away) && (bottomIds.has(f.home) || bottomIds.has(f.away) || avgPow <= botCut))) {
+  if (!topIds.has(f.home) && !topIds.has(f.away) && (bottomIds.has(f.home) || bottomIds.has(f.away) || avgPow <= botCut)) {
     return { tier: "weak", label: "Слабый матч", reason: "Матч команд нижней части / низкого рейтинга", avgPower: +avgPow.toFixed(1) };
   }
   return { tier: "mid", label: "Обычный матч", reason: "Стандартный матч тура", avgPower: +avgPow.toFixed(1) };
@@ -7470,8 +7471,8 @@ function getRefereeEffectiveSkill(r) {
   return seedR;
 }
 function assignTourReferees(tourList, force = false) {
-  const validMatches = tourList.filter((f) => f.comp === "rpl" || f.comp === "cup");
-  const invalidMatches = tourList.filter((f) => f.comp !== "rpl" && f.comp !== "cup");
+  const validMatches = tourList.filter((f) => f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup");
+  const invalidMatches = tourList.filter((f) => f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup");
   for (const f of invalidMatches) {
     if (f.manualReferees && !force) continue;
     delete f.refereeId;
@@ -7517,11 +7518,11 @@ function assignTourReferees(tourList, force = false) {
   }
   const compRoundPairs = /* @__PURE__ */ new Set();
   const curTourKey = getFixtureTourKey(validMatches[0]);
-  const prevCompRound = validMatches[0].comp === "rpl" && Number(validMatches[0].round) > 1 ? `${curSeason}:rpl:${Number(validMatches[0].round) - 1}` : null;
+  const prevCompRound = (validMatches[0].comp === "rpl" || validMatches[0].comp === "fnl") && Number(validMatches[0].round) > 1 ? `${curSeason}:${validMatches[0].comp}:${Number(validMatches[0].round) - 1}` : null;
   const prevTourHeadIds = /* @__PURE__ */ new Set();
   for (const fxItem of db.fixtures || []) {
     if ((fxItem.season || S()) !== curSeason) continue;
-    if (fxItem.comp !== "rpl" && fxItem.comp !== "cup") continue;
+    if (fxItem.comp !== "rpl" && fxItem.comp !== "fnl" && fxItem.comp !== "cup") continue;
     if (unlockedIds.has(fxItem.id)) continue;
     const isCounted = fxItem.status === "done" || fxItem.status === "live" || !!(fxItem.refereeId || fxItem.refereeName);
     if (!isCounted) continue;
@@ -7539,7 +7540,7 @@ function assignTourReferees(tourList, force = false) {
     if (fxItem.reserveReferee && resLoad[fxItem.reserveReferee] !== void 0) resLoad[fxItem.reserveReferee]++;
   }
   const comp = validMatches[0].comp;
-  let eligible = db.referees.filter((r) => !r.leagues || r.leagues.includes(comp));
+  let eligible = db.referees.filter((r) => !r.leagues || r.leagues.includes(comp) || (comp === "fnl" && r.leagues.includes("rpl")));
   if (!eligible.length) eligible = db.referees;
   const sortedMatches = [...validMatches].sort((a, b) => {
     const aDerby = db.derbies?.some((x) => x.a === a.home && x.b === a.away || x.a === a.away && x.b === a.home) ? 1 : 0;
@@ -7648,7 +7649,7 @@ function assignTourReferees(tourList, force = false) {
   }
 }
 function assignReferee(f, siblingList) {
-  if (f.comp !== "rpl" && f.comp !== "cup") {
+  if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup") {
     delete f.refereeId;
     delete f.refereeName;
     delete f.assistants;
@@ -8039,8 +8040,13 @@ function load() {
       assignFixtureWeather(f);
     }
   }
+  for (const r of db.referees || []) {
+    if (Array.isArray(r.leagues) && r.leagues.includes("rpl") && !r.leagues.includes("fnl")) {
+      r.leagues.push("fnl");
+    }
+  }
   for (const f of db.fixtures) {
-    if (f.comp !== "rpl" && f.comp !== "cup" && !f.manualReferees) {
+    if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup" && !f.manualReferees) {
       delete f.refereeId;
       delete f.refereeName;
       delete f.assistants;
@@ -8052,7 +8058,7 @@ function load() {
   reconcileRefereeStats();
   const tours: Record<string, any[]> = {};
   for (const f of db.fixtures) {
-    if (f.comp === "rpl" || f.comp === "cup") {
+    if (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup") {
       const k = getFixtureTourKey(f);
       tours[k] = tours[k] || [];
       tours[k].push(f);
@@ -8063,7 +8069,7 @@ function load() {
     const bd = String(b[0]?.date || "9999-99-99");
     return ad.localeCompare(bd) || (Number(a[0]?.round || 0) - Number(b[0]?.round || 0));
   });
-  const schedRplCup = db.fixtures.filter((f) => (f.season || S()) === S() && (f.comp === "rpl" || f.comp === "cup") && f.status === "scheduled" && !f.manualReferees);
+  const schedRplCup = db.fixtures.filter((f) => (f.season || S()) === S() && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup") && f.status === "scheduled" && !f.manualReferees);
   const distinctScheduledHeads = new Set(schedRplCup.map((f) => f.refereeId).filter(Boolean));
   const headCapableCount = (db.referees || []).filter((r) => r.role !== "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439 \u0441\u0443\u0434\u044C\u044F").length;
   const needsRotationRebalance = schedRplCup.length >= 16 && headCapableCount >= 18 && distinctScheduledHeads.size > 0 && distinctScheduledHeads.size <= 10;
@@ -8454,7 +8460,7 @@ function tryAutoRegisterPlayer(tid, p, force = false) {
   const cur = squadOf(tid);
   if (cur.some((x) => x.id === p.id)) return true;
   if (cur.length >= squadMax) return false;
-  if (tm?.comp === "rpl" && isLegionnaire(p)) {
+  if ((tm?.comp === "rpl" || tm?.comp === "fnl") && isLegionnaire(p)) {
     const limit = getRplLegionLimit(S());
     if (cur.filter(isLegionnaire).length >= limit.inSquad) return false;
   }
@@ -12198,7 +12204,8 @@ async function buildCtx(f) {
     ? `Внутрикомандный спарринг (${hDispName} против ${aDispName})`
     : dv ? dv.principled ? `\u041F\u0440\u0438\u043D\u0446\u0438\u043F\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043C\u0430\u0442\u0447 (\u041D\u0415 \u0434\u0435\u0440\u0431\u0438): ${dv.name}. ${dv.note}` : `${dv.name}. ${dv.note}` : "\u043D\u0435\u0442 (\u043E\u0431\u044B\u0447\u043D\u044B\u0439 \u043A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u043D\u044B\u0439 \u043C\u0430\u0442\u0447)";
   ctx.motiv = { home: motivText(f.home, f, hDispName), away: motivText(f.away, f, aDispName) };
-  const top = Object.values(agg().P).filter((x) => x.comp === "rpl" && x.g > 0).sort((a, b) => b.g - a.g).slice(0, 5);
+  const raceComp = f.comp === "fnl" ? "fnl" : "rpl";
+  const top = Object.values(agg().P).filter((x) => x.comp === raceComp && x.g > 0).sort((a, b) => b.g - a.g).slice(0, 5);
   ctx.race = top.length ? top.map((x) => `${x.n} (${tn(x.t)}) \u2014 ${x.g}`).join("; ") : "\u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445";
   ctx.weather = await weather(H, f.date, f.time);
   ctx.fat = { home: fatText(f.home, f), away: fatText(f.away, f) };
@@ -12255,7 +12262,7 @@ async function buildCtx(f) {
       away: rA ? formatStandingRow(rA, lpA.name) : `${lpA.name} (${lpA.level}) \u2014 \u043D\u0430\u0447\u0430\u043B\u043E \u0441\u0435\u0437\u043E\u043D\u0430`
     };
   }
-  if (!f.refereeName && (f.comp === "rpl" || f.comp === "cup")) {
+  if (!f.refereeName && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
     assignReferee(f);
   }
   const headRef = db.referees?.find((r) => r.id === f.refereeId || r.name === f.refereeName) || (f.refereeName ? {
@@ -12279,9 +12286,9 @@ async function buildCtx(f) {
     asst1: assts[0],
     asst2: assts[1],
     fourth: f.reserveReferee || "\u0412\u0435\u0440\u0430 \u041E\u043F\u0435\u0439\u043A\u0438\u043D\u0430",
-    var: f.varReferee || (f.comp === "rpl" ? "\u0421\u0435\u0440\u0433\u0435\u0439 \u041A\u0430\u0440\u0430\u0441\u0435\u0432" : null),
+    var: f.varReferee || ((f.comp === "rpl" || f.comp === "fnl") ? "\u0421\u0435\u0440\u0433\u0435\u0439 \u041A\u0430\u0440\u0430\u0441\u0435\u0432" : null),
     varProfile: varRef,
-    avar: f.avarReferee || (f.comp === "rpl" ? "\u041F\u0430\u0432\u0435\u043B \u041A\u0443\u043A\u0443\u044F\u043D" : null)
+    avar: f.avarReferee || ((f.comp === "rpl" || f.comp === "fnl") ? "\u041F\u0430\u0432\u0435\u043B \u041A\u0443\u043A\u0443\u044F\u043D" : null)
   };
   const isDerbyBool = !!(dv && !dv.principled);
   const isRivalryBool = !!(dv && dv.principled);
@@ -13162,8 +13169,8 @@ function normalizeEvents(raw, a, b, ctx, prev, minEv = 3, opts?: { strictLegionS
   // Enforce on-pitch legionnaire limit across all substitutions in RPL/Cup matches
   {
     const limBySide: Record<"home" | "away", number | null> = {
-      home: ctx?.legionLimitBySide?.home ?? (ctx?.compId === "rpl" && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null),
-      away: ctx?.legionLimitBySide?.away ?? (ctx?.compId === "rpl" && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null)
+      home: ctx?.legionLimitBySide?.home ?? ((ctx?.compId === "rpl" || ctx?.compId === "fnl") && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null),
+      away: ctx?.legionLimitBySide?.away ?? ((ctx?.compId === "rpl" || ctx?.compId === "fnl") && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null)
     };
     if (limBySide.home != null || limBySide.away != null) {
       const pitchBySide: Record<"home" | "away", Set<string>> = {
@@ -13520,7 +13527,7 @@ function fakePeriod(a, b, ctx, prev) {
     for (const sideKey of ["home", "away"] as const) {
       const pSubs = (ctx.lineup?.[sideKey]?.plannedSubs || []).filter((ps: any) => ps.minute === m);
       if (!pSubs.length) continue;
-      const sideLimit = ctx?.legionLimitBySide?.[sideKey] ?? ctx?.legionLimit?.onPitch ?? (ctx?.compId === "rpl" && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null);
+      const sideLimit = ctx?.legionLimitBySide?.[sideKey] ?? ctx?.legionLimit?.onPitch ?? ((ctx?.compId === "rpl" || ctx?.compId === "fnl") && !ctx?.intraSquad ? getRplLegionLimit(S()).onPitch : null);
       const isLegPid = (pid: string) => isCtxPidLegionnaire(ctx, pid);
       const eligible = pSubs.filter((ps: any) => {
         if (!onPitch[sideKey].has(ps.outPid) || subbedIn.has(ps.inPid)) return false;
@@ -14416,10 +14423,10 @@ function buildLiveStatsPayload(m: any, f: any) {
 var live = {};
 var timers = {};
 var fullSim = (f) => true;
-var AUTO_COMPS = /* @__PURE__ */ new Set(["rpl", "cup", "supercup", "playoff", "playoff_rpl_fnl", "friendly_match"]);
+var AUTO_COMPS = /* @__PURE__ */ new Set(["rpl", "fnl", "cup", "supercup", "playoff", "playoff_rpl_fnl", "friendly_match"]);
 var isMediaFx = (f) => String(f.comp || "").startsWith("media") || String(f.playoffTieId || "").startsWith("media");
 var isAutoFx = (f) => AUTO_COMPS.has(f.comp) && !isMediaFx(f);
-var isLightFx = (f) => !isAutoFx(f) && (/^(fnl|2la|2lb|media)/.test(String(f.comp || "")) || isMediaFx(f));
+var isLightFx = (f) => !isAutoFx(f) && (/^(2la|2lb|media)/.test(String(f.comp || "")) || isMediaFx(f));
 var AI_MAX_LATE_MS = 6 * 36e5;
 var queue = [];
 var running = 0;
@@ -15871,7 +15878,7 @@ function getTransferClubTierInfo(teamOrId: any, fallbackName?: string) {
 
     let statusTier = 4;
     let leagueBase = 60;
-    if (comp === "rpl") {
+    if (comp === "rpl" || comp === "fnl" || comp === "1l") {
       leagueBase = 100;
       if (rank <= 4 || (strRank <= 4 && played < 5)) {
         statusTier = 6;
@@ -15882,9 +15889,6 @@ function getTransferClubTierInfo(teamOrId: any, fallbackName?: string) {
       } else {
         statusTier = 3;
       }
-    } else if (comp === "fnl" || comp === "1l") {
-      leagueBase = 55;
-      statusTier = 2;
     } else {
       leagueBase = 28;
       statusTier = 1;
@@ -16648,7 +16652,7 @@ function nowMskParts() {
     };
   }
 }
-const TG_DAILY_ALLOWED_COMPS = new Set(["rpl", "cup"]);
+const TG_DAILY_ALLOWED_COMPS = new Set(["rpl", "fnl", "cup"]);
 function buildTodayMatchesTgMessage(dateStr: string) {
   const list = (db?.fixtures || [])
     .filter((f) => f && TG_DAILY_ALLOWED_COMPS.has(String(f.comp || "")) && (f.realDate || f.date) === dateStr && f.status !== "cancelled")
@@ -16968,7 +16972,7 @@ function genSeason(start, name, opts) {
       const sat = wk.sat;
       let order = shuffle(pairs, r);
       const dIdx = order.findIndex(([a, b]) => db.derbies.some((x) => x.a === a && x.b === b || x.a === b && x.b === a));
-      if (dIdx >= 0 && c === "rpl") {
+      if (dIdx >= 0 && (c === "rpl" || c === "fnl")) {
         const [dm] = order.splice(dIdx, 1);
         order.splice(Math.min(3, order.length), 0, dm);
       }
@@ -18784,12 +18788,12 @@ var pubFx = (f) => {
     full: f.status === "live" || f.status === "done" ? !!f.st || f.status === "live" : fullSim(f),
     derby: !!db.derbies.find((d) => !d.principled && (d.a === f.home && d.b === f.away || d.a === f.away && d.b === f.home)),
     rivalry: !!db.derbies.find((d) => d.principled && (d.a === f.home && d.b === f.away || d.a === f.away && d.b === f.home)),
-    refereeId: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeId || null : null,
-    refereeName: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeName || null : null,
-    assistants: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? (Array.isArray(f.assistants) ? f.assistants : []) : [],
-    reserveReferee: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.reserveReferee || null : null,
-    varReferee: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.varReferee || null : null,
-    avarReferee: (f.comp === "rpl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.avarReferee || null : null,
+    refereeId: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeId || null : null,
+    refereeName: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.refereeName || null : null,
+    assistants: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? (Array.isArray(f.assistants) ? f.assistants : []) : [],
+    reserveReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.reserveReferee || null : null,
+    varReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.varReferee || null : null,
+    avarReferee: (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup" || f.manualReferees || f.refereeId || f.refereeName) ? f.avarReferee || null : null,
     manualReferees: !!f.manualReferees,
     stadium,
     city,
@@ -22011,7 +22015,7 @@ app.get("/api/club", needClub, (req, res) => {
           squadCount: fSq.length,
           squadMax,
           legionCount: fSq.filter(isLegionnaire).length,
-          legionLimit: ft.comp === "rpl" ? legionLimit.inSquad : null,
+          legionLimit: (ft.comp === "rpl" || ft.comp === "fnl") ? legionLimit.inSquad : null,
           roster: [...fRo].sort((a, b) => (posOrd[a.pos] ?? 9) - (posOrd[b.pos] ?? 9) || String(a.name || "").localeCompare(String(b.name || ""), "ru")).map((p) => ({
             ...pubPlayer(p, ft.comp || refComp),
             inRegistration: fSqSet.has(p.id),
@@ -22384,7 +22388,7 @@ app.post("/api/club/squad/add", needClub, async (req, res) => {
     if (owner && req.me.role !== "admin") {
       const fromTeam = team(p.teamId);
       const toTeam = team(req.tid);
-      const isRplToRpl = fromTeam?.comp === "rpl" && toTeam?.comp === "rpl";
+      const isRplToRpl = (fromTeam?.comp === "rpl" || fromTeam?.comp === "fnl") && (toTeam?.comp === "rpl" || toTeam?.comp === "fnl");
       const isExchange = String(req.body.transferType || req.body.type || "") === "exchange" || !!req.body.exchangePid;
       const defaultFee = isExchange ? "€0" : "€1.0M";
       const { feeStr, feeAmount: feeNum } = sanitizeFeePair(req.body.fee, defaultFee);
@@ -22578,7 +22582,7 @@ app.post("/api/club/squad/add-batch", needClub, async (req, res) => {
       if (owner && req.me.role !== "admin") {
         const fromTeam = team(p.teamId);
         const toTeam = team(req.tid);
-        const isRplToRpl = fromTeam?.comp === "rpl" && toTeam?.comp === "rpl";
+        const isRplToRpl = (fromTeam?.comp === "rpl" || fromTeam?.comp === "fnl") && (toTeam?.comp === "rpl" || toTeam?.comp === "fnl");
         const feeStr = "\u20AC5.0M";
         const feeNum = 5;
         const trObj = {
@@ -22785,12 +22789,12 @@ app.post("/api/club/squad/nation", needClub, (req, res) => {
   const wasLeg = isLegionnaire(p);
   p.nation = nat;
   const tm = team(req.tid);
-  if (tm && tm.comp === "rpl" && inSquad && !wasLeg && isLegionnaire(p)) {
+  if (tm && (tm.comp === "rpl" || tm.comp === "fnl") && inSquad && !wasLeg && isLegionnaire(p)) {
     const limit = getRplLegionLimit(S());
     const legions = squadOf(req.tid).filter(isLegionnaire).length;
     if (legions > limit.inSquad) {
       p.nation = prev;
-      return fail(res, `\u0421 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u043E\u0439 \u0438\u0433\u0440\u043E\u043A \u0441\u0442\u0430\u043D\u0435\u0442 \u043B\u0435\u0433\u0438\u043E\u043D\u0435\u0440\u043E\u043C, \u0430 \u043B\u0438\u043C\u0438\u0442 \u043B\u0435\u0433\u0438\u043E\u043D\u0435\u0440\u043E\u0432 \u0432 \u0437\u0430\u044F\u0432\u043A\u0435 \u0420\u041F\u041B \u2014 ${limit.inSquad} (\u043B\u0438\u043C\u0438\u0442 ${limit.label}). \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0441\u0432\u043E\u0431\u043E\u0434\u0438\u0442\u0435 \u043C\u0435\u0441\u0442\u043E.`);
+      return fail(res, `\u0421 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u043E\u0439 \u0438\u0433\u0440\u043E\u043A \u0441\u0442\u0430\u043D\u0435\u0442 \u043B\u0435\u0433\u0438\u043E\u043D\u0435\u0440\u043E\u043C, \u0430 \u043B\u0438\u043C\u0438\u0442 \u043B\u0435\u0433\u0438\u043E\u043D\u0435\u0440\u043E\u0432 \u0432 \u0437\u0430\u044F\u0432\u043A\u0435 ${tm.comp === "fnl" ? "\u041F\u0435\u0440\u0432\u043E\u0439 \u043B\u0438\u0433\u0438" : "\u0420\u041F\u041B"} \u2014 ${limit.inSquad} (\u043B\u0438\u043C\u0438\u0442 ${limit.label}). \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0441\u0432\u043E\u0431\u043E\u0434\u0438\u0442\u0435 \u043C\u0435\u0441\u0442\u043E.`);
     }
   }
   p.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -22840,11 +22844,11 @@ app.post("/api/club/squad/submit", needClub, (req, res) => {
     return fail(res, `В заявке на сезон не может быть больше ${squadMax} игроков (сейчас выбрано: ${ids.length}). Уберите лишних игроков из заявки.`);
   }
   const tm = team(req.tid);
-  if (tm?.comp === "rpl") {
+  if (tm?.comp === "rpl" || tm?.comp === "fnl") {
     const limit = getRplLegionLimit(S());
     const legions = ids.map(player).filter(Boolean).filter(isLegionnaire).length;
     if (legions > limit.inSquad) {
-      return fail(res, `Превышен лимит легионеров в заявке РПЛ: ${legions} из допустимых ${limit.inSquad} (лимит ${limit.label} на сезон ${S()}).`);
+      return fail(res, `Превышен лимит легионеров в заявке ${tm.comp === "fnl" ? "Первой лиги" : "РПЛ"}: ${legions} из допустимых ${limit.inSquad} (лимит ${limit.label} на сезон ${S()}).`);
     }
   }
   db.squads[req.tid] = ids;
@@ -22870,11 +22874,11 @@ app.post("/api/club/registration/toggle", needClub, (req, res) => {
       return fail(res, `В заявке на сезон максимум ${squadMax} игроков. Сначала снимите кого-то с заявки.`);
     }
     const tm = team(req.tid);
-    if (tm?.comp === "rpl" && isLegionnaire(p)) {
+    if ((tm?.comp === "rpl" || tm?.comp === "fnl") && isLegionnaire(p)) {
       const limit = getRplLegionLimit(S());
       const curLegions = curIds.map(player).filter(Boolean).filter(isLegionnaire).length;
       if (curLegions >= limit.inSquad) {
-        return fail(res, `Превышен лимит легионеров в заявке РПЛ: максимум ${limit.inSquad} по лимиту ${limit.label} на сезон ${S()} (сейчас в заявке: ${curLegions}).`);
+        return fail(res, `Превышен лимит легионеров в заявке ${tm.comp === "fnl" ? "Первой лиги" : "РПЛ"}: максимум ${limit.inSquad} по лимиту ${limit.label} на сезон ${S()} (сейчас в заявке: ${curLegions}).`);
       }
     }
     db.squads[req.tid] = [...curIds, pid];
@@ -27054,7 +27058,7 @@ app.post("/api/admin/referee", admin, (req, res) => {
       city: city || "\u041C\u043E\u0441\u043A\u0432\u0430",
       age: Number(age2) || 38,
       varRole: varRole || "",
-      leagues: Array.isArray(leagues) && leagues.length ? leagues : ["rpl", "cup"],
+      leagues: Array.isArray(leagues) && leagues.length ? leagues : ["rpl", "fnl", "cup"],
       rating: initR,
       matches: 0,
       varMatches: 0,
@@ -27062,7 +27066,7 @@ app.post("/api/admin/referee", admin, (req, res) => {
       yellows: 0,
       reds: 0,
       penalties: 0,
-      bio: bio || "\u0410\u0440\u0431\u0438\u0442\u0440 \u0420\u041F\u041B \u0438 \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438.",
+      bio: bio || "\u0410\u0440\u0431\u0438\u0442\u0440 \u0420\u041F\u041B, \u041F\u0435\u0440\u0432\u043E\u0439 \u043B\u0438\u0433\u0438 \u0438 \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438.",
       ratingHistory: []
     };
     if (initR > 0) newRef.manualRating = true;
@@ -27098,7 +27102,7 @@ app.post("/api/admin/fixture/referee", admin, async (req, res) => {
     if (b.refereeId) {
       const r = (db.referees || []).find((x) => x.id === b.refereeId);
       if (!r) return fail(res, "\u0421\u0443\u0434\u044C\u044F \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D");
-      if (!force && (f.comp === "rpl" || f.comp === "cup")) {
+      if (!force && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
         const tourKey = getFixtureTourKey(f);
         const conflict = (db.fixtures || []).find((x) => x.id !== f.id && getFixtureTourKey(x) === tourKey && x.refereeId === r.id);
         if (conflict) {
@@ -27110,7 +27114,7 @@ app.post("/api/admin/fixture/referee", admin, async (req, res) => {
     } else if (b.refereeName) {
       const customName = String(b.refereeName).trim();
       const matched = (db.referees || []).find((x) => x.name === customName);
-      if (matched && !force && (f.comp === "rpl" || f.comp === "cup")) {
+      if (matched && !force && (f.comp === "rpl" || f.comp === "fnl" || f.comp === "cup")) {
         const tourKey = getFixtureTourKey(f);
         const conflict = (db.fixtures || []).find((x) => x.id !== f.id && getFixtureTourKey(x) === tourKey && x.refereeId === matched.id);
         if (conflict) {
@@ -27282,7 +27286,7 @@ app.post("/api/admin/referees/reassign-upcoming", admin, (req, res) => {
   const tours: Record<string, any[]> = {};
   for (const f of db.fixtures || []) {
     if ((f.season || S()) !== S()) continue;
-    if (f.comp !== "rpl" && f.comp !== "cup") continue;
+    if (f.comp !== "rpl" && f.comp !== "fnl" && f.comp !== "cup") continue;
     if (f.status !== "scheduled" || f.manualReferees) continue;
     const k = getFixtureTourKey(f);
     tours[k] = tours[k] || [];
@@ -27918,7 +27922,7 @@ app.post("/api/club/staff/offer", needClub, (req, res) => {
   const sellerCustom = String(m.role).startsWith("c_");
   if (!targetRole) targetRole = sellerCustom ? "copy" : m.role;
   if (targetRole !== "copy" && !roleValidFor(req.tid, targetRole)) return fail(res, "\u0422\u0430\u043A\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0432 \u0432\u0430\u0448\u0435\u043C \u043A\u043B\u0443\u0431\u0435 \u043D\u0435\u0442 \u2014 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0435\u0451 \u043D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \xAB\u0428\u0442\u0430\u0431\xBB");
-  const needClub2 = !isFreeAgent && seller?.comp === "rpl" && buyer.comp === "rpl";
+  const needClub2 = !isFreeAgent && (seller?.comp === "rpl" || seller?.comp === "fnl") && (buyer.comp === "rpl" || buyer.comp === "fnl");
   const fromNameLabel = isFreeAgent
     ? (m.formerClub ? `Свободный тренер (экс-${m.formerClub})` : "Свободный тренер")
     : seller.name;
@@ -28362,7 +28366,7 @@ function friendlyBreakFor(date) {
 function upcomingFriendlyBreaks() {
   return friendlyBreaks().sort((a, b) => a.start.localeCompare(b.start)).map((b) => ({ id: b.id, name: b.name, start: b.start, end: b.end }));
 }
-var friendlyNeedsClub = (opp) => opp?.comp === "rpl";
+var friendlyNeedsClub = (opp) => opp?.comp === "rpl" || opp?.comp === "fnl";
 function friendlyConflict(tid, date) {
   const clash = (db.fixtures || []).find((f) => (f.home === tid || f.away === tid) && (f.gameDate || f.date) === date);
   return clash ? `\u0423 \u043A\u043B\u0443\u0431\u0430 \xAB${tn(tid)}\xBB \u0443\u0436\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u043C\u0430\u0442\u0447 \u043D\u0430 ${date}` : null;
@@ -29108,7 +29112,7 @@ app.post("/api/admin/transfer/direct", admin, (req, res) => {
   if (sellOnPct > 0) {
     note += ` \xB7 Sell-on clause ${sellOnPct}%`;
   }
-  const isRplToRpl = fromTeam?.comp === "rpl" && toTeam?.comp === "rpl";
+  const isRplToRpl = (fromTeam?.comp === "rpl" || fromTeam?.comp === "fnl") && (toTeam?.comp === "rpl" || toTeam?.comp === "fnl");
   const customComment = typeof req.body.comment === "string" ? req.body.comment.trim().slice(0, 280) : "";
   const trObj: any = {
     id: uid(),

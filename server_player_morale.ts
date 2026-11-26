@@ -233,7 +233,7 @@ function buildTeamContextSnapshot(ctx: PlayerMoraleContext, teamId: string): Tea
   const budget = Number(t?.budget || 6_000_000);
   // Rough club ambition expectation (top-budget clubs expect top-5, mid-tier expect mid-table)
   const expectationMinPos =
-    comp === "rpl"
+    comp === "rpl" || comp === "fnl"
       ? budget >= 15_000_000
         ? 4
         : budget >= 8_500_000
