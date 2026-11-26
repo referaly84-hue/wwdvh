@@ -8203,7 +8203,7 @@ async function pgClub(app) {
     <button data-t="transfers" class="${CT === 'transfers' ? 'on' : ''}">Трансферы ${((c.incomingTransfers?.length || 0) + (c.outgoingTransfers?.length || 0)) ? `(${c.incomingTransfers.length + c.outgoingTransfers.length})` : ''}</button>
     <button data-t="sponsors" class="${CT === 'sponsors' ? 'on' : ''}">💰 Спонсоры и РФС</button>
     <button data-t="fines" class="${CT === 'fines' ? 'on' : ''}">⚖️ КДК и Фэйр-плэй${(c.finesSummary?.finesCount || 0) > 0 ? ` (${c.finesSummary.finesCount})` : ''}</button>
-    <button data-t="finances" class="${CT === 'finances' ? 'on' : ''}">🏦 Банк и баланс</button>
+    <button data-t="finances" class="${CT === 'finances' ? 'on' : ''}">🏦 VLF Банк</button>
   </div>
   <div id="cb"></div>`;
 

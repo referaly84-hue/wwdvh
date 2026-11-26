@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import type { Express } from "express";
 
-export type BankCardTheme = "tbank" | "alfa" | "vtb" | "sber" | "club";
+export type BankCardTheme = "vlf";
 export type BankCurrency = "EUR" | "RUB" | "USD";
 
 export interface ClubBankGoal {
@@ -42,7 +42,7 @@ export interface ClubBankContext {
   getBonusesSummary: (tid: string) => any;
 }
 
-const VALID_THEMES = new Set<BankCardTheme>(["tbank", "alfa", "vtb", "sber", "club"]);
+const VALID_THEMES = new Set<BankCardTheme>(["vlf"]);
 const VALID_CURRENCIES = new Set<BankCurrency>(["EUR", "RUB", "USD"]);
 
 export function ensureClubBankStore(db: any, teamId: string): ClubBankState {
@@ -50,7 +50,7 @@ export function ensureClubBankStore(db: any, teamId: string): ClubBankState {
   let st = db.clubBank[teamId];
   if (!st || typeof st !== "object") {
     st = {
-      cardTheme: "tbank",
+      cardTheme: "vlf",
       hideBalance: false,
       currency: "EUR",
       spendingLimits: {
@@ -63,7 +63,7 @@ export function ensureClubBankStore(db: any, teamId: string): ClubBankState {
     };
     db.clubBank[teamId] = st;
   }
-  if (!VALID_THEMES.has(st.cardTheme)) st.cardTheme = "tbank";
+  if (!VALID_THEMES.has(st.cardTheme)) st.cardTheme = "vlf";
   if (!VALID_CURRENCIES.has(st.currency)) st.currency = "EUR";
   st.hideBalance = !!st.hideBalance;
   if (!st.spendingLimits || typeof st.spendingLimits !== "object") {
@@ -155,7 +155,7 @@ function buildAccountDetails(teamObj: any, compTitle: string) {
     correspondentAccount: "30101 810 1 4525 0000974",
     inn: `77${innTail}`,
     kpp: "770401001",
-    bankName: "АО «Лига-Банк Корпоративный»",
+    bankName: "АО «Банк VLF»",
     cardLast4,
     cardHolder: String(teamObj?.name || "ФУТБОЛЬНЫЙ КЛУБ").toUpperCase(),
     leagueName: compTitle || comp.toUpperCase() || "Лига",
@@ -439,8 +439,7 @@ export function registerClubBankRoutes(app: Express, ctx: ClubBankContext) {
       const { cardTheme, hideBalance, currency, spendingLimits } = req.body || {};
 
       if (cardTheme !== undefined) {
-        if (!VALID_THEMES.has(cardTheme)) return ctx.fail(res, "Неизвестная тема карты");
-        st.cardTheme = cardTheme;
+        st.cardTheme = "vlf";
       }
       if (hideBalance !== undefined) {
         st.hideBalance = !!hideBalance;

@@ -1,4 +1,4 @@
-/* Банковский модуль клуба: объединяет лучшие практики Т-Банк, Альфа-Банк, ВТБ и СберБанк */
+/* Банковский модуль клуба VLF */
 
 declare global {
   interface Window {
@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-type BankTheme = "tbank" | "alfa" | "vtb" | "sber" | "club";
+type BankTheme = "vlf";
 type BankCurrency = "EUR" | "RUB" | "USD";
 type BankSubTab = "overview" | "analytics" | "goals" | "limits";
 
@@ -27,7 +27,6 @@ interface BankUiState {
   showDetails: boolean;
   localHideOverride: boolean | null;
   localCurrencyOverride: BankCurrency | null;
-  localThemeOverride: BankTheme | null;
 }
 
 const UI_STATE: BankUiState = {
@@ -40,7 +39,6 @@ const UI_STATE: BankUiState = {
   showDetails: false,
   localHideOverride: null,
   localCurrencyOverride: null,
-  localThemeOverride: null,
 };
 
 const CURRENCY_RATES: Record<BankCurrency, { rate: number; symbol: string; label: string }> = {
@@ -49,75 +47,16 @@ const CURRENCY_RATES: Record<BankCurrency, { rate: number; symbol: string; label
   USD: { rate: 1.08, symbol: "$", label: "USD ($)" },
 };
 
-const THEME_META: Record<
-  BankTheme,
-  {
-    name: string;
-    cardBg: string;
-    cardAccent: string;
-    cardText: string;
-    cardMuted: string;
-    accentColor: string;
-    badgeBg: string;
-    badgeText: string;
-    bankLabel: string;
-  }
-> = {
-  tbank: {
-    name: "Т-Банк",
-    cardBg: "linear-gradient(135deg, #1b1d22 0%, #2b303a 55%, #16181d 100%)",
-    cardAccent: "#ffdd2d",
-    cardText: "#ffffff",
-    cardMuted: "rgba(255,255,255,0.68)",
-    accentColor: "#e0b800",
-    badgeBg: "#ffdd2d",
-    badgeText: "#1b1d22",
-    bankLabel: "Т-Бизнес · Клуб",
-  },
-  alfa: {
-    name: "Альфа",
-    cardBg: "linear-gradient(135deg, #17171a 0%, #3a1212 52%, #b91c1c 100%)",
-    cardAccent: "#ef3124",
-    cardText: "#ffffff",
-    cardMuted: "rgba(255,255,255,0.72)",
-    accentColor: "#ef3124",
-    badgeBg: "#ef3124",
-    badgeText: "#ffffff",
-    bankLabel: "Альфа-Клуб",
-  },
-  vtb: {
-    name: "ВТБ",
-    cardBg: "linear-gradient(135deg, #061c47 0%, #0b3c8c 55%, #0062d1 100%)",
-    cardAccent: "#38bdf8",
-    cardText: "#ffffff",
-    cardMuted: "rgba(224,242,254,0.74)",
-    accentColor: "#0062d1",
-    badgeBg: "#38bdf8",
-    badgeText: "#061c47",
-    bankLabel: "ВТБ · Привилегия",
-  },
-  sber: {
-    name: "Сбер",
-    cardBg: "linear-gradient(135deg, #072d1c 0%, #10603b 52%, #1d8f4e 100%)",
-    cardAccent: "#4ade80",
-    cardText: "#ffffff",
-    cardMuted: "rgba(220,252,231,0.75)",
-    accentColor: "#16803c",
-    badgeBg: "#4ade80",
-    badgeText: "#052e16",
-    bankLabel: "СберБизнес",
-  },
-  club: {
-    name: "Карбон",
-    cardBg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
-    cardAccent: "#f0c419",
-    cardText: "#f8fafc",
-    cardMuted: "rgba(226,232,240,0.72)",
-    accentColor: "#1b5c3f",
-    badgeBg: "#f0c419",
-    badgeText: "#0f172a",
-    bankLabel: "РПЛ Казначейство",
-  },
+const VLF_THEME = {
+  name: "VLF",
+  cardBg: "linear-gradient(135deg, #0b1813 0%, #113526 54%, #09130f 100%)",
+  cardAccent: "#f0c419",
+  cardText: "#ffffff",
+  cardMuted: "rgba(226,242,233,0.72)",
+  accentColor: "#1b5c3f",
+  badgeBg: "#f0c419",
+  badgeText: "#0b1813",
+  bankLabel: "VLF Банк",
 };
 
 function ensureBankStyles() {
@@ -268,9 +207,8 @@ function ensureBankStyles() {
   `;
 }
 
-function getTheme(bank: any): BankTheme {
-  const t = UI_STATE.localThemeOverride || bank?.preferences?.cardTheme || "tbank";
-  return THEME_META[t as BankTheme] ? (t as BankTheme) : "tbank";
+function getTheme(_bank: any): BankTheme {
+  return "vlf";
 }
 
 function getCurrency(bank: any): BankCurrency {
@@ -348,7 +286,7 @@ function buildFallbackBank(c: any) {
     totalReservedGoals: 0,
     freeBeforeGoals: balance - committed,
     spendableAfterGoals: balance - committed,
-    preferences: { cardTheme: "tbank", hideBalance: false, currency: "EUR", spendingLimits: { transfers: 10_000_000, logistics: 500_000, bonuses: 1_500_000 } },
+    preferences: { cardTheme: "vlf", hideBalance: false, currency: "EUR", spendingLimits: { transfers: 10_000_000, logistics: 500_000, bonuses: 1_500_000 } },
     goals: [],
     accountDetails: {
       accountNumber: "40702 810 4 0001 0042817",
@@ -356,7 +294,7 @@ function buildFallbackBank(c: any) {
       correspondentAccount: "30101 810 1 4525 0000974",
       inn: "7704123456",
       kpp: "770401001",
-      bankName: "АО «Лига-Банк Корпоративный»",
+      bankName: "АО «Банк VLF»",
       cardLast4: "4821",
       cardHolder: String(c?.team?.name || "КЛУБ").toUpperCase(),
       leagueName: String(c?.team?.comp || "РПЛ").toUpperCase(),
@@ -502,8 +440,7 @@ async function renderClubBalanceTab(
   const withT = (o: Record<string, any>) => (teamId ? { ...o, teamId } : o);
 
   const bank = clubData?.bank || buildFallbackBank(clubData);
-  const themeKey = getTheme(bank);
-  const theme = THEME_META[themeKey];
+  const theme = VLF_THEME;
   const currency = getCurrency(bank);
   const mask = isHidden(bank);
   const history: any[] = Array.isArray(bank.history) ? bank.history : [];
@@ -638,11 +575,6 @@ async function renderClubBalanceTab(
           </div>
         </div>
         <div class="cbk-controls">
-          <div class="cbk-seg" role="group" aria-label="Стиль банка">
-            ${(["tbank", "alfa", "vtb", "sber", "club"] as BankTheme[])
-              .map((tk) => `<button type="button" data-bank-theme="${tk}" class="${themeKey === tk ? "on" : ""}">${e(THEME_META[tk].name)}</button>`)
-              .join("")}
-          </div>
           <div class="cbk-seg" role="group" aria-label="Валюта">
             ${(["EUR", "RUB", "USD"] as BankCurrency[])
               .map((cur) => `<button type="button" data-bank-cur="${cur}" class="${currency === cur ? "on" : ""}">${CURRENCY_RATES[cur].symbol}</button>`)
@@ -1238,15 +1170,6 @@ async function renderClubBalanceTab(
     }
   }
 
-  cb.querySelectorAll("[data-bank-theme]").forEach((btn) => {
-    (btn as HTMLElement).onclick = async () => {
-      const tk = (btn as HTMLElement).dataset.bankTheme as BankTheme;
-      UI_STATE.localThemeOverride = tk;
-      renderClubBalanceTab(cb, clubData, onRefreshClub, onSwitchTab);
-      await savePref({ cardTheme: tk });
-    };
-  });
-
   cb.querySelectorAll("[data-bank-cur]").forEach((btn) => {
     (btn as HTMLElement).onclick = async () => {
       const cur = (btn as HTMLElement).dataset.bankCur as BankCurrency;
@@ -1586,7 +1509,7 @@ async function renderClubBalanceTab(
       modal(
         `
         <div style="display:flex;flex-direction:column;gap:12px">
-          <h3 style="margin:0;font:700 16px Unbounded,sans-serif">Валютный калькулятор клуба (ВТБ · ЦБ)</h3>
+          <h3 style="margin:0;font:700 16px Unbounded,sans-serif">Валютный калькулятор VLF</h3>
           <div class="small muted">Курсы расчёта: <b>1 € = 105 ₽ = 1.08 $</b>. Свободный остаток клуба: <b>${e(fmtMoney(bank.spendableAfterGoals, "EUR", false))}</b></div>
           <label>
             <div class="small" style="font-weight:600;margin-bottom:4px">Сумма в евро (€)</div>
