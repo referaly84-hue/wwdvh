@@ -9721,6 +9721,26 @@ var RPL_PRIZE_SCALE = [
   { place: 15, prize: 35e5, label: "15 \u043C\u0435\u0441\u0442\u043E (\u0412\u044B\u043B\u0435\u0442)" },
   { place: 16, prize: 34e5, label: "16 \u043C\u0435\u0441\u0442\u043E (\u0412\u044B\u043B\u0435\u0442)" }
 ];
+var FNL_PRIZE_SCALE = [
+  { place: 1, prize: 25e5, label: "1 \u043C\u0435\u0441\u0442\u043E \u2014 \u0427\u0435\u043C\u043F\u0438\u043E\u043D \u0424\u041D\u041B (\u0412 \u0420\u041F\u041B)" },
+  { place: 2, prize: 21e5, label: "2 \u043C\u0435\u0441\u0442\u043E \u2014 \u0421\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u044B\u0439 \u043F\u0440\u0438\u0437\u0451\u0440 (\u0412 \u0420\u041F\u041B)" },
+  { place: 3, prize: 18e5, label: "3 \u043C\u0435\u0441\u0442\u043E (\u0421\u0442\u044B\u043A\u0438 \u0432 \u0420\u041F\u041B)" },
+  { place: 4, prize: 16e5, label: "4 \u043C\u0435\u0441\u0442\u043E (\u0421\u0442\u044B\u043A\u0438 \u0432 \u0420\u041F\u041B)" },
+  { place: 5, prize: 14e5, label: "5 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 6, prize: 125e4, label: "6 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 7, prize: 115e4, label: "7 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 8, prize: 105e4, label: "8 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 9, prize: 95e4, label: "9 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 10, prize: 9e5, label: "10 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 11, prize: 85e4, label: "11 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 12, prize: 8e5, label: "12 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 13, prize: 75e4, label: "13 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 14, prize: 7e5, label: "14 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 15, prize: 65e4, label: "15 \u043C\u0435\u0441\u0442\u043E" },
+  { place: 16, prize: 6e5, label: "16 \u043C\u0435\u0441\u0442\u043E (\u0412\u044B\u043B\u0435\u0442)" },
+  { place: 17, prize: 55e4, label: "17 \u043C\u0435\u0441\u0442\u043E (\u0412\u044B\u043B\u0435\u0442)" },
+  { place: 18, prize: 5e5, label: "18 \u043C\u0435\u0441\u0442\u043E (\u0412\u044B\u043B\u0435\u0442)" }
+];
 var CUP_PRIZE_SCALE = {
   groupParticipation: 3e5,
   // 300 тысяч за участие в групповом этапе
@@ -9990,11 +10010,29 @@ function ensureSuperCupFixture(sName, startDate) {
 }
 function calculateCupPrizeSuggestions() {
   const rplTeams = db.teams.filter((t) => t.comp === "rpl");
+  const fnlTeams = db.teams.filter((t) => t.comp === "fnl");
   const suggestions = [];
   const cupFx = (db.fixtures || []).filter((f) => f.comp === "cup");
+  const didTeamWin = (f, tid) => {
+    const isHome = f.home === tid;
+    const isAway = f.away === tid;
+    if (!isHome && !isAway) return false;
+    if (f.tech?.winner === "home") return isHome;
+    if (f.tech?.winner === "away") return isAway;
+    const hs = Number(f.hg ?? f.homeScore ?? 0);
+    const as = Number(f.ag ?? f.awayScore ?? 0);
+    if (hs !== as) return isHome ? hs > as : as > hs;
+    if (f.pen?.winner) return isHome ? f.pen.winner === "home" : f.pen.winner === "away";
+    if (f.penalties || f.pen) {
+      const hp = Number(f.pen?.hg ?? f.homePen ?? 0);
+      const ap = Number(f.pen?.ag ?? f.awayPen ?? 0);
+      return isHome ? hp > ap : ap > hp;
+    }
+    return false;
+  };
   for (const t of rplTeams) {
     let stage = "\u0413\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0439 \u044D\u0442\u0430\u043F";
-    let base = CUP_PRIZE_SCALE.groupParticipation;
+    const base = CUP_PRIZE_SCALE.groupParticipation;
     let groupWins = 0;
     let r16Wins = 0;
     let qfWins = 0;
@@ -10003,22 +10041,18 @@ function calculateCupPrizeSuggestions() {
     let isFinalRunnerUp = false;
     for (const f of cupFx) {
       if (f.status !== "done") continue;
-      const isHome = f.home === t.id;
-      const isAway = f.away === t.id;
-      if (!isHome && !isAway) continue;
-      const teamWon = isHome && f.homeScore > f.awayScore || isAway && f.awayScore > f.homeScore;
-      const isPenWon = f.penalties && (isHome && f.homePen > f.awayPen || isAway && f.awayPen > f.homePen);
-      const won = teamWon || isPenWon;
+      if (f.home !== t.id && f.away !== t.id) continue;
+      const won = didTeamWin(f, t.id);
       const label = String(f.label || "").toLowerCase();
-      const stageField = String(f.stage || "").toLowerCase();
-      if (label.includes("\u0444\u0438\u043D\u0430\u043B") && !label.includes("1/2") && !label.includes("1/4") && !label.includes("1/8")) {
+      const stageField = String(f.cupStage || f.stage || "").toLowerCase();
+      if (f.cupStage === "superfinal" || f.cupPath === "superfinal" || (label.includes("\u0444\u0438\u043D\u0430\u043B") && !label.includes("1/2") && !label.includes("1/4") && !label.includes("1/8") && !label.includes("\u043F\u0443\u0442\u0438"))) {
         stage = "\u0424\u0438\u043D\u0430\u043B \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438";
         if (won) isFinalWinner = true;
         else isFinalRunnerUp = true;
-      } else if (label.includes("1/2") || stageField.includes("semi")) {
+      } else if (label.includes("1/2") || stageField.includes("semi") || stageField.includes("_sf")) {
         stage = "\u041F\u043E\u043B\u0443\u0444\u0438\u043D\u0430\u043B \u041F\u0443\u0442\u0438 \u0420\u041F\u041B";
         if (won) sfWins++;
-      } else if (label.includes("1/4") || stageField.includes("quarter")) {
+      } else if (label.includes("1/4") || stageField.includes("quarter") || stageField.includes("_qf")) {
         stage = "1/4 \u0444\u0438\u043D\u0430\u043B\u0430";
         if (won) qfWins++;
       } else if (label.includes("1/8") || stageField.includes("r16")) {
@@ -10041,6 +10075,7 @@ function calculateCupPrizeSuggestions() {
     suggestions.push({
       teamId: t.id,
       teamName: t.name,
+      comp: t.comp,
       logo: teamLogo(t.id),
       stage,
       groupWins,
@@ -10050,7 +10085,69 @@ function calculateCupPrizeSuggestions() {
       breakdown: `\u0423\u0447\u0430\u0441\u0442\u0438\u0435 \u20AC300K + ${groupWins} \u043F\u043E\u0431\u0435\u0434 \u0432 \u0433\u0440\u0443\u043F\u043F\u0435 (\u20AC${(groupWins * 100).toLocaleString("ru-RU")}K)`
     });
   }
-  return suggestions.sort((a, b) => b.prize - a.prize);
+  for (const t of fnlTeams) {
+    let stage = "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 \u041E\u0442\u0431\u043E\u0440";
+    let qualWins = 0;
+    let playoffWins = 0;
+    let bonus = 5e4;
+    let isFinalWinner = false;
+    let isFinalRunnerUp = false;
+    for (const f of cupFx) {
+      if (f.status !== "done") continue;
+      if (f.home !== t.id && f.away !== t.id) continue;
+      const won = didTeamWin(f, t.id);
+      const label = String(f.label || "").toLowerCase();
+      const stageField = String(f.cupStage || f.stage || "").toLowerCase();
+      if (f.cupStage === "superfinal" || f.cupPath === "superfinal") {
+        stage = "\u0424\u0438\u043D\u0430\u043B \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438";
+        if (won) isFinalWinner = true;
+        else isFinalRunnerUp = true;
+      } else if (stageField.includes("regions_final") || label.includes("\u0444\u0438\u043D\u0430\u043B \u043F\u0443\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D")) {
+        stage = "\u0424\u0438\u043D\u0430\u043B \u041F\u0443\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432";
+        if (won) playoffWins++;
+      } else if (label.includes("1/2") || stageField.includes("semi") || stageField.includes("_sf")) {
+        if (stage !== "\u0424\u0438\u043D\u0430\u043B \u041F\u0443\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432" && stage !== "\u0424\u0438\u043D\u0430\u043B \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438") {
+          stage = "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/2 \u0444\u0438\u043D\u0430\u043B\u0430";
+        }
+        if (won) playoffWins++;
+      } else if (label.includes("1/4") || stageField.includes("quarter") || stageField.includes("_qf")) {
+        if (!stage.includes("1/2") && !stage.includes("\u0424\u0438\u043D\u0430\u043B")) {
+          stage = "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/4 \u0444\u0438\u043D\u0430\u043B\u0430";
+        }
+        if (won) playoffWins++;
+      } else if (label.includes("1/8") || stageField.includes("r16")) {
+        if (stage === "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 \u041E\u0442\u0431\u043E\u0440") {
+          stage = "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/8 \u0444\u0438\u043D\u0430\u043B\u0430";
+        }
+        if (won) playoffWins++;
+      } else {
+        if (won) qualWins++;
+      }
+    }
+    if (stage === "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/8 \u0444\u0438\u043D\u0430\u043B\u0430") bonus += 1e5;
+    else if (stage === "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/4 \u0444\u0438\u043D\u0430\u043B\u0430") bonus += 2e5;
+    else if (stage === "\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \xB7 1/2 \u0444\u0438\u043D\u0430\u043B\u0430") bonus += 35e4;
+    else if (stage === "\u0424\u0438\u043D\u0430\u043B \u041F\u0443\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432") bonus += 55e4;
+    else if (stage === "\u0424\u0438\u043D\u0430\u043B \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438") bonus += isFinalWinner ? CUP_PRIZE_SCALE.finalWinner : CUP_PRIZE_SCALE.finalRunnerUp;
+    const totalPrize = bonus + qualWins * 5e4 + playoffWins * 75e3;
+    suggestions.push({
+      teamId: t.id,
+      teamName: t.name,
+      comp: t.comp,
+      logo: teamLogo(t.id),
+      stage,
+      groupWins: qualWins,
+      playoffWins,
+      prize: totalPrize,
+      formattedPrize: "\u20AC" + totalPrize.toLocaleString("ru-RU"),
+      breakdown: `\u041F\u0443\u0442\u044C \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432: \u0443\u0447\u0430\u0441\u0442\u0438\u0435 \u20AC50K + ${qualWins} \u043F\u043E\u0431\u0435\u0434 \u0432 \u043E\u0442\u0431\u043E\u0440\u0435 (\u20AC${(qualWins * 50).toLocaleString("ru-RU")}K)`
+    });
+  }
+  return suggestions.sort((a, b) => {
+    if (a.comp === "rpl" && b.comp !== "rpl") return -1;
+    if (a.comp !== "rpl" && b.comp === "rpl") return 1;
+    return b.prize - a.prize;
+  });
 }
 async function getTransferAiAdvice(t, p, fromT, toT) {
   const pName = p?.name || t.playerName || "\u0424\u0443\u0442\u0431\u043E\u043B\u0438\u0441\u0442";
@@ -27030,6 +27127,7 @@ ${ev}
 app.get("/api/admin/budgets", admin, (req, res) => {
   try {
     ensureInitialBudgets();
+    const compPriority = (c: string) => c === "rpl" ? 0 : c === "fnl" ? 1 : 2;
     const teams = db.teams.map((t) => ({
       id: t.id,
       name: t.name,
@@ -27040,8 +27138,9 @@ app.get("/api/admin/budgets", admin, (req, res) => {
       budget: t.budget || 0,
       formattedBudget: (t.budget || 0) < 0 ? "-\u20AC" + Math.abs(Math.round(t.budget || 0)).toLocaleString("ru-RU") : "\u20AC" + Math.round(t.budget || 0).toLocaleString("ru-RU")
     })).sort((a, b) => {
-      if (a.comp === "rpl" && b.comp !== "rpl") return -1;
-      if (a.comp !== "rpl" && b.comp === "rpl") return 1;
+      const pa = compPriority(a.comp);
+      const pb = compPriority(b.comp);
+      if (pa !== pb) return pa - pb;
       return (b.budget || 0) - (a.budget || 0);
     });
     const rplStandings = table("rpl").map((row, idx) => ({
@@ -27054,13 +27153,30 @@ app.get("/api/admin/budgets", admin, (req, res) => {
       defaultPrize: RPL_PRIZE_SCALE[idx]?.prize || 34e5,
       label: RPL_PRIZE_SCALE[idx]?.label || `${idx + 1} \u043C\u0435\u0441\u0442\u043E`
     }));
+    const fnlStandings = table("fnl").map((row, idx) => ({
+      place: idx + 1,
+      teamId: row.id,
+      teamName: row.name,
+      logo: teamLogo(row.id),
+      points: row.pts || 0,
+      played: row.p || 0,
+      defaultPrize: FNL_PRIZE_SCALE[idx]?.prize || 5e5,
+      label: FNL_PRIZE_SCALE[idx]?.label || `${idx + 1} \u043C\u0435\u0441\u0442\u043E`
+    }));
     const cupSuggestions = calculateCupPrizeSuggestions();
+    const teamCompById = new Map(db.teams.map((t) => [t.id, t.comp]));
+    const history = (Array.isArray(db.budgetHistory) ? db.budgetHistory : []).slice(-200).reverse().map((h) => ({
+      ...h,
+      comp: h.comp || teamCompById.get(h.teamId) || ""
+    }));
     res.json({
       teams,
-      history: (Array.isArray(db.budgetHistory) ? db.budgetHistory : []).slice(-200).reverse(),
+      history,
       rplScale: RPL_PRIZE_SCALE,
+      fnlScale: FNL_PRIZE_SCALE,
       cupScale: CUP_PRIZE_SCALE,
       rplStandings,
+      fnlStandings,
       cupSuggestions,
       totalLeagueBudget: teams.reduce((acc, t) => acc + (t.budget || 0), 0)
     });
@@ -27110,7 +27226,7 @@ app.post("/api/admin/budget/adjust", admin, (req, res) => {
 });
 app.post("/api/admin/budget/award-prizes", admin, (req, res) => {
   ensureInitialBudgets();
-  const { rplAwards, cupAwards, seasonName } = req.body;
+  const { rplAwards, fnlAwards, cupAwards, seasonName } = req.body;
   const curSeason = seasonName || db.settings.season || "2026/27";
   let count = 0;
   let totalAwarded = 0;
@@ -27134,6 +27250,33 @@ app.post("/api/admin/budget/award-prizes", admin, (req, res) => {
         newBudget: t.budget,
         type: "rpl_prize",
         typeLabel: "\u041F\u0440\u0438\u0437\u043E\u0432\u044B\u0435 \u0420\u041F\u041B",
+        description: `\u041D\u0430\u0447\u0438\u0441\u043B\u0435\u043D\u044B \u043F\u0440\u0438\u0437\u043E\u0432\u044B\u0435 \u0437\u0430 ${placeText} (\u0421\u0435\u0437\u043E\u043D ${curSeason}): +\u20AC${prize.toLocaleString("ru-RU")}`,
+        date: now,
+        byAdmin: true
+      });
+      count++;
+      totalAwarded += prize;
+    }
+  }
+  if (Array.isArray(fnlAwards)) {
+    for (const aw of fnlAwards) {
+      if (!aw.teamId) continue;
+      const t = team(aw.teamId);
+      const prize = Number(aw.prize);
+      if (!t || isNaN(prize) || prize <= 0) continue;
+      const prevBudget = t.budget || 0;
+      t.budget = prevBudget + prize;
+      const placeText = aw.place ? `${aw.place} \u043C\u0435\u0441\u0442\u043E \u0432 \u0424\u041D\u041B` : "\u041F\u0440\u0438\u0437\u043E\u0432\u044B\u0435 \u0424\u041D\u041B";
+      if (!Array.isArray(db.budgetHistory)) db.budgetHistory = [];
+      db.budgetHistory.push({
+        id: uid(),
+        teamId: t.id,
+        teamName: t.name,
+        amount: prize,
+        prevBudget,
+        newBudget: t.budget,
+        type: "fnl_prize",
+        typeLabel: "\u041F\u0440\u0438\u0437\u043E\u0432\u044B\u0435 \u0424\u041D\u041B",
         description: `\u041D\u0430\u0447\u0438\u0441\u043B\u0435\u043D\u044B \u043F\u0440\u0438\u0437\u043E\u0432\u044B\u0435 \u0437\u0430 ${placeText} (\u0421\u0435\u0437\u043E\u043D ${curSeason}): +\u20AC${prize.toLocaleString("ru-RU")}`,
         date: now,
         byAdmin: true

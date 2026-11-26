@@ -18371,45 +18371,85 @@ async function pgAdmin(app) {
     const bTeams = bData.teams || [];
     const bHistory = bData.history || [];
     const rplScale = bData.rplScale || [];
+    const fnlScale = bData.fnlScale || [];
     const cupScale = bData.cupScale || {};
     const rplStandings = bData.rplStandings || [];
+    const fnlStandings = bData.fnlStandings || [];
     const cupSuggestions = bData.cupSuggestions || [];
 
     const rplTeams = bTeams.filter(t => t.comp === 'rpl');
-    const totalRplBudget = rplTeams.reduce((a, b) => a + (b.budget || 0), 0);
-    const avgRplBudget = rplTeams.length ? Math.round(totalRplBudget / rplTeams.length) : 0;
-    const richestTeam = rplTeams.length ? [...rplTeams].sort((a, b) => (b.budget || 0) - (a.budget || 0))[0] : null;
+    const fnlTeams = bTeams.filter(t => t.comp === 'fnl');
+    const otherTeams = bTeams.filter(t => t.comp !== 'rpl' && t.comp !== 'fnl');
 
-    let prizeTab = 'rpl';
-    let teamFilterComp = 'rpl';
+    let prizeTab = window.__adminBudgetPrizeTab || 'rpl';
+    let teamFilterComp = window.__adminBudgetCompFilter || 'rpl';
+    let cupCompFilter = window.__adminBudgetCupFilter || 'all';
+    let histFilterComp = window.__adminBudgetHistFilter || 'all';
     let teamSearchQuery = '';
 
-    function renderBudgetView() {
+    function calcLeagueKpi(compScope) {
+      const pool = compScope === 'fnl'
+        ? fnlTeams
+        : compScope === 'all'
+          ? [...rplTeams, ...fnlTeams]
+          : rplTeams;
+      const total = pool.reduce((a, b) => a + (b.budget || 0), 0);
+      const avg = pool.length ? Math.round(total / pool.length) : 0;
+      const richest = pool.length ? [...pool].sort((a, b) => (b.budget || 0) - (a.budget || 0))[0] : null;
+      const titleSuffix = compScope === 'fnl' ? 'ФНЛ' : (compScope === 'all' ? 'РПЛ и ФНЛ' : 'РПЛ');
+      const divDesc = compScope === 'fnl'
+        ? `Все ${pool.length} клубов Первой лиги`
+        : compScope === 'all'
+          ? `${rplTeams.length} клубов РПЛ + ${fnlTeams.length} клубов ФНЛ`
+          : `Все ${pool.length} клубов Премьер-Лиги`;
+      return { total, avg, richest, titleSuffix, divDesc };
+    }
+
+    function renderBudgetView(preserveSearchFocus = false) {
+      window.__adminBudgetPrizeTab = prizeTab;
+      window.__adminBudgetCompFilter = teamFilterComp;
+      window.__adminBudgetCupFilter = cupCompFilter;
+      window.__adminBudgetHistFilter = histFilterComp;
+
+      const kpi = calcLeagueKpi(teamFilterComp);
       const filteredTeams = bTeams.filter(t => {
         if (teamFilterComp !== 'all' && t.comp !== teamFilterComp) return false;
         if (teamSearchQuery && !t.name.toLowerCase().includes(teamSearchQuery.toLowerCase())) return false;
         return true;
       });
+      const filteredHistory = bHistory.filter(h => {
+        if (histFilterComp === 'all') return true;
+        const hComp = h.comp || bTeams.find(t => t.id === h.teamId)?.comp || '';
+        return hComp === histFilterComp;
+      });
 
       ab.innerHTML = `
+        <div class="row sp" style="flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div class="tabs" style="margin:0">
+            <button type="button" class="${teamFilterComp === 'rpl' ? 'on' : ''}" data-bleague="rpl" style="padding:6px 14px;font-weight:700">🏆 РПЛ (${rplTeams.length})</button>
+            <button type="button" class="${teamFilterComp === 'fnl' ? 'on' : ''}" data-bleague="fnl" style="padding:6px 14px;font-weight:700">🥈 Первая лига ФНЛ (${fnlTeams.length})</button>
+            <button type="button" class="${teamFilterComp === 'all' ? 'on' : ''}" data-bleague="all" style="padding:6px 14px;font-weight:700">🌐 Все лиги (${bTeams.length})</button>
+          </div>
+        </div>
+
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px">
           <div class="panel" style="background:#f0fdf4;border:1px solid #86efac;padding:14px;border-radius:10px">
-            <div class="muted small" style="color:#166534;font-weight:600">Суммарный фонд РПЛ</div>
-            <div style="font-size:24px;font-weight:800;color:#14532d;margin-top:4px">€${(totalRplBudget / 1_000_000).toFixed(1)}M</div>
-            <div class="small muted">Все 16 клубов лиги</div>
+            <div class="muted small" style="color:#166534;font-weight:600">Суммарный фонд ${e(kpi.titleSuffix)}</div>
+            <div style="font-size:24px;font-weight:800;color:#14532d;margin-top:4px">€${(kpi.total / 1_000_000).toFixed(1)}M</div>
+            <div class="small muted">${e(kpi.divDesc)}</div>
           </div>
           <div class="panel" style="background:#eff6ff;border:1px solid #93c5fd;padding:14px;border-radius:10px">
-            <div class="muted small" style="color:#1e40af;font-weight:600">Средний бюджет клуба РПЛ</div>
-            <div style="font-size:24px;font-weight:800;color:#1e3a8a;margin-top:4px">€${(avgRplBudget / 1_000_000).toFixed(1)}M</div>
-            <div class="small muted">Среднее по высшему дивизиону</div>
+            <div class="muted small" style="color:#1e40af;font-weight:600">Средний бюджет клуба ${e(kpi.titleSuffix)}</div>
+            <div style="font-size:24px;font-weight:800;color:#1e3a8a;margin-top:4px">€${(kpi.avg / 1_000_000).toFixed(1)}M</div>
+            <div class="small muted">Среднее по выбранной лиге</div>
           </div>
           <div class="panel" style="background:#fffbeb;border:1px solid #fde68a;padding:14px;border-radius:10px">
-            <div class="muted small" style="color:#92400e;font-weight:600">Лидер по финансам</div>
+            <div class="muted small" style="color:#92400e;font-weight:600">Лидер по финансам (${e(kpi.titleSuffix)})</div>
             <div style="font-size:22px;font-weight:800;color:#78350f;margin-top:4px;display:flex;align-items:center;gap:6px">
-              ${richestTeam?.logo ? `<img class="t-logo sm" src="${richestTeam.logo}" alt="">` : ''}
-              ${e(richestTeam?.name || '—')}
+              ${kpi.richest?.logo ? `<img class="t-logo sm" src="${kpi.richest.logo}" alt="">` : ''}
+              ${e(kpi.richest?.name || '—')}
             </div>
-            <div class="small muted">Баланс: €${((richestTeam?.budget || 0) / 1_000_000).toFixed(1)}M</div>
+            <div class="small muted">Баланс: €${((kpi.richest?.budget || 0) / 1_000_000).toFixed(1)}M</div>
           </div>
         </div>
 
@@ -18420,12 +18460,13 @@ async function pgAdmin(app) {
                 <span>🏆</span> Таблица распределения призовых (конец сезона)
               </h3>
               <p class="muted small" style="margin:4px 0 0">
-                Заполните итоговые места клубов в РПЛ и Кубке России. Вы можете расставить клубы вручную либо нажать «Заполнить по текущей таблице РПЛ». <b>Начисление средств произойдёт только тогда, когда вы нажмёте зелёную кнопку «Начислить призовые».</b>
+                Заполните итоговые места клубов в РПЛ, ФНЛ и Кубке России. Можно расставить клубы вручную или автозаполнением по текущей таблице. <b>Начисление средств произойдёт после подтверждения по кнопке «Начислить призовые».</b>
               </p>
             </div>
-            <div class="tabs" style="margin:0">
-              <button id="tab_prz_rpl" class="${prizeTab === 'rpl' ? 'on' : ''}" style="padding:6px 12px;font-weight:700">🏆 Чемпионат РПЛ (16 мест)</button>
-              <button id="tab_prz_cup" class="${prizeTab === 'cup' ? 'on' : ''}" style="padding:6px 12px;font-weight:700">🍷 Кубок России</button>
+            <div class="tabs" style="margin:0;flex-wrap:wrap">
+              <button type="button" id="tab_prz_rpl" class="${prizeTab === 'rpl' ? 'on' : ''}" style="padding:6px 12px;font-weight:700">🏆 Чемпионат РПЛ (${rplScale.length})</button>
+              <button type="button" id="tab_prz_fnl" class="${prizeTab === 'fnl' ? 'on' : ''}" style="padding:6px 12px;font-weight:700">🥈 Первая лига ФНЛ (${fnlScale.length})</button>
+              <button type="button" id="tab_prz_cup" class="${prizeTab === 'cup' ? 'on' : ''}" style="padding:6px 12px;font-weight:700">🍷 Кубок России</button>
             </div>
           </div>
 
@@ -18434,7 +18475,7 @@ async function pgAdmin(app) {
               <div class="small muted">
                 Шкала призовых РПЛ: от <b>€13,0 млн</b> (1 место) до <b>€3,4 млн</b> (16 место).
               </div>
-              <button class="btn sm alt" id="btn_autofill_rpl" style="font-weight:700;display:flex;align-items:center;gap:6px">
+              <button type="button" class="btn sm alt" id="btn_autofill_rpl" style="font-weight:700;display:flex;align-items:center;gap:6px">
                 ⚡ Заполнить по текущей таблице РПЛ
               </button>
             </div>
@@ -18444,7 +18485,7 @@ async function pgAdmin(app) {
                 <thead>
                   <tr>
                     <th style="width:50px;text-align:center">Место</th>
-                    <th class="l" style="width:200px">Статус / Награда</th>
+                    <th class="l" style="width:220px">Статус / Награда</th>
                     <th class="l">Клуб (выберите или измените)</th>
                     <th style="width:160px">Призовые (€)</th>
                     <th class="l" style="width:140px">Сумма в млн €</th>
@@ -18481,13 +18522,13 @@ async function pgAdmin(app) {
             </div>
           </div>
 
-          <div id="prz_cup_box" style="display:${prizeTab === 'cup' ? 'block' : 'none'}">
+          <div id="prz_fnl_box" style="display:${prizeTab === 'fnl' ? 'block' : 'none'}">
             <div class="row sp" style="margin-bottom:12px;flex-wrap:wrap;gap:8px">
               <div class="small muted">
-                Регламент выплат: Группа (участие <b>€300K</b>, победа <b>€100K</b>) · 1/8 (<b>€110K + €125K</b>) · 1/4 (<b>€110K + €250K</b>) · 1/2 Пути РПЛ (<b>€110K + €500K</b>) · Финал (победитель <b>€1 130 000</b>, финалист <b>€380 000</b>).
+                Шкала призовых Первой лиги (ФНЛ): от <b>€2,5 млн</b> (1 место) до <b>€0,5 млн</b> (18 место).
               </div>
-              <button class="btn sm alt" id="btn_autocalc_cup" style="font-weight:700;display:flex;align-items:center;gap:6px">
-                ⚡ Рассчитать по результатам матчей Кубка
+              <button type="button" class="btn sm alt" id="btn_autofill_fnl" style="font-weight:700;display:flex;align-items:center;gap:6px">
+                ⚡ Заполнить по текущей таблице ФНЛ
               </button>
             </div>
 
@@ -18495,32 +18536,110 @@ async function pgAdmin(app) {
               <table style="font-size:13px">
                 <thead>
                   <tr>
+                    <th style="width:50px;text-align:center">Место</th>
+                    <th class="l" style="width:230px">Статус / Награда</th>
+                    <th class="l">Клуб (выберите или измените)</th>
+                    <th style="width:160px">Призовые (€)</th>
+                    <th class="l" style="width:140px">Сумма в млн €</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${fnlScale.map(item => {
+                    const defaultTeamId = fnlStandings[item.place - 1]?.teamId || (fnlTeams[item.place - 1]?.id || '');
+                    return `
+                      <tr>
+                        <td style="font-weight:800;text-align:center;font-size:14px">${item.place}</td>
+                        <td class="l">
+                          <span class="tag" style="background:${item.place <= 2 ? '#dcfce7;color:#166534;font-weight:800' : item.place <= 4 ? '#fef3c7;color:#92400e;font-weight:700' : item.place >= 16 ? '#fee2e2;color:#991b1b;font-weight:700' : '#f1f5f9'}">
+                            ${e(item.label)}
+                          </span>
+                        </td>
+                        <td class="l">
+                          <select class="fnl-prize-sel" data-place="${item.place}" style="width:100%;max-width:280px;font-weight:600">
+                            <option value="">-- Выберите клуб --</option>
+                            ${fnlTeams.map(t => `<option value="${t.id}" ${t.id === defaultTeamId ? 'selected' : ''}>${e(t.name)}</option>`).join('')}
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number" class="fnl-prize-amt" data-place="${item.place}" value="${item.prize}" step="50000" style="width:140px;font-weight:700;padding:4px 8px">
+                        </td>
+                        <td class="l small" id="fmt_fnl_${item.place}" style="font-weight:700;color:#166534">
+                          €${(item.prize / 1_000_000).toFixed(2)}M
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="prz_cup_box" style="display:${prizeTab === 'cup' ? 'block' : 'none'}">
+            <div class="row sp" style="margin-bottom:12px;flex-wrap:wrap;gap:8px">
+              <div class="small muted">
+                Путь РПЛ: группа (€300K + €100K/поб.) и плей-офф · Путь регионов (ФНЛ): отбор (€50K + €50K/поб.) и плей-офф.
+              </div>
+              <div class="row" style="gap:8px;flex-wrap:wrap">
+                <div class="tabs" style="margin:0">
+                  <button type="button" class="${cupCompFilter === 'all' ? 'on' : ''}" data-cupcomp="all" style="padding:4px 10px;font-size:12px">Все (${cupSuggestions.length})</button>
+                  <button type="button" class="${cupCompFilter === 'rpl' ? 'on' : ''}" data-cupcomp="rpl" style="padding:4px 10px;font-size:12px">РПЛ (${cupSuggestions.filter(c => (c.comp || 'rpl') === 'rpl').length})</button>
+                  <button type="button" class="${cupCompFilter === 'fnl' ? 'on' : ''}" data-cupcomp="fnl" style="padding:4px 10px;font-size:12px">ФНЛ (${cupSuggestions.filter(c => c.comp === 'fnl').length})</button>
+                </div>
+                <button type="button" class="btn sm alt" id="btn_autocalc_cup" style="font-weight:700;display:flex;align-items:center;gap:6px">
+                  ⚡ Рассчитать по результатам матчей Кубка
+                </button>
+              </div>
+            </div>
+
+            <div class="wrap">
+              <table style="font-size:13px">
+                <thead>
+                  <tr>
                     <th class="l" style="width:240px">Клуб</th>
-                    <th class="l" style="width:200px">Стадия в Кубке</th>
-                    <th style="width:110px">Побед в группе</th>
+                    <th class="l" style="width:210px">Стадия в Кубке</th>
+                    <th style="width:110px">Побед в отб./гр.</th>
                     <th style="width:170px">Призовые (€)</th>
                     <th class="l">Формула и обоснование</th>
                   </tr>
                 </thead>
                 <tbody id="cup_rows_tbody">
-                  ${cupSuggestions.map(cs => `
-                    <tr data-cup-tid="${cs.teamId}">
+                  ${cupSuggestions.map(cs => {
+                    const csComp = cs.comp || (rplTeams.some(t => t.id === cs.teamId) ? 'rpl' : 'fnl');
+                    const visible = cupCompFilter === 'all' || cupCompFilter === csComp;
+                    return `
+                    <tr data-cup-tid="${cs.teamId}" data-cup-comp="${csComp}" style="display:${visible ? '' : 'none'}">
                       <td class="l">
                         <div class="row" style="gap:8px">
                           ${cs.logo ? `<img class="t-logo xs" src="${cs.logo}" alt="">` : ''}
                           <select class="cup-prize-sel" style="max-width:200px;font-weight:600">
-                            ${rplTeams.map(t => `<option value="${t.id}" ${t.id === cs.teamId ? 'selected' : ''}>${e(t.name)}</option>`).join('')}
+                            <optgroup label="РПЛ">
+                              ${rplTeams.map(t => `<option value="${t.id}" ${t.id === cs.teamId ? 'selected' : ''}>${e(t.name)}</option>`).join('')}
+                            </optgroup>
+                            <optgroup label="Первая лига (ФНЛ)">
+                              ${fnlTeams.map(t => `<option value="${t.id}" ${t.id === cs.teamId ? 'selected' : ''}>${e(t.name)}</option>`).join('')}
+                            </optgroup>
                           </select>
                         </div>
                       </td>
                       <td class="l">
                         <select class="cup-prize-stage" style="width:100%;font-size:12px">
-                          <option value="Групповой этап" ${cs.stage === 'Групповой этап' ? 'selected' : ''}>Групповой этап</option>
-                          <option value="1/8 финала" ${cs.stage === '1/8 финала' ? 'selected' : ''}>1/8 финала (+€110K)</option>
-                          <option value="1/4 финала" ${cs.stage === '1/4 финала' ? 'selected' : ''}>1/4 финала (+€220K)</option>
-                          <option value="Полуфинал Пути РПЛ" ${cs.stage === 'Полуфинал Пути РПЛ' ? 'selected' : ''}>Полуфинал Пути РПЛ (+€330K)</option>
-                          <option value="Финал (Финалист)" ${cs.stage.includes('Финалист') ? 'selected' : ''}>Финалист Кубка (+€710K)</option>
-                          <option value="Финал (Обладатель Кубка)" ${cs.stage.includes('Обладатель') || cs.stage === 'Финал Кубка России' ? 'selected' : ''}>🏆 Обладатель Кубка (+€1 460K)</option>
+                          <optgroup label="Путь РПЛ">
+                            <option value="Групповой этап" ${cs.stage === 'Групповой этап' ? 'selected' : ''}>Групповой этап</option>
+                            <option value="1/8 финала" ${cs.stage === '1/8 финала' ? 'selected' : ''}>1/8 финала (+€110K)</option>
+                            <option value="1/4 финала" ${cs.stage === '1/4 финала' ? 'selected' : ''}>1/4 финала (+€220K)</option>
+                            <option value="Полуфинал Пути РПЛ" ${cs.stage === 'Полуфинал Пути РПЛ' ? 'selected' : ''}>Полуфинал Пути РПЛ (+€330K)</option>
+                          </optgroup>
+                          <optgroup label="Путь регионов (ФНЛ)">
+                            <option value="Путь регионов · Отбор" ${cs.stage === 'Путь регионов · Отбор' ? 'selected' : ''}>Путь регионов · Отбор</option>
+                            <option value="Путь регионов · 1/8 финала" ${cs.stage === 'Путь регионов · 1/8 финала' ? 'selected' : ''}>Путь регионов · 1/8 (+€100K)</option>
+                            <option value="Путь регионов · 1/4 финала" ${cs.stage === 'Путь регионов · 1/4 финала' ? 'selected' : ''}>Путь регионов · 1/4 (+€200K)</option>
+                            <option value="Путь регионов · 1/2 финала" ${cs.stage === 'Путь регионов · 1/2 финала' ? 'selected' : ''}>Путь регионов · 1/2 (+€350K)</option>
+                            <option value="Финал Пути регионов" ${cs.stage === 'Финал Пути регионов' ? 'selected' : ''}>Финал Пути регионов (+€550K)</option>
+                          </optgroup>
+                          <optgroup label="Суперфинал">
+                            <option value="Финал (Финалист)" ${cs.stage.includes('Финалист') ? 'selected' : ''}>Финалист Кубка (+€710K)</option>
+                            <option value="Финал (Обладатель Кубка)" ${cs.stage.includes('Обладатель') || cs.stage === 'Финал Кубка России' ? 'selected' : ''}>🏆 Обладатель Кубка (+€1 460K)</option>
+                          </optgroup>
                         </select>
                       </td>
                       <td>
@@ -18533,7 +18652,8 @@ async function pgAdmin(app) {
                         ${e(cs.breakdown || '')}
                       </td>
                     </tr>
-                  `).join('')}
+                  `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -18541,10 +18661,10 @@ async function pgAdmin(app) {
 
           <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
             <div>
-              <span class="small muted">Расчётная сумма выплат:</span>
-              <span id="prize_sum_preview" style="font-size:18px;font-weight:800;color:#166534;margin-left:8px">...</span>
+              <span class="small muted">Сумма призовых:</span>
+              <span id="prize_sum_preview" style="font-size:17px;font-weight:800;color:#166534;margin-left:8px">...</span>
             </div>
-            <button class="btn" id="btn_award_prizes_submit" style="background:#16a34a;padding:12px 24px;font-size:15px;font-weight:800;box-shadow:0 4px 14px rgba(22,163,74,0.25)">
+            <button type="button" class="btn" id="btn_award_prizes_submit" style="background:#16a34a;padding:12px 24px;font-size:15px;font-weight:800;box-shadow:0 4px 14px rgba(22,163,74,0.25)">
               🏆 Начислить призовые в бюджеты клубов
             </button>
           </div>
@@ -18552,12 +18672,20 @@ async function pgAdmin(app) {
 
         <div class="panel" style="margin-bottom:18px">
           <h3>💰 Ручное пополнение или корректировка бюджета</h3>
-          <p class="muted small">Вы можете в любой момент начислить или списать произвольную сумму со счёта любого клуба (спонсорские выплаты, инвестиции владельцев, штрафы КДК и т.д.).</p>
+          <p class="muted small">Вы можете в любой момент начислить или списать произвольную сумму со счёта любого клуба РПЛ, ФНЛ и других лиг (спонсорские выплаты, инвестиции владельцев, штрафы КДК и т.д.).</p>
           <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
             <div style="flex:2;min-width:200px">
               <label class="small muted">Клуб</label>
               <select id="adj_tid" style="width:100%">
-                ${bTeams.map(t => `<option value="${t.id}">${e(t.name)} (${t.comp.toUpperCase()}, баланс: €${((t.budget || 0) / 1_000_000).toFixed(2)}M)</option>`).join('')}
+                <optgroup label="РПЛ (${rplTeams.length})">
+                  ${rplTeams.map(t => `<option value="${t.id}" ${teamFilterComp === 'rpl' && t.id === rplTeams[0]?.id ? 'selected' : ''}>${e(t.name)} (РПЛ, баланс: €${((t.budget || 0) / 1_000_000).toFixed(2)}M)</option>`).join('')}
+                </optgroup>
+                <optgroup label="Первая лига ФНЛ (${fnlTeams.length})">
+                  ${fnlTeams.map(t => `<option value="${t.id}" ${teamFilterComp === 'fnl' && t.id === fnlTeams[0]?.id ? 'selected' : ''}>${e(t.name)} (ФНЛ, баланс: €${((t.budget || 0) / 1_000_000).toFixed(2)}M)</option>`).join('')}
+                </optgroup>
+                ${otherTeams.length ? `<optgroup label="Другие лиги (${otherTeams.length})">
+                  ${otherTeams.map(t => `<option value="${t.id}">${e(t.name)} (${e(compName(t.comp))}, баланс: €${((t.budget || 0) / 1_000_000).toFixed(2)}M)</option>`).join('')}
+                </optgroup>` : ''}
               </select>
             </div>
             <div style="flex:1.5;min-width:160px">
@@ -18584,7 +18712,7 @@ async function pgAdmin(app) {
               <input id="adj_reason" placeholder="Например: Спонсорский контракт, инвестиции" style="width:100%">
             </div>
             <div style="padding-top:19px">
-              <button class="btn" id="adj_submit">Применить</button>
+              <button type="button" class="btn" id="adj_submit">Применить</button>
             </div>
           </div>
           <div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap">
@@ -18601,13 +18729,13 @@ async function pgAdmin(app) {
           <div class="row sp" style="flex-wrap:wrap;gap:10px;margin-bottom:12px">
             <div>
               <h3 style="margin:0">Текущие бюджеты команд (${filteredTeams.length})</h3>
-              <p class="muted small" style="margin:4px 0 0">Актуальный финансовый баланс всех клубов лиги.</p>
+              <p class="muted small" style="margin:4px 0 0">Актуальный финансовый баланс клубов РПЛ, ФНЛ и других дивизионов.</p>
             </div>
             <div class="row" style="gap:8px;flex-wrap:wrap">
               <div class="tabs" style="margin:0">
-                <button class="${teamFilterComp === 'rpl' ? 'on' : ''}" data-bfilter="rpl" style="padding:4px 10px;font-size:12px">РПЛ (16)</button>
-                <button class="${teamFilterComp === 'fnl' ? 'on' : ''}" data-bfilter="fnl" style="padding:4px 10px;font-size:12px">Первая лига</button>
-                <button class="${teamFilterComp === 'all' ? 'on' : ''}" data-bfilter="all" style="padding:4px 10px;font-size:12px">Все клубы</button>
+                <button type="button" class="${teamFilterComp === 'rpl' ? 'on' : ''}" data-bfilter="rpl" style="padding:4px 10px;font-size:12px">РПЛ (${rplTeams.length})</button>
+                <button type="button" class="${teamFilterComp === 'fnl' ? 'on' : ''}" data-bfilter="fnl" style="padding:4px 10px;font-size:12px">Первая лига (${fnlTeams.length})</button>
+                <button type="button" class="${teamFilterComp === 'all' ? 'on' : ''}" data-bfilter="all" style="padding:4px 10px;font-size:12px">Все клубы (${bTeams.length})</button>
               </div>
               <input id="b_search" placeholder="Поиск клуба..." value="${e(teamSearchQuery)}" style="width:180px;padding:4px 8px;font-size:13px">
             </div>
@@ -18633,13 +18761,13 @@ async function pgAdmin(app) {
                         <b>${e(t.name)}</b>
                       </div>
                     </td>
-                    <td class="l"><span class="tag">${e(t.comp.toUpperCase())}</span></td>
+                    <td class="l"><span class="tag">${e(compName(t.comp))}</span></td>
                     <td class="l small muted">${e(t.city || '')} ${t.stadium ? `· ${e(t.stadium)}` : ''}</td>
                     <td style="font-size:15px;font-weight:800;color:${(t.budget || 0) < 0 ? '#b91c1c' : '#15803d'}">
                       ${(t.budget || 0) < 0 ? '-€' + Math.abs(Math.round(t.budget || 0)).toLocaleString('ru-RU') : '€' + Math.round(t.budget || 0).toLocaleString('ru-RU')}
                     </td>
                     <td>
-                      <button class="btn sm alt" data-edit-team="${t.id}" data-team-name="${e(t.name)}" data-team-budget="${t.budget || 0}">
+                      <button type="button" class="btn sm alt" data-edit-team="${t.id}" data-team-name="${e(t.name)}" data-team-budget="${t.budget || 0}">
                         💰 Изменить / Пополнить
                       </button>
                     </td>
@@ -18651,9 +18779,16 @@ async function pgAdmin(app) {
         </div>
 
         <div class="panel">
-          <div class="row sp" style="margin-bottom:12px">
-            <h3 style="margin:0">📜 История бюджета и финансовых операций (${bHistory.length})</h3>
-            <span class="muted small">Полный аудит поступлений, призовых, трансферов и списаний</span>
+          <div class="row sp" style="margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div>
+              <h3 style="margin:0">📜 История бюджета и финансовых операций (${filteredHistory.length}${histFilterComp !== 'all' ? ` из ${bHistory.length}` : ''})</h3>
+              <span class="muted small">Полный аудит поступлений, призовых, трансферов и списаний</span>
+            </div>
+            <div class="tabs" style="margin:0">
+              <button type="button" class="${histFilterComp === 'all' ? 'on' : ''}" data-hfilter="all" style="padding:4px 10px;font-size:12px">Все</button>
+              <button type="button" class="${histFilterComp === 'rpl' ? 'on' : ''}" data-hfilter="rpl" style="padding:4px 10px;font-size:12px">РПЛ</button>
+              <button type="button" class="${histFilterComp === 'fnl' ? 'on' : ''}" data-hfilter="fnl" style="padding:4px 10px;font-size:12px">ФНЛ</button>
+            </div>
           </div>
 
           <div class="wrap">
@@ -18669,12 +18804,13 @@ async function pgAdmin(app) {
                 </tr>
               </thead>
               <tbody>
-                ${bHistory.length ? bHistory.map(h => {
+                ${filteredHistory.length ? filteredHistory.map(h => {
                   const isPositive = (h.amount || 0) >= 0;
+                  const hComp = h.comp || bTeams.find(t => t.id === h.teamId)?.comp || '';
                   return `
                     <tr>
                       <td class="l small muted">${h.date ? new Date(h.date).toLocaleDateString('ru-RU') + ' ' + new Date(h.date).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '—'}</td>
-                      <td class="l"><b>${e(h.teamName || 'Клуб')}</b></td>
+                      <td class="l"><b>${e(h.teamName || 'Клуб')}</b>${hComp ? ` <span class="tag" style="font-size:10px;padding:1px 5px">${e(hComp === 'rpl' ? 'РПЛ' : hComp === 'fnl' ? 'ФНЛ' : compName(hComp))}</span>` : ''}</td>
                       <td class="l">
                         <span class="tag" style="font-size:11px;background:${h.type?.includes('prize') ? '#e0f2fe;color:#0369a1' : h.type?.includes('initial') ? '#fef3c7;color:#92400e' : h.type?.includes('transfer') ? '#f1f5f9;color:#334155' : '#f0fdf4;color:#166534'}">
                           ${e(h.typeLabel || h.type || 'Операция')}
@@ -18697,34 +18833,75 @@ async function pgAdmin(app) {
       `;
 
       bindBudgetEvents();
+      if (preserveSearchFocus) {
+        const sEl = document.getElementById('b_search');
+        if (sEl) {
+          sEl.focus();
+          const len = sEl.value.length;
+          sEl.setSelectionRange(len, len);
+        }
+      }
     }
 
     function calculateTotalPrizePreview() {
-      let sum = 0;
-      ab.querySelectorAll('.rpl-prize-amt').forEach(inp => {
-        sum += Number(inp.value) || 0;
-      });
-      ab.querySelectorAll('.cup-prize-amt').forEach(inp => {
-        sum += Number(inp.value) || 0;
-      });
+      let rplSum = 0;
+      let fnlSum = 0;
+      let cupSum = 0;
+      ab.querySelectorAll('.rpl-prize-amt').forEach(inp => { rplSum += Number(inp.value) || 0; });
+      ab.querySelectorAll('.fnl-prize-amt').forEach(inp => { fnlSum += Number(inp.value) || 0; });
+      ab.querySelectorAll('.cup-prize-amt').forEach(inp => { cupSum += Number(inp.value) || 0; });
+      const activeSum = prizeTab === 'fnl' ? fnlSum : prizeTab === 'cup' ? cupSum : rplSum;
+      const activeLbl = prizeTab === 'fnl' ? 'ФНЛ' : prizeTab === 'cup' ? 'Кубок' : 'РПЛ';
       const prevEl = document.getElementById('prize_sum_preview');
-      if (prevEl) prevEl.textContent = '€' + sum.toLocaleString('ru-RU') + ` (~€${(sum / 1_000_000).toFixed(1)} млн)`;
+      if (prevEl) {
+        prevEl.textContent = `${activeLbl}: €${activeSum.toLocaleString('ru-RU')} (~€${(activeSum / 1_000_000).toFixed(1)} млн) · Всего (РПЛ+ФНЛ+Кубок): €${(rplSum + fnlSum + cupSum).toLocaleString('ru-RU')}`;
+      }
     }
 
     function bindBudgetEvents() {
-      $('#tab_prz_rpl')?.addEventListener('click', () => {
-        prizeTab = 'rpl';
-        $('#prz_rpl_box').style.display = 'block';
-        $('#prz_cup_box').style.display = 'none';
-        $('#tab_prz_rpl').classList.add('on');
-        $('#tab_prz_cup').classList.remove('on');
+      const switchPrizeTab = (tab) => {
+        prizeTab = tab;
+        window.__adminBudgetPrizeTab = tab;
+        $('#prz_rpl_box').style.display = tab === 'rpl' ? 'block' : 'none';
+        $('#prz_fnl_box').style.display = tab === 'fnl' ? 'block' : 'none';
+        $('#prz_cup_box').style.display = tab === 'cup' ? 'block' : 'none';
+        $('#tab_prz_rpl')?.classList.toggle('on', tab === 'rpl');
+        $('#tab_prz_fnl')?.classList.toggle('on', tab === 'fnl');
+        $('#tab_prz_cup')?.classList.toggle('on', tab === 'cup');
+        calculateTotalPrizePreview();
+      };
+
+      $('#tab_prz_rpl')?.addEventListener('click', () => switchPrizeTab('rpl'));
+      $('#tab_prz_fnl')?.addEventListener('click', () => switchPrizeTab('fnl'));
+      $('#tab_prz_cup')?.addEventListener('click', () => switchPrizeTab('cup'));
+
+      ab.querySelectorAll('[data-bleague]').forEach(b => {
+        b.onclick = () => {
+          teamFilterComp = b.dataset.bleague;
+          if (teamFilterComp === 'rpl' || teamFilterComp === 'fnl') {
+            prizeTab = teamFilterComp;
+            if (histFilterComp !== 'all') histFilterComp = teamFilterComp;
+          }
+          renderBudgetView();
+        };
       });
-      $('#tab_prz_cup')?.addEventListener('click', () => {
-        prizeTab = 'cup';
-        $('#prz_rpl_box').style.display = 'none';
-        $('#prz_cup_box').style.display = 'block';
-        $('#tab_prz_cup').classList.add('on');
-        $('#tab_prz_rpl').classList.remove('on');
+
+      ab.querySelectorAll('[data-cupcomp]').forEach(b => {
+        b.onclick = () => {
+          cupCompFilter = b.dataset.cupcomp;
+          window.__adminBudgetCupFilter = cupCompFilter;
+          ab.querySelectorAll('[data-cupcomp]').forEach(btn => btn.classList.toggle('on', btn.dataset.cupcomp === cupCompFilter));
+          ab.querySelectorAll('#cup_rows_tbody tr').forEach(tr => {
+            tr.style.display = (cupCompFilter === 'all' || tr.dataset.cupComp === cupCompFilter) ? '' : 'none';
+          });
+        };
+      });
+
+      ab.querySelectorAll('[data-hfilter]').forEach(b => {
+        b.onclick = () => {
+          histFilterComp = b.dataset.hfilter;
+          renderBudgetView();
+        };
       });
 
       $('#btn_autofill_rpl')?.addEventListener('click', () => {
@@ -18733,6 +18910,14 @@ async function pgAdmin(app) {
           if (sel) sel.value = rs.teamId;
         });
         toast('Команды расставлены по текущей турнирной таблице РПЛ');
+      });
+
+      $('#btn_autofill_fnl')?.addEventListener('click', () => {
+        fnlStandings.forEach(fs => {
+          const sel = ab.querySelector(`.fnl-prize-sel[data-place="${fs.place}"]`);
+          if (sel) sel.value = fs.teamId;
+        });
+        toast('Команды расставлены по текущей турнирной таблице ФНЛ');
       });
 
       $('#btn_autocalc_cup')?.addEventListener('click', () => {
@@ -18765,6 +18950,16 @@ async function pgAdmin(app) {
         };
       });
 
+      ab.querySelectorAll('.fnl-prize-amt').forEach(inp => {
+        inp.oninput = () => {
+          const place = inp.dataset.place;
+          const val = Number(inp.value) || 0;
+          const fmtEl = document.getElementById(`fmt_fnl_${place}`);
+          if (fmtEl) fmtEl.textContent = `€${(val / 1_000_000).toFixed(2)}M`;
+          calculateTotalPrizePreview();
+        };
+      });
+
       ab.querySelectorAll('.cup-prize-amt').forEach(inp => {
         inp.oninput = calculateTotalPrizePreview;
       });
@@ -18772,15 +18967,18 @@ async function pgAdmin(app) {
       ab.querySelectorAll('[data-bfilter]').forEach(b => {
         b.onclick = () => {
           teamFilterComp = b.dataset.bfilter;
+          if (teamFilterComp === 'rpl' || teamFilterComp === 'fnl') {
+            prizeTab = teamFilterComp;
+          }
           renderBudgetView();
         };
       });
 
       const searchInp = document.getElementById('b_search');
       if (searchInp) {
-        searchInp.oninput = e => {
-          teamSearchQuery = e.target.value;
-          renderBudgetView();
+        searchInp.oninput = ev => {
+          teamSearchQuery = ev.target.value;
+          renderBudgetView(true);
         };
       }
 
@@ -18937,6 +19135,18 @@ async function pgAdmin(app) {
           }
         });
 
+        const fnlAwards = [];
+        ab.querySelectorAll('.fnl-prize-sel').forEach(sel => {
+          const place = Number(sel.dataset.place);
+          const teamId = sel.value;
+          const amtInp = ab.querySelector(`.fnl-prize-amt[data-place="${place}"]`);
+          const prize = Number(amtInp?.value) || 0;
+          if (teamId && prize > 0) {
+            const teamObj = bTeams.find(t => t.id === teamId);
+            fnlAwards.push({ place, teamId, teamName: teamObj?.name || 'Клуб', prize });
+          }
+        });
+
         const cupAwards = [];
         ab.querySelectorAll('#cup_rows_tbody tr').forEach(row => {
           const sel = row.querySelector('.cup-prize-sel');
@@ -18957,65 +19167,94 @@ async function pgAdmin(app) {
           }
         });
 
-        const totalAwards = [...rplAwards, ...cupAwards];
-        const totalPrizeSum = totalAwards.reduce((a, b) => a + b.prize, 0);
-
-        if (!totalAwards.length) {
+        if (!rplAwards.length && !fnlAwards.length && !cupAwards.length) {
           toast('Выберите хотя бы один клуб для начисления', true);
           return;
         }
 
-        const clubMap = {};
-        for (const a of rplAwards) {
-          clubMap[a.teamId] = clubMap[a.teamId] || { name: a.teamName, rpl: 0, cup: 0, total: 0, details: [] };
-          clubMap[a.teamId].rpl += a.prize;
-          clubMap[a.teamId].total += a.prize;
-          clubMap[a.teamId].details.push(`${a.place} место РПЛ: €${(a.prize / 1_000_000).toFixed(2)}M`);
-        }
-        for (const a of cupAwards) {
-          clubMap[a.teamId] = clubMap[a.teamId] || { name: a.teamName, rpl: 0, cup: 0, total: 0, details: [] };
-          clubMap[a.teamId].cup += a.prize;
-          clubMap[a.teamId].total += a.prize;
-          clubMap[a.teamId].details.push(`Кубок (${a.stageLabel}): €${(a.prize / 1_000_000).toFixed(2)}M`);
-        }
-
-        const clubList = Object.values(clubMap).sort((a, b) => b.total - a.total);
+        const buildSelectedAwards = (useRpl, useFnl, useCup) => {
+          const clubMap = {};
+          const addEntry = (teamId, name, prize, detail) => {
+            clubMap[teamId] = clubMap[teamId] || { name, total: 0, details: [] };
+            clubMap[teamId].total += prize;
+            clubMap[teamId].details.push(detail);
+          };
+          if (useRpl) {
+            for (const a of rplAwards) addEntry(a.teamId, a.teamName, a.prize, `${a.place} место РПЛ: €${(a.prize / 1_000_000).toFixed(2)}M`);
+          }
+          if (useFnl) {
+            for (const a of fnlAwards) addEntry(a.teamId, a.teamName, a.prize, `${a.place} место ФНЛ: €${(a.prize / 1_000_000).toFixed(2)}M`);
+          }
+          if (useCup) {
+            for (const a of cupAwards) addEntry(a.teamId, a.teamName, a.prize, `Кубок (${a.stageLabel}): €${(a.prize / 1_000_000).toFixed(2)}M`);
+          }
+          const clubList = Object.values(clubMap).sort((a, b) => b.total - a.total);
+          const totalPrizeSum = clubList.reduce((acc, c) => acc + c.total, 0);
+          return { clubList, totalPrizeSum };
+        };
 
         const m = modal(`
           <div class="row sp" style="margin-bottom:12px">
             <h3 style="margin:0;color:#166534">🏆 Подтверждение начисления призовых</h3>
-            <button class="btn alt sm" id="m_prz_close">✕</button>
+            <button type="button" class="btn alt sm" id="m_prz_close">✕</button>
           </div>
-          <p class="small muted">
-            Проверьте итоговые суммы. Выплат будет начислено для <b>${clubList.length} клубов</b> на общую сумму <b>€${totalPrizeSum.toLocaleString('ru-RU')}</b> (~€${(totalPrizeSum / 1_000_000).toFixed(1)} млн).
-          </p>
-          <div style="max-height:50vh;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:8px;margin:12px 0;background:#f8fafc">
-            ${clubList.map((c, i) => `
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #e2e8f0;font-size:13px">
-                <div>
-                  <b style="font-size:14px">${i + 1}. ${e(c.name)}</b>
-                  <div class="small muted">${e(c.details.join(' + '))}</div>
-                </div>
-                <div style="font-weight:800;color:#15803d;font-size:14px">
-                  +€${c.total.toLocaleString('ru-RU')}
-                </div>
-              </div>
-            `).join('')}
+          <div style="display:flex;gap:12px;flex-wrap:wrap;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;margin-bottom:10px">
+            <label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:700;cursor:pointer"><input type="checkbox" id="m_prz_inc_rpl" ${prizeTab === 'rpl' ? 'checked' : ''} style="width:auto"> 🏆 РПЛ (${rplAwards.length})</label>
+            <label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:700;cursor:pointer"><input type="checkbox" id="m_prz_inc_fnl" ${prizeTab === 'fnl' ? 'checked' : ''} style="width:auto"> 🥈 ФНЛ (${fnlAwards.length})</label>
+            <label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:700;cursor:pointer"><input type="checkbox" id="m_prz_inc_cup" ${prizeTab === 'cup' ? 'checked' : ''} style="width:auto"> 🍷 Кубок (${cupAwards.length})</label>
           </div>
+          <p class="small muted" id="m_prz_summary"></p>
+          <div id="m_prz_list" style="max-height:46vh;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:8px;margin:12px 0;background:#f8fafc"></div>
           <div class="warn small" style="margin-bottom:14px">
-            ⚠️ Средства будут немедленно зачислены на балансы клубов, а в журнал аудита будут добавлены официальные бухгалтерские записи.
+            ⚠️ Средства будут немедленно зачислены на балансы выбранных клубов, а в журнал аудита будут добавлены официальные бухгалтерские записи.
           </div>
           <div class="row sp" style="margin-top:16px">
-            <button class="btn alt" id="m_prz_cancel">Отмена</button>
-            <button class="btn" id="m_prz_confirm" style="background:#16a34a;font-weight:800;padding:10px 20px">
+            <button type="button" class="btn alt" id="m_prz_cancel">Отмена</button>
+            <button type="button" class="btn" id="m_prz_confirm" style="background:#16a34a;font-weight:800;padding:10px 20px">
               ✅ Подтвердить и начислить призовые
             </button>
           </div>
         `, mEl => {
+          const chkRpl = mEl.querySelector('#m_prz_inc_rpl');
+          const chkFnl = mEl.querySelector('#m_prz_inc_fnl');
+          const chkCup = mEl.querySelector('#m_prz_inc_cup');
+          const sumEl = mEl.querySelector('#m_prz_summary');
+          const listEl = mEl.querySelector('#m_prz_list');
+          const confirmBtn = mEl.querySelector('#m_prz_confirm');
+
+          const refreshModalPreview = () => {
+            const { clubList, totalPrizeSum } = buildSelectedAwards(chkRpl.checked, chkFnl.checked, chkCup.checked);
+            sumEl.innerHTML = clubList.length
+              ? `Выплат будет начислено для <b>${clubList.length} клубов</b> на общую сумму <b>€${totalPrizeSum.toLocaleString('ru-RU')}</b> (~€${(totalPrizeSum / 1_000_000).toFixed(1)} млн).`
+              : 'Выберите хотя бы один турнир выше для начисления призовых.';
+            listEl.innerHTML = clubList.length
+              ? clubList.map((c, i) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #e2e8f0;font-size:13px">
+                  <div>
+                    <b style="font-size:14px">${i + 1}. ${e(c.name)}</b>
+                    <div class="small muted">${e(c.details.join(' + '))}</div>
+                  </div>
+                  <div style="font-weight:800;color:#15803d;font-size:14px">
+                    +€${c.total.toLocaleString('ru-RU')}
+                  </div>
+                </div>
+              `).join('')
+              : '<div class="empty">Нет выбранных выплат</div>';
+            confirmBtn.disabled = !clubList.length;
+          };
+
+          [chkRpl, chkFnl, chkCup].forEach(c => c.onchange = refreshModalPreview);
+          refreshModalPreview();
+
           mEl.querySelector('#m_prz_close').onclick = () => m.remove();
           mEl.querySelector('#m_prz_cancel').onclick = () => m.remove();
-          mEl.querySelector('#m_prz_confirm').onclick = async () => {
-            const res = await act(() => api('/admin/budget/award-prizes', { rplAwards, cupAwards }), 'Призовые успешно начислены!');
+          confirmBtn.onclick = async () => {
+            const payload = {
+              rplAwards: chkRpl.checked ? rplAwards : [],
+              fnlAwards: chkFnl.checked ? fnlAwards : [],
+              cupAwards: chkCup.checked ? cupAwards : []
+            };
+            const res = await act(() => api('/admin/budget/award-prizes', payload), 'Призовые успешно начислены!');
             if (res) {
               m.remove();
               re();
